@@ -1,0 +1,24 @@
+{
+  "name": "quran-reader",
+  "version": "1.0.0",
+  "description": "Quran Speed Reader - Word by word Quran reading app",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'No build needed - static site'",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios"
+  },
+  "author": "Ameen Roayan",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^8.0.2",
+    "@capacitor/core": "^8.0.2",
+    "@capacitor/ios": "^8.0.2",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.2"
+  }
+}
