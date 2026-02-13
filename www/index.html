@@ -2713,7 +2713,20 @@
             playTimer = setTimeout(gameLoop, duration);
         }
 
-        function togglePlay() {
+        async function togglePlay() {
+            // Check if we've finished reading the current surah and user wants to play again
+            if (!state.isPlaying && state.words.length > 0 && state.wordIndex >= state.words.length - 1) {
+                // Find the next surah
+                const currentSurahIndex = SURAHS.findIndex(s => s.number === state.surah);
+                if (currentSurahIndex !== -1 && currentSurahIndex < SURAHS.length - 1) {
+                    const nextSurah = SURAHS[currentSurahIndex + 1];
+                    // Load the next surah
+                    await loadSurah(nextSurah.number);
+                    // Update the surah selector
+                    $('surahSelect').value = nextSurah.number;
+                }
+            }
+
             state.isPlaying = !state.isPlaying;
             $('playIcon').innerHTML = state.isPlaying ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
             $('playLabel').textContent = state.isPlaying ? i18n[state.lang].pause : i18n[state.lang].play;
