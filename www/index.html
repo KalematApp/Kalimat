@@ -1913,6 +1913,12 @@
                 </div>
                 <div class="top-bar-center">
                     <div class="top-bar-item">
+                        <button class="top-bar-btn" id="pagesBtn" onclick="window.location.href='pages.html'"><svg viewBox="0 0 24 24">
+                                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></button>
+                        <span class="btn-label" id="pagesLabel">الصفحات</span>
+                    </div>
+                    <div class="top-bar-item">
                         <button class="top-bar-btn" id="focusModeBtn"><svg viewBox="0 0 24 24">
                                 <path
                                     d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
@@ -2287,12 +2293,12 @@
                 word: 'الكلمة',
                 surahTime: 'الوقت المتبقي للسورة',
                 quranTime: 'لختم القرآن كاملاً',
-                play: 'تشغيل', pause: 'إيقاف',
+                play: 'تشغيل', pause: 'إيقاف', nextSurah: 'السورة التالية',
                 startAyah: 'بداية الآية', endAyah: 'نهاية الآية',
                 skip10: '١٠ كلمات', speed: 'سرعة القراءة',
                 variableSpeed: 'سرعة متغيرة',
                 variableSpeedTip: 'نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف',
-                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'وضع التركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slow: 'بطيء', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!'
+                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'وضع التركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slow: 'بطيء', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!', pages: 'الصفحات'
             },
             en: {
                 introTitle: 'Quran Reader',
@@ -2304,18 +2310,18 @@
                 word: 'Word',
                 surahTime: 'Time left for Surah',
                 quranTime: 'To finish Quran',
-                play: 'Play', pause: 'Pause',
+                play: 'Play', pause: 'Pause', nextSurah: 'Next Surah',
                 startAyah: 'Ayah Start', endAyah: 'Ayah End',
                 skip10: '10 words', speed: 'Reading Speed',
                 variableSpeed: 'Variable Speed',
                 variableSpeedTip: 'Rhythmic mode: Auto-slowing for Madda & Pause markers',
-                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slow: 'Slow', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!'
+                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slow: 'Slow', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!', pages: 'Pages'
             }
         };
         function $(id) { return document.getElementById(id); }
         function toArabicNum(n) { return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
         function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
-        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; $('pageLabel').textContent = t.page; $('ayahLabel').textContent = t.ayah; $('wordLabel').textContent = t.word; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; $('playLabel').textContent = state.isPlaying ? t.pause : t.play; $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
+        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; $('pageLabel').textContent = t.page; $('ayahLabel').textContent = t.ayah; $('wordLabel').textContent = t.word; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
         function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
         // Quranic markings to filter out (pause signs, Hizb marks, recitation indicators)
         const QURAN_MARKS = /^[ۖۗۘۚۛۙ۞ۜ۩ۣ۠ۢۡۤۥۦ]*$|^[صقطعل]{1,4}ۢ?$|^ج$|^صل[ىي]?$/;
@@ -2357,6 +2363,7 @@
             updateProgress();
             updateTimeEstimates();
             autoSaveBookmark();
+            updatePlayButton();
         }
         function displayWord() { if (!state.words.length) return; const word = state.words[state.wordIndex]; const el = $('currentWord'); el.className = `current-word size-${state.fontSize}`; if (state.enhancedMode) { const text = word.text; el.innerHTML = `<span style="display:inline-block">${text}</span>`; $('focusContainer').classList.remove('focus-lines-hidden'); } else { el.textContent = word.text; $('focusContainer').classList.add('focus-lines-hidden'); } state.currentAyah = word.ayah; $('pageNum').textContent = state.lang === 'ar' ? toArabicNum(word.page) : word.page; $('ayahNum').textContent = state.lang === 'ar' ? toArabicNum(word.ayah) : word.ayah; const wordsInAyah = state.words.filter(w => w.ayah === word.ayah); const posInAyah = wordsInAyah.indexOf(word) + 1; const wordNumEl = $('wordNum'); wordNumEl.style.direction = 'ltr'; wordNumEl.style.unicodeBidi = 'embed'; wordNumEl.textContent = state.lang === 'ar' ? `${toArabicNum(posInAyah)}/${toArabicNum(wordsInAyah.length)}` : `${posInAyah}/${wordsInAyah.length}`; }
         function getWordWeight(text) {
@@ -2713,6 +2720,27 @@
             playTimer = setTimeout(gameLoop, duration);
         }
 
+        function updatePlayButton() {
+            const isFinished = state.words.length > 0 && state.wordIndex >= state.words.length - 1 && !state.isPlaying;
+            const currentSurahIndex = SURAHS.findIndex(s => s.number === state.surah);
+            const hasNextSurah = currentSurahIndex !== -1 && currentSurahIndex < SURAHS.length - 1;
+            const showNextSurah = isFinished && hasNextSurah;
+
+            if (state.isPlaying) {
+                // Pause icon
+                $('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                $('playLabel').textContent = i18n[state.lang].pause;
+            } else if (showNextSurah) {
+                // Next surah icon (skip forward style)
+                $('playIcon').innerHTML = '<path d="M8 5v14l7-7-7-7zm8 0v14h2V5h-2z"/>';
+                $('playLabel').textContent = i18n[state.lang].nextSurah;
+            } else {
+                // Play icon
+                $('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+                $('playLabel').textContent = i18n[state.lang].play;
+            }
+        }
+
         async function togglePlay() {
             // Check if we've finished reading the current surah and user wants to play again
             if (!state.isPlaying && state.words.length > 0 && state.wordIndex >= state.words.length - 1) {
@@ -2728,8 +2756,7 @@
             }
 
             state.isPlaying = !state.isPlaying;
-            $('playIcon').innerHTML = state.isPlaying ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
-            $('playLabel').textContent = state.isPlaying ? i18n[state.lang].pause : i18n[state.lang].play;
+            updatePlayButton();
 
             // Sync Overlay Icon
             const displayStyle = state.isPlaying ? 'none' : 'flex';
@@ -2745,8 +2772,35 @@
                     updateCollectiveTime();
                 }, 1000);
 
-                // Start recursive loop
-                gameLoop();
+                // If at the start of a surah (wordIndex 0), ensure first word gets full duration
+                if (state.wordIndex === 0 && state.words.length > 0) {
+                    // Refresh display to ensure word is visible
+                    displayWord();
+                    updateProgress();
+                    updateTimeEstimates();
+                    autoSaveBookmark();
+                    
+                    // Calculate effective WPM
+                    let effectiveWpm = state.wpm;
+                    if (state.gazeEnabled && !state.overlayActive) {
+                        effectiveWpm = state.wpm * state.rampFactor;
+                    }
+                    
+                    // Small delay to ensure display is rendered, then start timer for first word
+                    // After timer expires, gameLoop() will increment to index 1 and continue
+                    setTimeout(() => {
+                        if (!state.isPlaying) return; // Check if still playing
+                        if (effectiveWpm < 10) {
+                            playTimer = setTimeout(gameLoop, 200);
+                        } else {
+                            const duration = (60000 / effectiveWpm) * getWordWeight(state.words[0].text);
+                            playTimer = setTimeout(gameLoop, duration);
+                        }
+                    }, 50); // Small delay to ensure rendering
+                } else {
+                    // Start recursive loop
+                    gameLoop();
+                }
 
             } else {
                 clearTimeout(playTimer);
