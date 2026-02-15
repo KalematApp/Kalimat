@@ -24,7 +24,26 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
+    <!-- Uthmani Script Fonts -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
     <style>
+        /* Uthmanic Script Font */
+        @font-face {
+            font-family: 'KFGQPC Uthmanic Script HAFS';
+            src: url('https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Scheherazade New';
+            src: url('https://fonts.gstatic.com/s/scheherazadenew/v9/4iCp6KhlaNHb2oeD7Vamy7lsnA7gL1kzLad.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -450,11 +469,11 @@
             display: none;
         }
 
-        /* Current Word - Fixed ORP */
+        /* Current Word - Fixed ORP with Uthmanic Script */
         .current-word {
-            font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+            font-family: 'KFGQPC Uthmanic Script HAFS', 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Noto Naskh Arabic', serif;
             font-size: 4rem;
-            font-weight: 500;
+            font-weight: normal;
             color: var(--text-primary);
             text-align: center;
             line-height: 1.5;
@@ -466,6 +485,11 @@
             unicode-bidi: bidi-override;
             z-index: 1;
             position: relative;
+            /* Uthmanic font features */
+            font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .current-word .orp-letter {
@@ -1054,6 +1078,8 @@
 
             .current-word {
                 font-size: 3.5rem;
+                /* Keep Uthmanic font in responsive */
+                font-family: 'KFGQPC Uthmanic Script HAFS', 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Noto Naskh Arabic', serif;
             }
 
             .current-word.size-small {
@@ -2397,7 +2423,11 @@
             const quranMins = Math.ceil((TOTAL_QURAN_WORDS / state.wpm) * globalMultiplier);
             const quranHrs = Math.floor(quranMins / 60);
 
-            $('quranTime').textContent = `${quranHrs} ${state.lang === 'ar' ? 'ساعة' : 'hrs'}`;
+            // Proper Arabic pluralization: ساعات for 1-9 (مفرد أقل من عشرة), ساعة for 10+
+            const hoursText = state.lang === 'ar' 
+                ? (quranHrs >= 1 && quranHrs <= 9 ? 'ساعات' : 'ساعة')
+                : (quranHrs === 1 ? 'hr' : 'hrs');
+            $('quranTime').textContent = `${quranHrs} ${hoursText}`;
         }
         function updateLoopSliders() { const maxAyah = SURAHS.find(s => s.number === state.surah)?.ayahs || 7; $('loopStartSlider').max = maxAyah; $('loopEndSlider').max = maxAyah; $('loopStartInput').max = maxAyah; $('loopEndInput').max = maxAyah; state.loopEnd = Math.min(state.loopEnd, maxAyah); $('loopStartSlider').value = state.loopStart; $('loopEndSlider').value = state.loopEnd; $('loopStartInput').value = state.loopStart; $('loopEndInput').value = state.loopEnd; updateLoopDisplay(); }
         function updateLoopDisplay() { $('loopRangeValue').textContent = state.lang === 'ar' ? `${toArabicNum(state.loopStart)} - ${toArabicNum(state.loopEnd)}` : `${state.loopStart} - ${state.loopEnd}`; }

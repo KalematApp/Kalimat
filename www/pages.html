@@ -14,11 +14,13 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
-    <!-- Uthmani Script Fonts -->
+    <!-- Uthmani Script Fonts - Complete set matching quran.com -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
     <style>
+        /* Primary Uthmanic Font - KFGQPC Uthmanic Script HAFS */
         @font-face {
             font-family: 'KFGQPC Uthmanic Script HAFS';
             src: url('https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff2') format('woff2'),
@@ -27,9 +29,20 @@
             font-style: normal;
             font-display: swap;
         }
+        
+        /* Alternative Uthmanic fonts for better coverage */
         @font-face {
             font-family: 'Scheherazade New';
             src: url('https://fonts.gstatic.com/s/scheherazadenew/v9/4iCp6KhlaNHb2oeD7Vamy7lsnA7gL1kzLad.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Additional Uthmanic font support */
+        @font-face {
+            font-family: 'Amiri Quran';
+            src: url('https://fonts.gstatic.com/s/amiriquran/v2/VuJ0dNv15G1kqp6s4K5kR-TmNZjNx8.woff2') format('woff2');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -115,9 +128,19 @@
         .page-container {
             margin-top: 60px;
             padding: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: calc(100vh - 60px);
+        }
+
+        .quran-page-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: auto;
+            padding: 20px 0;
         }
 
         .page-header {
@@ -167,27 +190,50 @@
             border-radius: 12px;
             padding: 50px 40px;
             min-height: 600px;
-            line-height: 3;
-            font-size: 1.8rem;
+            /* Exact Uthmanic styling matching quran.com exactly */
+            line-height: 3.5;
+            font-size: 1.65rem;
             text-align: justify;
+            text-align-last: center;
             direction: rtl;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            /* Primary Uthmanic font with fallbacks */
             font-family: 'KFGQPC Uthmanic Script HAFS', 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Noto Naskh Arabic', serif;
-            font-feature-settings: "liga" 1, "kern" 1;
+            /* Critical font features for Uthmanic script */
+            font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
             text-rendering: optimizeLegibility;
             font-weight: normal;
-            word-spacing: 0.1em;
-            letter-spacing: 0.02em;
+            /* Precise spacing matching quran.com Uthmanic format exactly */
+            word-spacing: 0.25em;
+            letter-spacing: 0.04em;
+            width: 700px;
+            margin: 0 auto;
+            hyphens: none;
+            overflow-wrap: normal;
+            white-space: normal;
+            word-break: keep-all;
+            -webkit-text-justify: inter-word;
+            text-justify: inter-word;
+            /* Font smoothing for crisp Uthmanic text */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* Ensure consistent spacing for Uthmanic script */
+            text-rendering: geometricPrecision;
+            /* Additional properties for proper Arabic text rendering */
+            unicode-bidi: bidi-override;
+            writing-mode: horizontal-tb;
         }
 
         .basmala {
             text-align: center;
-            font-size: 2rem;
-            margin-bottom: 30px;
-            margin-top: 10px;
-            color: var(--accent-1);
-            font-weight: 600;
-            line-height: 1.8;
+            font-size: 2.2rem;
+            margin-bottom: 35px;
+            margin-top: 15px;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 2;
+            font-family: 'KFGQPC Uthmanic Script HAFS', 'Amiri Quran', serif;
+            letter-spacing: 0.05em;
         }
 
         .basmala-english {
@@ -200,53 +246,76 @@
         }
 
         .ayah-marker {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            line-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            min-height: 26px;
             border-radius: 50%;
             background: var(--text-primary);
             color: var(--bg-gradient-1);
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin: 0 5px 0 3px;
             vertical-align: middle;
-            font-family: 'Noto Naskh Arabic', serif;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
+            /* Exact positioning matching quran.com */
+            position: relative;
+            top: 0;
+            /* Ensure proper RTL rendering */
+            unicode-bidi: embed;
+            /* Perfect centering for the number */
+            line-height: 1;
+            padding: 0;
+            /* Better visual appearance */
+            border: none;
+            outline: none;
+            /* Smooth transitions */
+            transition: all 0.2s ease;
         }
 
         .ayah-text {
             display: inline;
             text-align: justify;
+            text-align-last: center;
+            word-spacing: inherit;
+            letter-spacing: inherit;
+            /* Ensure Uthmanic font features are applied */
+            font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
+            /* Proper Arabic text rendering */
+            unicode-bidi: embed;
         }
 
         .ayah-separator {
-            margin: 15px 0;
-            height: 1px;
-            background: linear-gradient(to left, transparent, var(--border), transparent);
-            border: none;
+            /* No separator between surahs - matches quran.com-frontend-next exactly */
+            display: none;
         }
 
         .surah-header {
             text-align: center;
-            margin: 30px 0 20px 0;
-            padding: 15px;
-            border-top: 2px solid var(--border);
-            border-bottom: 2px solid var(--border);
+            margin: 35px 0 25px 0;
+            padding: 20px 15px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         .surah-name {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--accent-1);
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-family: 'KFGQPC Uthmanic Script HAFS', 'Amiri Quran', serif;
         }
 
         .surah-info {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
         }
 
         .quran-page.loading {
@@ -254,13 +323,6 @@
             align-items: center;
             justify-content: center;
             color: var(--text-secondary);
-        }
-
-        .ayah-marker {
-            color: var(--accent-1);
-            font-weight: 600;
-            margin: 0 8px;
-            font-size: 1.2rem;
         }
 
         .page-selector {
@@ -337,7 +399,9 @@
             </div>
         </div>
 
-        <div class="quran-page loading" id="quranPage">جاري التحميل...</div>
+        <div class="quran-page-wrapper">
+            <div class="quran-page loading" id="quranPage">جاري التحميل...</div>
+        </div>
 
         <div class="page-selector">
             <span>انتقل إلى الصفحة:</span>
@@ -357,7 +421,8 @@
 
         const state = {
             currentPage: 1,
-            theme: localStorage.getItem('quranPageTheme') || 'dark'
+            theme: localStorage.getItem('quranPageTheme') || 'dark',
+            useIframe: false // Set to true to use iframe from quran.com
         };
 
         const TOTAL_PAGES = 604;
@@ -420,6 +485,57 @@
             localStorage.setItem('quranPageTheme', state.theme);
         }
 
+        function applyFixedLineBreaks() {
+            // This function mimics quran.com's exact formatting
+            // Uses fixed width (700px) and scales down on smaller screens
+            const pageElement = $('quranPage');
+            if (!pageElement) return;
+            
+            const baseWidth = 700;
+            const viewportWidth = window.innerWidth;
+            const minScale = 0.4; // Minimum scale to prevent too small text
+            
+            // Calculate available width (accounting for container padding)
+            const availableWidth = viewportWidth - 40; // 20px padding on each side
+            
+            // Calculate scale factor
+            let scale = 1;
+            if (availableWidth < baseWidth) {
+                scale = availableWidth / baseWidth;
+                scale = Math.max(minScale, scale);
+            }
+            
+            // Apply fixed width (always 700px like quran.com)
+            pageElement.style.width = `${baseWidth}px`;
+            pageElement.style.maxWidth = `${baseWidth}px`;
+            pageElement.style.minWidth = `${baseWidth}px`;
+            
+            // Apply scale transform for smaller screens (like quran.com)
+            if (scale < 1) {
+                pageElement.style.transform = `scale(${scale})`;
+                pageElement.style.transformOrigin = 'top center';
+                pageElement.style.marginBottom = `${((1 - scale) * 100) / scale}%`;
+            } else {
+                pageElement.style.transform = 'none';
+                pageElement.style.marginBottom = '0';
+            }
+            
+            // Ensure text justification is maintained with proper spacing (matching quran.com Uthmanic format exactly)
+            pageElement.style.textAlign = 'justify';
+            pageElement.style.textAlignLast = 'center';
+            pageElement.style.wordSpacing = '0.25em';
+            pageElement.style.letterSpacing = '0.04em';
+            pageElement.style.lineHeight = '3.5';
+            pageElement.style.fontSize = '1.65rem';
+            pageElement.style.fontFeatureSettings = '"liga" 1, "kern" 1, "calt" 1';
+            pageElement.style.webkitFontSmoothing = 'antialiased';
+            pageElement.style.mozOsxFontSmoothing = 'grayscale';
+            pageElement.style.textRendering = 'geometricPrecision';
+            pageElement.style.unicodeBidi = 'bidi-override';
+            pageElement.style.textJustify = 'inter-word';
+            pageElement.style.webkitTextJustify = 'inter-word';
+        }
+
         async function loadPage(pageNum) {
             if (pageNum < 1 || pageNum > TOTAL_PAGES) return;
 
@@ -432,6 +548,15 @@
             // Update button states
             $('prevPageBtn').disabled = pageNum === 1;
             $('nextPageBtn').disabled = pageNum === TOTAL_PAGES;
+
+            // Option: Use iframe to embed quran.com page directly
+            // Uncomment below to use iframe approach (easier but less control)
+            // if (state.useIframe) {
+            //     $('quranPage').className = 'quran-page';
+            //     $('quranPage').innerHTML = `<iframe src="https://quran.com/${pageNum}" style="width:100%;height:800px;border:none;" sandbox="allow-same-origin"></iframe>`;
+            //     localStorage.setItem('quranCurrentPage', pageNum);
+            //     return;
+            // }
 
             try {
                 // Primary: Supabase (self-hosted, fast)
@@ -473,11 +598,9 @@
                 for (const [ayahNum, ayahData] of sortedAyahs) {
                     const ayahNumber = parseInt(ayahNum);
                     
-                    // Add surah header if it changed
+                    // Add surah header if it changed (matching quran.com-frontend-next)
                     if (currentSurah !== ayahData.surah) {
-                        if (currentSurah !== null) {
-                            html += '<hr class="ayah-separator">';
-                        }
+                        // No separator - surahs flow naturally
                         currentSurah = ayahData.surah;
                         firstAyahInSurah = true;
                         
@@ -496,23 +619,24 @@
                         }
                     }
                     
-                    // Add separator between verses (except first verse after header)
-                    if (!firstAyahInSurah) {
-                        html += ' ';
-                    }
+                    // No separator - verses flow naturally (matching quran.com-frontend-next exactly)
                     firstAyahInSurah = false;
 
-                    // Filter out Quran marks and join words
+                    // Filter out Quran marks and join words with proper spacing
                     const words = ayahData.words
                         .filter(w => !isQuranMark(w))
                         .join(' ');
 
-                    // Build ayah with marker at the end
+                    // Build ayah with marker at the end - exact format as quran.com-frontend-next
+                    // Marker comes immediately after text with minimal spacing
                     html += `<span class="ayah-text">${words}</span><span class="ayah-marker">${toArabicNum(ayahNumber)}</span>`;
                 }
 
                 $('quranPage').className = 'quran-page';
                 $('quranPage').innerHTML = html;
+
+                // Apply fixed line breaks to maintain exact word count per line
+                setTimeout(() => applyFixedLineBreaks(), 100);
 
                 // Save current page to localStorage
                 localStorage.setItem('quranCurrentPage', pageNum);
@@ -607,9 +731,7 @@
                         
                         // Add surah header if it changed
                         if (currentSurah !== ayahData.surah) {
-                            if (currentSurah !== null) {
-                                html += '<hr class="ayah-separator">';
-                            }
+                            // No separator - surahs flow naturally
                             currentSurah = ayahData.surah;
                             firstAyahInSurah = true;
                             
@@ -641,8 +763,12 @@
                         html += `<span class="ayah-text">${words}</span><span class="ayah-marker">${toArabicNum(ayahNumber)}</span>`;
                     }
 
-                    $('quranPage').className = 'quran-page';
-                    $('quranPage').innerHTML = html;
+                $('quranPage').className = 'quran-page';
+                $('quranPage').innerHTML = html;
+                
+                // Apply fixed line breaks to maintain exact word count per line
+                setTimeout(() => applyFixedLineBreaks(), 100);
+                    
                     localStorage.setItem('quranCurrentPage', pageNum);
 
                 } catch (fallbackErr) {
@@ -692,6 +818,15 @@
         const savedPage = parseInt(localStorage.getItem('quranCurrentPage')) || 1;
         loadPage(savedPage);
         updateTheme();
+
+        // Reapply line breaks on window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                applyFixedLineBreaks();
+            }, 250);
+        });
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
