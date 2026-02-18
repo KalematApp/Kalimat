@@ -52,6 +52,18 @@
             touch-action: manipulation;
         }
 
+        /* Prevent text selection on mobile for better UX */
+        button, .ctrl-btn, .speed-btn-simple, .top-bar-btn {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* Prevent zoom on double tap for iOS */
+        input, select, textarea {
+            font-size: 16px; /* Prevents iOS zoom on focus */
+        }
+
         :root {
             --bg-gradient-1: #0a0a0f;
             --bg-gradient-2: #12121a;
@@ -291,6 +303,62 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            padding: 0 16px;
+        }
+
+        .app-screen {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        /* Mobile: Full width and height for reading area */
+        @media (max-width: 768px) {
+            .app-container {
+                max-width: 100%;
+                padding: 0;
+                gap: 0;
+            }
+
+            .word-display {
+                width: 100vw;
+                min-height: calc(100vh - 200px);
+                max-height: calc(100vh - 200px);
+                padding: 0;
+                margin: 0;
+                border-radius: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .spritz-frame {
+                width: 100%;
+                max-width: 100%;
+                min-height: auto;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                flex: 1;
+            }
+
+            .focus-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 0;
+            }
+
+            .current-word {
+                width: 100%;
+                max-width: 100%;
+            }
         }
 
         /* Top Bar with Labels (mobile friendly) */
@@ -1192,7 +1260,195 @@
             font-size: 1.2rem;
         }
 
-        /* Responsive */
+        /* Loading dots animation */
+        .loading-dots {
+            display: inline-block;
+            font-size: 2rem;
+            letter-spacing: 0.3em;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            animation: dotPulse 1.4s infinite;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotPulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Responsive - Mobile Optimizations */
+        @media (max-width: 768px) {
+            .app-screen {
+                padding: 0;
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .top-bar {
+                padding: 12px 16px;
+                gap: 8px;
+            }
+
+            .top-bar-btn {
+                min-width: 44px;
+                min-height: 44px;
+                padding: 10px;
+            }
+
+            .surah-row {
+                padding: 0 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .surah-row .page-display {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.9rem;
+                color: var(--text-secondary);
+                min-width: fit-content;
+            }
+
+            .surah-row .page-display #pageLabel {
+                font-size: 0.85rem;
+            }
+
+            .surah-row .page-display #pageNum {
+                font-weight: 600;
+                color: var(--accent-1);
+                font-size: 0.95rem;
+            }
+
+            .surah-selector select {
+                font-size: 0.95rem;
+                padding: 12px 16px;
+            }
+
+            .app-container {
+                max-width: 100%;
+                padding: 0;
+                gap: 0;
+            }
+
+            .word-display {
+                width: 100vw;
+                min-height: calc(100vh - 200px);
+                max-height: calc(100vh - 200px);
+                padding: 0;
+                margin: 0;
+                border-radius: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .spritz-frame {
+                width: 100%;
+                max-width: 100%;
+                min-height: auto;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                flex: 1;
+            }
+
+            .focus-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 0;
+            }
+
+            .current-word {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .playback-controls {
+                gap: 8px;
+                padding: 12px 8px;
+                flex-wrap: wrap;
+            }
+
+            .ctrl-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            .ctrl-btn-play {
+                width: 56px;
+                height: 56px;
+            }
+
+            .ctrl-btn-sm {
+                width: 40px;
+                height: 40px;
+            }
+
+            .ctrl-btn-md {
+                width: 44px;
+                height: 44px;
+            }
+
+            .speed-presets-simple {
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+
+            .speed-btn-simple {
+                min-width: 60px;
+                min-height: 44px;
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+
+            .info-bar {
+                gap: 12px;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+
+            .time-estimates {
+                gap: 12px;
+                padding: 10px 12px;
+            }
+
+            .control-card {
+                padding: 12px;
+            }
+
+            .more-controls-btn {
+                min-height: 44px;
+                padding: 12px 16px;
+            }
+        }
+
         @media (max-width: 500px) {
             .intro-title {
                 font-size: 2.2rem;
@@ -1226,8 +1482,19 @@
             }
 
             .word-display {
-                min-height: 180px;
-                padding: 35px 15px;
+                width: 100vw;
+                min-height: calc(100vh - 180px);
+                max-height: calc(100vh - 180px);
+                padding: 0;
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .spritz-frame {
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+                min-height: auto;
             }
 
             .ctrl-btn-play {
@@ -1238,6 +1505,66 @@
             .info-bar {
                 gap: 15px;
                 padding: 10px 12px;
+            }
+
+            .playback-controls {
+                gap: 6px;
+            }
+
+            .speed-presets-simple {
+                gap: 4px;
+            }
+
+            .speed-btn-simple {
+                min-width: 55px;
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .current-word.size-small {
+                font-size: 2.2rem;
+                padding: 8px 10px;
+            }
+
+            .current-word.size-medium {
+                font-size: 3rem;
+                padding: 10px 12px;
+            }
+
+            .current-word.size-large {
+                font-size: 3.5rem;
+                padding: 12px 14px;
+            }
+
+            .current-word.size-xlarge {
+                font-size: 4rem;
+                padding: 14px 16px;
+            }
+
+            .speed-btn-simple {
+                min-width: 50px;
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+
+            .ctrl-btn-label {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Safe area insets for notched devices */
+        @supports (padding: max(0px)) {
+            .app-screen {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+                padding-top: max(0px, env(safe-area-inset-top));
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+
+            .top-bar {
+                padding-top: max(12px, env(safe-area-inset-top));
             }
         }
 
@@ -2066,7 +2393,7 @@
                 </div>
                 <div class="top-bar-center">
                     <div class="top-bar-item">
-                        <button class="top-bar-btn" id="pagesBtn" onclick="window.location.href='pages.html'"><svg viewBox="0 0 24 24">
+                        <button class="top-bar-btn" id="pagesBtn" onclick="window.location.href='quran-pages-reader.html'"><svg viewBox="0 0 24 24">
                                 <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
                             </svg></button>
                         <span class="btn-label" id="pagesLabel">الصفحات</span>
@@ -2107,10 +2434,20 @@
                 </div>
             </div>
 
-            <div class="surah-row" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                <div class="surah-selector" style="flex: 1; margin: 0;"><select id="surahSelect">
+            <div class="surah-row" style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px;">
+                <div class="surah-selector" style="flex: 1; margin: 0; position: relative; padding-top: 20px;">
+                    <label for="surahSelect" style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;" id="surahSelectLabel">السورة</label>
+                    <select id="surahSelect" style="margin-top: 0;">
                         <option value="">اختر سورة...</option>
-                    </select></div>
+                    </select>
+                </div>
+                <!-- Page Selector Dropdown -->
+                <div class="surah-selector" style="flex: 1; margin: 0; position: relative; padding-top: 20px;">
+                    <label for="pageSelect" style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;" id="pageNumberLabel">رقم الصفحة</label>
+                    <select id="pageSelect" style="margin-top: 0;">
+                        <option value="">--</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Gaze Bar Removed (Moved to Bottom) -->
@@ -2230,7 +2567,7 @@
                         <button class="adjust-btn" id="increaseSpeedBtn">+50</button>
                     </div>
                 </div>
-                <input type="range" class="speed-slider" id="speedSlider" min="50" max="1000" value="200" step="10">
+                <input type="range" class="speed-slider" id="speedSlider" min="50" max="600" value="200" step="10">
             </div>
 
             <!-- Variable Speed Control -->
@@ -2486,8 +2823,141 @@
         function $(id) { return document.getElementById(id); }
         function toArabicNum(n) { return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
         function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
-        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
+        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
         function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
+        
+        function populatePageSelect() {
+            const sel = $('pageSelect');
+            if (!sel) return;
+            const currentPage = state.words[state.wordIndex]?.page || 1;
+            sel.innerHTML = `<option value="">--</option>`;
+            for (let i = 1; i <= 604; i++) {
+                const o = document.createElement('option');
+                o.value = i;
+                o.textContent = state.lang === 'ar' ? toArabicNum(i) : i;
+                if (i === currentPage) o.selected = true;
+                sel.appendChild(o);
+            }
+        }
+        
+        async function goToPage(pageNum) {
+            if (pageNum < 1 || pageNum > 604) return;
+            
+            // Always pause playback first - use the same logic as togglePlay
+            if (state.isPlaying) {
+                state.isPlaying = false;
+                if (typeof playTimer !== 'undefined' && playTimer !== null) {
+                    clearTimeout(playTimer);
+                    playTimer = null;
+                }
+                if (typeof statsInterval !== 'undefined' && statsInterval !== null) {
+                    clearInterval(statsInterval);
+                    statsInterval = null;
+                }
+                updatePlayButton();
+                // Sync Overlay Icon
+                if ($('pauseOverlayIcon')) $('pauseOverlayIcon').style.display = 'flex';
+            }
+            
+            // First, check if the page is in the current surah
+            if (state.words.length) {
+                const wordIndex = state.words.findIndex(w => w.page === pageNum);
+                if (wordIndex !== -1) {
+                    state.wordIndex = wordIndex;
+                    displayWord();
+                    updateProgress();
+                    updateTimeEstimates();
+                    autoSaveBookmark();
+                    // Always update surah dropdown to reflect current surah
+                    if ($('surahSelect')) {
+                        $('surahSelect').value = state.surah;
+                    }
+                    // Always update page dropdown to reflect current page
+                    if ($('pageSelect')) {
+                        $('pageSelect').value = pageNum;
+                    }
+                    return;
+                }
+            }
+            
+            // If page is not in current surah, find which surah contains this page
+            // and load that surah, then go to the first word on the page
+            try {
+                const sb = getSB();
+                // Get the first word on this page to find the surah
+                const { data, error } = await sb.from('quran_words')
+                    .select('surah, page_number')
+                    .eq('page_number', pageNum)
+                    .order('ayah')
+                    .order('word_position')
+                    .limit(1)
+                    .single();
+                
+                if (error || !data) {
+                    // Fallback: try API to find surah
+                    try {
+                        // Try to find surah by checking multiple surahs
+                        for (let surahNum = 1; surahNum <= 114; surahNum++) {
+                            const res = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${surahNum}?language=en&fields=page_number&per_page=300`);
+                            const apiData = await res.json();
+                            if (apiData.verses && apiData.verses.some(v => v.page_number === pageNum)) {
+                                await loadSurah(surahNum);
+                                // Now find the first word on this page
+                                const wordIndex = state.words.findIndex(w => w.page === pageNum);
+                                if (wordIndex !== -1) {
+                                    state.wordIndex = wordIndex;
+                                    displayWord();
+                                    updateProgress();
+                                    updateTimeEstimates();
+                                    autoSaveBookmark();
+                                    // Always update surah dropdown
+                                    if ($('surahSelect')) {
+                                        $('surahSelect').value = state.surah;
+                                    }
+                                    // Always update page dropdown
+                                    if ($('pageSelect')) {
+                                        $('pageSelect').value = pageNum;
+                                    }
+                                } else {
+                                    console.error('Word not found on page after loading surah');
+                                }
+                                return;
+                            }
+                        }
+                        console.error('Could not find surah containing page:', pageNum);
+                    } catch (apiErr) {
+                        console.error('Failed to find surah for page:', apiErr);
+                    }
+                    return;
+                }
+                
+                // Load the surah that contains this page
+                await loadSurah(data.surah);
+                
+                // Now find the first word on the selected page
+                const wordIndex = state.words.findIndex(w => w.page === pageNum);
+                if (wordIndex !== -1) {
+                    state.wordIndex = wordIndex;
+                    displayWord();
+                    updateProgress();
+                    updateTimeEstimates();
+                    autoSaveBookmark();
+                    // Always update surah dropdown
+                    if ($('surahSelect')) {
+                        $('surahSelect').value = state.surah;
+                    }
+                    // Always update page dropdown
+                    if ($('pageSelect')) {
+                        $('pageSelect').value = pageNum;
+                    }
+                } else {
+                    console.error('Word not found on page after loading surah:', pageNum);
+                }
+            } catch (err) {
+                console.error('Error loading page:', err);
+            }
+        }
+        
         // Quranic markings to filter out (pause signs, Hizb marks, recitation indicators)
         const QURAN_MARKS = /^[ۖۗۘۚۛۙ۞ۜ۩ۣ۠ۢۡۤۥۦ]*$|^[صقطعل]{1,4}ۢ?$|^ج$|^صل[ىي]?$/;
         function isQuranMark(word) { return QURAN_MARKS.test(word) || word.length === 1 && word.charCodeAt(0) >= 0x06D6 && word.charCodeAt(0) <= 0x06ED; }
@@ -2495,7 +2965,8 @@
             state.surah = num;
             state.words = [];
             state.wordIndex = 0;
-            $('currentWord').textContent = i18n[state.lang].loading;
+            // Show loading dots instead of "جاري التحميل"
+            $('currentWord').innerHTML = '<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>';
             updateLoopSliders();
             try {
                 // Primary: Supabase (self-hosted, fast)
@@ -2529,6 +3000,9 @@
             updateTimeEstimates();
             autoSaveBookmark();
             updatePlayButton();
+            populatePageSelect();
+            // Update surah dropdown to reflect current surah
+            if ($('surahSelect')) $('surahSelect').value = state.surah;
         }
         // Calculate Juzu from page number (each Juzu is ~20 pages, but varies)
         function getJuzuFromPage(page) {
@@ -2552,7 +3026,7 @@
             const hizbInJuzu = page >= midPage ? 2 : 1;
             return (juzu - 1) * 2 + hizbInJuzu;
         }
-        function displayWord() { if (!state.words.length) return; const word = state.words[state.wordIndex]; const el = $('currentWord'); el.className = `current-word size-${state.fontSize}`; if (state.enhancedMode) { const text = word.text; el.innerHTML = `<span style="display:inline-block">${text}</span>`; $('focusContainer').classList.remove('focus-lines-hidden'); } else { el.textContent = word.text; $('focusContainer').classList.add('focus-lines-hidden'); } state.currentAyah = word.ayah; const currentPage = word.page; const currentJuzu = getJuzuFromPage(currentPage); const currentHizb = getHizbFromPage(currentPage); const surahName = SURAHS.find(s => s.number === state.surah)?.name || ''; if ($('surahName')) $('surahName').textContent = surahName; if ($('juzuNum')) $('juzuNum').textContent = state.lang === 'ar' ? toArabicNum(currentJuzu) : currentJuzu; if ($('hizbNum')) $('hizbNum').textContent = state.lang === 'ar' ? toArabicNum(currentHizb) : currentHizb; if ($('pageNum')) $('pageNum').textContent = state.lang === 'ar' ? toArabicNum(currentPage) : currentPage; if ($('ayahNum')) $('ayahNum').textContent = state.lang === 'ar' ? toArabicNum(word.ayah) : word.ayah; const wordsInAyah = state.words.filter(w => w.ayah === word.ayah); const posInAyah = wordsInAyah.indexOf(word) + 1; if ($('wordNum')) { const wordNumEl = $('wordNum'); wordNumEl.style.direction = 'ltr'; wordNumEl.style.unicodeBidi = 'embed'; wordNumEl.textContent = state.lang === 'ar' ? `${toArabicNum(posInAyah)}/${toArabicNum(wordsInAyah.length)}` : `${posInAyah}/${wordsInAyah.length}`; } }
+        function displayWord() { if (!state.words.length) return; const word = state.words[state.wordIndex]; const el = $('currentWord'); el.className = `current-word size-${state.fontSize}`; if (state.enhancedMode) { const text = word.text; el.innerHTML = `<span style="display:inline-block">${text}</span>`; $('focusContainer').classList.remove('focus-lines-hidden'); } else { el.textContent = word.text; $('focusContainer').classList.add('focus-lines-hidden'); } state.currentAyah = word.ayah; const currentPage = word.page; const currentJuzu = getJuzuFromPage(currentPage); const currentHizb = getHizbFromPage(currentPage); const surahName = SURAHS.find(s => s.number === state.surah)?.name || ''; if ($('surahName')) $('surahName').textContent = surahName; if ($('juzuNum')) $('juzuNum').textContent = state.lang === 'ar' ? toArabicNum(currentJuzu) : currentJuzu; if ($('hizbNum')) $('hizbNum').textContent = state.lang === 'ar' ? toArabicNum(currentHizb) : currentHizb; if ($('pageSelect')) $('pageSelect').value = currentPage; if ($('pageNum')) $('pageNum').textContent = state.lang === 'ar' ? toArabicNum(currentPage) : currentPage; if ($('surahSelect')) $('surahSelect').value = state.surah; if ($('ayahNum')) $('ayahNum').textContent = state.lang === 'ar' ? toArabicNum(word.ayah) : word.ayah; const wordsInAyah = state.words.filter(w => w.ayah === word.ayah); const posInAyah = wordsInAyah.indexOf(word) + 1; if ($('wordNum')) { const wordNumEl = $('wordNum'); wordNumEl.style.direction = 'ltr'; wordNumEl.style.unicodeBidi = 'embed'; wordNumEl.textContent = state.lang === 'ar' ? `${toArabicNum(posInAyah)}/${toArabicNum(wordsInAyah.length)}` : `${posInAyah}/${wordsInAyah.length}`; } }
         function getWordWeight(text) {
             if (!state.variableSpeed) return 1.0;
             let weight = 0.8 + (text.length * 0.04);
@@ -3146,7 +3620,21 @@
             document.querySelectorAll('.onb-feature').forEach(f => f.style.textAlign = lang === 'ar' ? 'right' : 'left');
         }
         document.getElementById('onbStartBtn').addEventListener('click', async () => { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); });
-        $('surahSelect').addEventListener('change', e => { if (e.target.value) loadSurah(parseInt(e.target.value)); });
+        $('surahSelect').addEventListener('change', async e => { 
+            if (e.target.value) {
+                // Pause playback if currently playing
+                if (state.isPlaying) {
+                    state.isPlaying = false;
+                    clearTimeout(playTimer);
+                    playTimer = null;
+                    clearInterval(statsInterval);
+                    statsInterval = null;
+                    updatePlayButton();
+                }
+                await loadSurah(parseInt(e.target.value));
+            }
+        });
+        $('pageSelect').addEventListener('change', async e => { if (e.target.value) await goToPage(parseInt(e.target.value)); });
         $('playBtn').addEventListener('click', togglePlay);
         // Logic Corrected: skipBack decreases index (Previous), skipFwd increases index (Next)
         $('skipBackBtn').addEventListener('click', () => { state.wordIndex = Math.max(0, state.wordIndex - 10); displayWord(); updateProgress(); });
@@ -3155,7 +3643,7 @@
         let startAyahLastClick = 0;
         $('startAyahBtn').addEventListener('click', () => { const now = Date.now(); if (now - startAyahLastClick < 500 && state.currentAyah > 1) { seekToAyah(state.currentAyah - 1); } else { seekToAyah(state.currentAyah); } startAyahLastClick = now; });
         $('endAyahBtn').addEventListener('click', () => { const nextAyah = state.words.find((w, i) => i > state.wordIndex && w.ayah !== state.currentAyah); if (nextAyah) seekToAyah(nextAyah.ayah); else { state.wordIndex = state.words.length - 1; displayWord(); updateProgress(); } });
-        $('themeBtn').addEventListener('click', () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', state.theme); });
+        $('themeBtn').addEventListener('click', () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', state.theme); localStorage.setItem('quranReaderTheme', state.theme); });
         $('focusModeBtn').addEventListener('click', toggleFocusMode);
         $('focusExit').addEventListener('click', toggleFocusMode);
         $('shareBtn').addEventListener('click', shareApp);
@@ -3169,7 +3657,7 @@
 
         $('speedSlider').addEventListener('input', e => { state.wpm = parseInt(e.target.value); updateSpeedDisplay(); });
         $('decreaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.max(50, state.wpm - 50); updateSpeedDisplay(); });
-        $('increaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.min(1000, state.wpm + 50); updateSpeedDisplay(); });
+        $('increaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.min(600, state.wpm + 50); updateSpeedDisplay(); });
         function updateSpeedDisplay() { 
             if ($('wpmValue')) $('wpmValue').textContent = state.wpm; 
             if ($('speedSlider')) $('speedSlider').value = state.wpm; 
@@ -3361,7 +3849,14 @@
             const text = state.lang === 'ar' ? 'كلمات — ختم القرآن بالقراءة السريعة\nبلا إعلانات • صدقة جارية' : 'Kalima — Speed-read the Quran\nAd-free • Ongoing charity';
             if (navigator.share) { navigator.share({ title: 'كلمات', text, url }); } else { navigator.clipboard.writeText(url); showToast(i18n[state.lang].copied); }
         });
-        createParticles(); updateUI(); populateSurahSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
+        createParticles(); updateUI(); populateSurahSelect(); populatePageSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
+        
+        // Load theme from localStorage and apply it
+        const savedTheme = localStorage.getItem('quranReaderTheme') || state.theme;
+        state.theme = savedTheme;
+        document.documentElement.setAttribute('data-theme', state.theme);
+        // Save theme to localStorage to ensure it's available for other pages
+        localStorage.setItem('quranReaderTheme', state.theme);
         
         // Auto-initialize: Skip language screen and resume modal, always start from last position
         (async () => {

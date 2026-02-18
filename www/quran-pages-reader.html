@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>قراءة صفحات القرآن</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff;
+            color: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            transition: background 0.3s ease;
+        }
+
+        body[data-theme="dark"] {
+            background: #000;
+            color: #fff;
+        }
+
+        .page-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            padding-top: 70px; /* Space for top bar */
+        }
+
+        .quran-page {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .quran-page img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 100%;
+            transition: filter 0.3s ease;
+            /* Default: no inversion (images are black on white background) */
+            filter: none;
+        }
+
+        /* Invert PNG image colors in dark mode to make them white */
+        body[data-theme="dark"] .quran-page img {
+            filter: invert(1) !important;
+            -webkit-filter: invert(1) !important;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #666;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        body[data-theme="dark"] .loading {
+            color: #999;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        body[data-theme="dark"] .loading-spinner {
+            border-color: rgba(255, 255, 255, 0.2);
+            border-top-color: #fff;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error p {
+            color: #ff6b6b;
+        }
+
+        .error p[style*="color: #999"] {
+            color: #666 !important;
+        }
+
+        body[data-theme="dark"] .error p[style*="color: #999"] {
+            color: #999 !important;
+        }
+
+        .error p[style*="color: #666"] {
+            color: #666 !important;
+        }
+
+        body[data-theme="dark"] .error p[style*="color: #666"] {
+            color: #999 !important;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 200;
+            transition: all 0.3s ease;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        body[data-theme="dark"] .top-bar {
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+
+        body[data-theme="dark"] .back-btn {
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: translateX(-2px);
+        }
+
+        body[data-theme="dark"] .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .reading-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        .page-number-display {
+            font-size: 12px;
+            color: #666;
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        body[data-theme="dark"] .page-number-display {
+            color: #999;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .speed-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+        }
+
+        body[data-theme="dark"] .speed-display {
+            color: #999;
+        }
+
+        .speed-value {
+            font-weight: 600;
+            color: #d4af37;
+            font-size: 14px;
+        }
+
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body[data-theme="dark"] .theme-toggle {
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: scale(1.05);
+        }
+
+        body[data-theme="dark"] .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .page-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .page-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .page-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .page-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        body[data-theme="dark"] .page-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        body[data-theme="dark"] .page-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body[data-theme="dark"] .page-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .navigation-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-select {
+            padding: 6px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 120px;
+            transition: all 0.2s ease;
+        }
+
+        body[data-theme="dark"] .nav-select {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+        }
+
+        .nav-select:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body[data-theme="dark"] .nav-select:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                padding: 8px 10px;
+            }
+
+            .navigation-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-select {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .reading-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="index.html" class="back-btn" title="العودة">←</a>
+        <div class="navigation-controls">
+            <select id="surahSelect" class="nav-select">
+                <option value="">اختر سورة...</option>
+            </select>
+            <select id="pageSelect" class="nav-select">
+                <option value="">--</option>
+            </select>
+        </div>
+        <div class="reading-stats">
+            <div class="speed-display">
+                <span>معدل القراءة:</span>
+                <span class="speed-value" id="readingSpeed">--</span>
+                <span>ك/د</span>
+            </div>
+        </div>
+        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button>
+    </div>
+    <div class="page-container" id="pageContainer">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div>جاري التحميل...</div>
+        </div>
+    </div>
+
+    <script>
+        const TOTAL_PAGES = 604;
+        const FOLDER_PATH = 'Quran_Pages/';
+        
+        // Surahs data
+        const SURAHS = [
+            { number: 1, name: "الفاتحة", ayahs: 7 }, { number: 2, name: "البقرة", ayahs: 286 }, 
+            { number: 3, name: "آل عمران", ayahs: 200 }, { number: 4, name: "النساء", ayahs: 176 }, 
+            { number: 5, name: "المائدة", ayahs: 120 }, { number: 6, name: "الأنعام", ayahs: 165 }, 
+            { number: 7, name: "الأعراف", ayahs: 206 }, { number: 8, name: "الأنفال", ayahs: 75 }, 
+            { number: 9, name: "التوبة", ayahs: 129 }, { number: 10, name: "يونس", ayahs: 109 }, 
+            { number: 11, name: "هود", ayahs: 123 }, { number: 12, name: "يوسف", ayahs: 111 }, 
+            { number: 13, name: "الرعد", ayahs: 43 }, { number: 14, name: "إبراهيم", ayahs: 52 }, 
+            { number: 15, name: "الحجر", ayahs: 99 }, { number: 16, name: "النحل", ayahs: 128 }, 
+            { number: 17, name: "الإسراء", ayahs: 111 }, { number: 18, name: "الكهف", ayahs: 110 }, 
+            { number: 19, name: "مريم", ayahs: 98 }, { number: 20, name: "طه", ayahs: 135 }, 
+            { number: 21, name: "الأنبياء", ayahs: 112 }, { number: 22, name: "الحج", ayahs: 78 }, 
+            { number: 23, name: "المؤمنون", ayahs: 118 }, { number: 24, name: "النور", ayahs: 64 }, 
+            { number: 25, name: "الفرقان", ayahs: 77 }, { number: 26, name: "الشعراء", ayahs: 227 }, 
+            { number: 27, name: "النمل", ayahs: 93 }, { number: 28, name: "القصص", ayahs: 88 }, 
+            { number: 29, name: "العنكبوت", ayahs: 69 }, { number: 30, name: "الروم", ayahs: 60 }, 
+            { number: 31, name: "لقمان", ayahs: 34 }, { number: 32, name: "السجدة", ayahs: 30 }, 
+            { number: 33, name: "الأحزاب", ayahs: 73 }, { number: 34, name: "سبأ", ayahs: 54 }, 
+            { number: 35, name: "فاطر", ayahs: 45 }, { number: 36, name: "يس", ayahs: 83 }, 
+            { number: 37, name: "الصافات", ayahs: 182 }, { number: 38, name: "ص", ayahs: 88 }, 
+            { number: 39, name: "الزمر", ayahs: 75 }, { number: 40, name: "غافر", ayahs: 85 }, 
+            { number: 41, name: "فصلت", ayahs: 54 }, { number: 42, name: "الشورى", ayahs: 53 }, 
+            { number: 43, name: "الزخرف", ayahs: 89 }, { number: 44, name: "الدخان", ayahs: 59 }, 
+            { number: 45, name: "الجاثية", ayahs: 37 }, { number: 46, name: "الأحقاف", ayahs: 35 }, 
+            { number: 47, name: "محمد", ayahs: 38 }, { number: 48, name: "الفتح", ayahs: 29 }, 
+            { number: 49, name: "الحجرات", ayahs: 18 }, { number: 50, name: "ق", ayahs: 45 }, 
+            { number: 51, name: "الذاريات", ayahs: 60 }, { number: 52, name: "الطور", ayahs: 49 }, 
+            { number: 53, name: "النجم", ayahs: 62 }, { number: 54, name: "القمر", ayahs: 55 }, 
+            { number: 55, name: "الرحمن", ayahs: 78 }, { number: 56, name: "الواقعة", ayahs: 96 }, 
+            { number: 57, name: "الحديد", ayahs: 29 }, { number: 58, name: "المجادلة", ayahs: 22 }, 
+            { number: 59, name: "الحشر", ayahs: 24 }, { number: 60, name: "الممتحنة", ayahs: 13 }, 
+            { number: 61, name: "الصف", ayahs: 14 }, { number: 62, name: "الجمعة", ayahs: 11 }, 
+            { number: 63, name: "المنافقون", ayahs: 11 }, { number: 64, name: "التغابن", ayahs: 18 }, 
+            { number: 65, name: "الطلاق", ayahs: 12 }, { number: 66, name: "التحريم", ayahs: 12 }, 
+            { number: 67, name: "الملك", ayahs: 30 }, { number: 68, name: "القلم", ayahs: 52 }, 
+            { number: 69, name: "الحاقة", ayahs: 52 }, { number: 70, name: "المعارج", ayahs: 44 }, 
+            { number: 71, name: "نوح", ayahs: 28 }, { number: 72, name: "الجن", ayahs: 28 }, 
+            { number: 73, name: "المزمل", ayahs: 20 }, { number: 74, name: "المدثر", ayahs: 56 }, 
+            { number: 75, name: "القيامة", ayahs: 40 }, { number: 76, name: "الإنسان", ayahs: 31 }, 
+            { number: 77, name: "المرسلات", ayahs: 50 }, { number: 78, name: "النبأ", ayahs: 40 }, 
+            { number: 79, name: "النازعات", ayahs: 46 }, { number: 80, name: "عبس", ayahs: 42 }, 
+            { number: 81, name: "التكوير", ayahs: 29 }, { number: 82, name: "الانفطار", ayahs: 19 }, 
+            { number: 83, name: "المطففين", ayahs: 36 }, { number: 84, name: "الانشقاق", ayahs: 25 }, 
+            { number: 85, name: "البروج", ayahs: 22 }, { number: 86, name: "الطارق", ayahs: 17 }, 
+            { number: 87, name: "الأعلى", ayahs: 19 }, { number: 88, name: "الغاشية", ayahs: 26 }, 
+            { number: 89, name: "الفجر", ayahs: 30 }, { number: 90, name: "البلد", ayahs: 20 }, 
+            { number: 91, name: "الشمس", ayahs: 15 }, { number: 92, name: "الليل", ayahs: 21 }, 
+            { number: 93, name: "الضحى", ayahs: 11 }, { number: 94, name: "الشرح", ayahs: 8 }, 
+            { number: 95, name: "التين", ayahs: 8 }, { number: 96, name: "العلق", ayahs: 19 }, 
+            { number: 97, name: "القدر", ayahs: 5 }, { number: 98, name: "البينة", ayahs: 8 }, 
+            { number: 99, name: "الزلزلة", ayahs: 8 }, { number: 100, name: "العاديات", ayahs: 11 }, 
+            { number: 101, name: "القارعة", ayahs: 10 }, { number: 102, name: "التكاثر", ayahs: 8 }, 
+            { number: 103, name: "العصر", ayahs: 3 }, { number: 104, name: "الهمزة", ayahs: 9 }, 
+            { number: 105, name: "الفيل", ayahs: 5 }, { number: 106, name: "قريش", ayahs: 4 }, 
+            { number: 107, name: "الماعون", ayahs: 7 }, { number: 108, name: "الكوثر", ayahs: 3 }, 
+            { number: 109, name: "الكافرون", ayahs: 6 }, { number: 110, name: "النصر", ayahs: 3 }, 
+            { number: 111, name: "المسد", ayahs: 5 }, { number: 112, name: "الإخلاص", ayahs: 4 }, 
+            { number: 113, name: "الفلق", ayahs: 5 }, { number: 114, name: "الناس", ayahs: 6 }
+        ];
+
+        // Approximate page ranges for each surah (first page of each surah)
+        // This is a simplified mapping - actual pages may vary
+        const SURAH_PAGE_MAP = {
+            1: 1, 2: 2, 3: 50, 4: 77, 5: 106, 6: 128, 7: 151, 8: 177, 9: 187, 10: 208,
+            11: 221, 12: 235, 13: 249, 14: 255, 15: 262, 16: 267, 17: 282, 18: 293, 19: 305, 20: 312,
+            21: 322, 22: 332, 23: 342, 24: 350, 25: 359, 26: 367, 27: 377, 28: 385, 29: 396, 30: 404,
+            31: 411, 32: 415, 33: 418, 34: 428, 35: 434, 36: 440, 37: 446, 38: 453, 39: 458, 40: 467,
+            41: 477, 42: 483, 43: 489, 44: 496, 45: 499, 46: 502, 47: 507, 48: 511, 49: 515, 50: 518,
+            51: 520, 52: 523, 53: 526, 54: 528, 55: 531, 56: 534, 57: 537, 58: 542, 59: 545, 60: 549,
+            61: 551, 62: 553, 63: 554, 64: 556, 65: 558, 66: 560, 67: 562, 68: 564, 69: 566, 70: 568,
+            71: 570, 72: 572, 73: 574, 74: 575, 75: 577, 76: 578, 77: 580, 78: 582, 79: 583, 80: 585,
+            81: 586, 82: 587, 83: 587, 84: 589, 85: 590, 86: 591, 87: 591, 88: 592, 89: 593, 90: 594,
+            91: 595, 92: 595, 93: 596, 94: 596, 95: 597, 96: 597, 97: 598, 98: 598, 99: 599, 100: 599,
+            101: 600, 102: 600, 103: 601, 104: 601, 105: 601, 106: 602, 107: 602, 108: 602, 109: 603, 110: 603,
+            111: 603, 112: 604, 113: 604, 114: 604
+        };
+        
+        // Average words per page in the Quran (approximately 200-250 words per page)
+        // This is an approximation - actual count varies by page
+        const AVG_WORDS_PER_PAGE = 225;
+        
+        // Minimum time needed to read a page realistically (in milliseconds)
+        // Any page read faster than this is considered a quick flip/navigation, not actual reading
+        const MIN_PAGE_READING_TIME = 12000; // 12 seconds
+        
+        let currentPage = 1;
+        let currentSurah = 1;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+        let isSwiping = false;
+        const minSwipeDistance = 50;
+        
+        // Reading speed tracking
+        let pageStartTime = null;
+        let totalWordsRead = 0;
+        let totalReadingTime = 0; // in milliseconds
+        let averageWPM = 0;
+
+        const pageContainer = document.getElementById('pageContainer');
+        const pageInfo = document.getElementById('pageInfo');
+        const surahSelect = document.getElementById('surahSelect');
+        const pageSelect = document.getElementById('pageSelect');
+
+        // Find surah from page number
+        function findSurahFromPage(pageNum) {
+            // Find the surah that contains this page
+            for (let surahNum = 114; surahNum >= 1; surahNum--) {
+                const surahStartPage = SURAH_PAGE_MAP[surahNum];
+                if (surahStartPage && pageNum >= surahStartPage) {
+                    // Check if next surah starts after this page
+                    const nextSurahStartPage = SURAH_PAGE_MAP[surahNum + 1] || TOTAL_PAGES + 1;
+                    if (pageNum < nextSurahStartPage) {
+                        return surahNum;
+                    }
+                }
+            }
+            return 1; // Default to first surah
+        }
+
+        // Get first page of a surah
+        function getSurahFirstPage(surahNum) {
+            return SURAH_PAGE_MAP[surahNum] || 1;
+        }
+
+        // Populate surah dropdown
+        function populateSurahSelect() {
+            surahSelect.innerHTML = '<option value="">اختر سورة...</option>';
+            SURAHS.forEach(s => {
+                const o = document.createElement('option');
+                o.value = s.number;
+                o.textContent = `${s.number}. ${s.name}`;
+                surahSelect.appendChild(o);
+            });
+            surahSelect.value = currentSurah;
+        }
+
+        // Populate page dropdown
+        function populatePageSelect() {
+            pageSelect.innerHTML = '<option value="">--</option>';
+            for (let i = 1; i <= TOTAL_PAGES; i++) {
+                const o = document.createElement('option');
+                o.value = i;
+                o.textContent = i;
+                if (i === currentPage) o.selected = true;
+                pageSelect.appendChild(o);
+            }
+        }
+
+        function updatePageInfo() {
+            // Update current surah based on current page
+            currentSurah = findSurahFromPage(currentPage);
+            if (surahSelect) surahSelect.value = currentSurah;
+            if (pageSelect) pageSelect.value = currentPage;
+        }
+
+        function calculateReadingSpeed() {
+            if (totalReadingTime > 0 && totalWordsRead > 0) {
+                // Convert milliseconds to minutes
+                const minutes = totalReadingTime / 60000;
+                averageWPM = Math.round(totalWordsRead / minutes);
+                document.getElementById('readingSpeed').textContent = averageWPM;
+            }
+        }
+
+        function startPageTimer() {
+            pageStartTime = Date.now();
+        }
+
+        function endPageTimer() {
+            if (pageStartTime) {
+                const pageReadingTime = Date.now() - pageStartTime;
+                
+                // Only count this page if the reading time is realistic
+                // Quick flips/navigation should not affect reading speed
+                if (pageReadingTime >= MIN_PAGE_READING_TIME) {
+                    // This is a realistic reading time, count it
+                    totalReadingTime += pageReadingTime;
+                    totalWordsRead += AVG_WORDS_PER_PAGE;
+                    calculateReadingSpeed();
+                } else {
+                    // This was a quick flip, ignore it for speed calculation
+                    console.log(`Quick flip detected (${Math.round(pageReadingTime / 1000)}s), ignoring for speed calculation`);
+                }
+                
+                // Reset timer
+                pageStartTime = null;
+            }
+        }
+
+        function loadPage(pageNum) {
+            if (pageNum < 1 || pageNum > TOTAL_PAGES) return;
+
+            // End timer for previous page if it exists
+            if (currentPage !== pageNum) {
+                endPageTimer();
+            }
+
+            currentPage = pageNum;
+            // Update current surah based on page
+            currentSurah = findSurahFromPage(pageNum);
+            updatePageInfo();
+            
+            // Start timer for new page
+            startPageTimer();
+
+            // Show loading
+            pageContainer.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>جاري التحميل...</div>
+                </div>
+            `;
+
+            // Try different image formats
+            const pageNumStr = String(pageNum).padStart(3, '0');
+            const imageSources = [
+                `${FOLDER_PATH}${pageNumStr}.png`,
+                `${FOLDER_PATH}${pageNumStr}.jpg`,
+                `${FOLDER_PATH}${pageNum}.png`,
+                `${FOLDER_PATH}${pageNum}.jpg`,
+                `${FOLDER_PATH}page_${pageNumStr}.png`,
+                `${FOLDER_PATH}page_${pageNumStr}.jpg`,
+                `${FOLDER_PATH}page_${pageNum}.png`,
+                `${FOLDER_PATH}page_${pageNum}.jpg`
+            ];
+
+            let currentSourceIndex = 0;
+            let imageLoaded = false;
+
+            function tryNextSource() {
+                if (currentSourceIndex >= imageSources.length) {
+                    // All sources failed
+                    pageContainer.innerHTML = `
+                        <div class="error">
+                            <p>❌ لم يتم العثور على الصفحة ${pageNum}</p>
+                            <p style="margin-top: 10px; font-size: 14px; color: #999;">
+                                تأكد من وجود الملف في مجلد Quran_Pages
+                            </p>
+                            <p style="margin-top: 5px; font-size: 12px; color: #666;">
+                                الأسماء المتوقعة: ${pageNumStr}.png, ${pageNumStr}.jpg, ${pageNum}.png, ${pageNum}.jpg
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const src = imageSources[currentSourceIndex];
+                currentSourceIndex++;
+
+                const img = new Image();
+                let timeoutId = null;
+                let isHandled = false;
+
+                const cleanup = () => {
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                        timeoutId = null;
+                    }
+                };
+
+                const handleSuccess = () => {
+                    if (isHandled) return;
+                    isHandled = true;
+                    cleanup();
+
+                    if (!imageLoaded) {
+                        imageLoaded = true;
+                        pageContainer.innerHTML = '';
+                        img.className = 'quran-page';
+                        
+                        // Apply invert filter in dark mode
+                        const isDarkMode = document.body.getAttribute('data-theme') === 'dark';
+                        if (isDarkMode) {
+                            img.style.setProperty('filter', 'invert(1)', 'important');
+                            img.style.setProperty('-webkit-filter', 'invert(1)', 'important');
+                        } else {
+                            img.style.setProperty('filter', 'none', 'important');
+                            img.style.setProperty('-webkit-filter', 'none', 'important');
+                        }
+                        
+                        pageContainer.appendChild(img);
+                        // Scroll to top when page changes
+                        pageContainer.scrollTop = 0;
+                    }
+                };
+
+                const handleError = () => {
+                    if (isHandled) return;
+                    isHandled = true;
+                    cleanup();
+                    setTimeout(() => tryNextSource(), 100);
+                };
+
+                img.onload = handleSuccess;
+                img.onerror = handleError;
+
+                timeoutId = setTimeout(() => {
+                    if (!imageLoaded && !isHandled) {
+                        handleError();
+                    }
+                }, 5000);
+
+                img.src = src;
+            }
+
+            tryNextSource();
+        }
+
+        // Swipe detection
+        pageContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            isSwiping = false;
+        }, { passive: true });
+
+        pageContainer.addEventListener('touchmove', (e) => {
+            // Check if horizontal movement is greater than vertical (swipe, not scroll)
+            const currentX = e.changedTouches[0].screenX;
+            const currentY = e.changedTouches[0].screenY;
+            const deltaX = Math.abs(currentX - touchStartX);
+            const deltaY = Math.abs(currentY - touchStartY);
+
+            // If horizontal movement is significantly more than vertical, it's a swipe
+            if (deltaX > deltaY && deltaX > 10) {
+                isSwiping = true;
+                // Prevent scrolling during horizontal swipe
+                if (Math.abs(currentX - touchStartX) > 20) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+
+        pageContainer.addEventListener('touchend', (e) => {
+            if (!isSwiping) return;
+
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+
+            const swipeDistance = touchEndX - touchStartX;
+            const verticalDistance = Math.abs(touchEndY - touchStartY);
+
+            // Only trigger swipe if horizontal movement is significant and vertical is minimal
+            if (Math.abs(swipeDistance) > minSwipeDistance && verticalDistance < 100) {
+                if (swipeDistance > 0) {
+                    // Swipe right (RTL: next page)
+                    if (currentPage < TOTAL_PAGES) {
+                        endPageTimer(); // End timer before loading new page
+                        loadPage(currentPage + 1);
+                    }
+                } else {
+                    // Swipe left (RTL: previous page)
+                    if (currentPage > 1) {
+                        endPageTimer(); // End timer before loading new page
+                        loadPage(currentPage - 1);
+                    }
+                }
+            }
+
+            isSwiping = false;
+        }, { passive: true });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                if (currentPage < TOTAL_PAGES) {
+                    endPageTimer(); // End timer before loading new page
+                    loadPage(currentPage + 1);
+                }
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                if (currentPage > 1) {
+                    endPageTimer(); // End timer before loading new page
+                    loadPage(currentPage - 1);
+                }
+            }
+        });
+
+        // Theme toggle - use same theme as index.html
+        const themeToggle = document.getElementById('themeToggle');
+        // Get theme from index.html's localStorage key (quranReaderTheme)
+        // Priority: 1) quranReaderTheme (from index.html), 2) quranPagesReaderTheme (from this page), 3) default to 'dark' (same as index.html)
+        const indexTheme = localStorage.getItem('quranReaderTheme');
+        const savedTheme = indexTheme || localStorage.getItem('quranPagesReaderTheme') || 'dark';
+        
+        document.body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        
+        // Update image filter on initial load
+        setTimeout(() => {
+            updateImageFilter();
+        }, 100);
+
+        function updateImageFilter() {
+            const isDarkMode = document.body.getAttribute('data-theme') === 'dark';
+            const images = document.querySelectorAll('.quran-page img, img.quran-page');
+            images.forEach(img => {
+                if (isDarkMode) {
+                    img.style.setProperty('filter', 'invert(1)', 'important');
+                    img.style.setProperty('-webkit-filter', 'invert(1)', 'important');
+                } else {
+                    img.style.setProperty('filter', 'none', 'important');
+                    img.style.setProperty('-webkit-filter', 'none', 'important');
+                }
+            });
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            // Save to both localStorage keys to sync with index.html
+            localStorage.setItem('quranReaderTheme', newTheme);
+            localStorage.setItem('quranPagesReaderTheme', newTheme);
+            // Update image filter immediately
+            updateImageFilter();
+        });
+
+        // Populate dropdowns
+        populateSurahSelect();
+        populatePageSelect();
+
+        // Handle surah selection
+        surahSelect.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const surahNum = parseInt(e.target.value);
+                const firstPage = getSurahFirstPage(surahNum);
+                endPageTimer(); // End timer before loading new page
+                loadPage(firstPage);
+            }
+        });
+
+        // Handle page selection
+        pageSelect.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const pageNum = parseInt(e.target.value);
+                endPageTimer(); // End timer before loading new page
+                loadPage(pageNum);
+            }
+        });
+
+        // Initialize - load first page
+        const savedPage = parseInt(localStorage.getItem('quranPagesReaderCurrentPage')) || 1;
+        
+        // Reset reading speed stats for each new session
+        // Don't load saved stats - start fresh every time
+        totalWordsRead = 0;
+        totalReadingTime = 0;
+        averageWPM = 0;
+        document.getElementById('readingSpeed').textContent = '--';
+        
+        loadPage(savedPage);
+
+        // Save current page when it changes
+        const originalLoadPage = loadPage;
+        loadPage = function(pageNum) {
+            originalLoadPage(pageNum);
+            localStorage.setItem('quranPagesReaderCurrentPage', pageNum);
+        };
+    </script>
+</body>
+</html>
