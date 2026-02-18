@@ -581,6 +581,9 @@
             currentSurah = findSurahFromPage(pageNum);
             updatePageInfo();
             
+            // Save current page to localStorage
+            localStorage.setItem('quranPagesReaderCurrentPage', pageNum);
+            
             // Start timer for new page
             startPageTimer();
 
@@ -830,13 +833,6 @@
         document.getElementById('readingSpeed').textContent = '--';
         
         loadPage(savedPage);
-
-        // Save current page when it changes
-        const originalLoadPage = loadPage;
-        loadPage = function(pageNum) {
-            originalLoadPage(pageNum);
-            localStorage.setItem('quranPagesReaderCurrentPage', pageNum);
-        };
     </script>
 </body>
 </html>
