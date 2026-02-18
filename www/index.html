@@ -411,7 +411,9 @@
             justify-content: center;
             width: 100%;
             z-index: 1;
+            /* Keep the whole (word + yellow guide lines) block centered in the reading box */
             padding: 15px 0;
+            margin-top: 0;
         }
 
         .spritz-frame {
@@ -422,6 +424,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            /* Symmetric padding so the guide lines + word sit visually centered */
+            padding: 15px;
+            box-sizing: border-box;
         }
 
         /* Lines are in background, behind the word */
@@ -476,7 +481,7 @@
             font-weight: normal;
             color: var(--text-primary);
             text-align: center;
-            line-height: 1.5;
+            line-height: 1.4;
             min-height: 100px;
             display: flex;
             align-items: center;
@@ -485,11 +490,19 @@
             unicode-bidi: bidi-override;
             z-index: 1;
             position: relative;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            max-width: 100%;
+            width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
             /* Uthmanic font features */
             font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            /* Adjust vertical position to be equidistant from both lines */
+            margin-top: -15px;
         }
 
         .current-word .orp-letter {
@@ -503,18 +516,22 @@
 
         .current-word.size-small {
             font-size: 3rem;
+            padding: 12px 18px;
         }
 
         .current-word.size-medium {
             font-size: 4rem;
+            padding: 15px 20px;
         }
 
         .current-word.size-large {
-            font-size: 5rem;
+            font-size: 4.5rem;
+            padding: 18px 22px;
         }
 
         .current-word.size-xlarge {
-            font-size: 6rem;
+            font-size: 5rem;
+            padding: 20px 25px;
         }
 
         /* Info Bar - Improved */
@@ -872,6 +889,89 @@
             border-color: var(--accent-1);
         }
 
+        /* Simplified Speed Buttons */
+        .speed-presets-simple {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .speed-btn-simple {
+            padding: 10px 20px;
+            background: var(--bg-card-solid);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .speed-btn-simple:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+        }
+
+        .speed-btn-simple.active {
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            color: #0a0a0f;
+            border-color: var(--accent-1);
+            font-weight: 600;
+        }
+
+        /* More Controls Button */
+        .more-controls-btn {
+            width: 100%;
+            padding: 12px 16px;
+            margin-top: 16px;
+            background: var(--bg-card-solid);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .more-controls-btn:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+        }
+
+        .more-controls-btn.expanded #moreControlsIcon {
+            transform: rotate(180deg);
+        }
+
+        /* Advanced Controls Section */
+        .advanced-controls {
+            margin-top: 16px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Loop Control - Improved with Range Slider */
         .loop-control {
             margin-top: 14px;
@@ -939,40 +1039,57 @@
 
         /* Font Size Control */
         .font-size-control {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             gap: 12px;
         }
 
         .font-size-label {
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
         }
 
         .font-size-btns {
             display: flex;
-            gap: 6px;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
         }
 
         .font-btn {
             background: var(--bg-card-solid);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .font-btn:hover,
+        .font-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+            transform: translateY(-2px);
+        }
+
         .font-btn.active {
             background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
             color: #0a0a0f;
             border-color: var(--accent-1);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         /* Stats with Visitor Counter */
@@ -1078,24 +1195,29 @@
 
             .current-word {
                 font-size: 3.5rem;
+                padding: 12px 15px;
                 /* Keep Uthmanic font in responsive */
                 font-family: 'KFGQPC Uthmanic Script HAFS', 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Noto Naskh Arabic', serif;
             }
 
             .current-word.size-small {
                 font-size: 2.5rem;
+                padding: 10px 12px;
             }
 
             .current-word.size-medium {
                 font-size: 3.5rem;
+                padding: 12px 15px;
             }
 
             .current-word.size-large {
-                font-size: 4.5rem;
+                font-size: 4rem;
+                padding: 14px 18px;
             }
 
             .current-word.size-xlarge {
-                font-size: 5.5rem;
+                font-size: 4.5rem;
+                padding: 16px 20px;
             }
 
             .word-display {
@@ -1869,8 +1991,8 @@
         <button class="intro-btn" id="startBtn">ابدأ</button>
     </div>
 
-    <!-- LANGUAGE SCREEN -->
-    <div class="screen lang-screen active" id="langScreen">
+    <!-- LANGUAGE SCREEN (Hidden - removed) -->
+    <div class="screen lang-screen" id="langScreen" style="display: none;">
         <h2 class="lang-title">اختر اللغة / Choose Language</h2>
         <div class="lang-options">
             <button class="lang-btn" data-lang="ar"><span>🇸🇦</span><span>العربية</span></button>
@@ -1984,12 +2106,6 @@
                 <div class="surah-selector" style="flex: 1; margin: 0;"><select id="surahSelect">
                         <option value="">اختر سورة...</option>
                     </select></div>
-                <div class="variable-speed-top-toggle"
-                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0 12px; height: 48px; display: flex; align-items: center; gap: 8px;">
-                    <span id="variableSpeedLabel" style="font-size: 0.75rem; font-weight: 500;">متغيرة</span>
-                    <label class="toggle-switch" style="transform: scale(0.8);"><input type="checkbox"
-                            id="variableSpeedToggle" checked><span class="toggle-slider"></span></label>
-                </div>
             </div>
 
             <!-- Gaze Bar Removed (Moved to Bottom) -->
@@ -1998,11 +2114,6 @@
                 <div class="interaction-overlay" id="interactionOverlay"
                     style="position: absolute; inset: 0; z-index: 20; display: flex; pointer-events: auto;">
                     <div class="touch-zone side right" id="zoneRight">
-                        <div class="overlay-icon-side" id="overlayIconRight" style="display: flex;">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" />
-                            </svg>
-                        </div>
                     </div>
                     <div class="touch-zone center" id="zoneCenter">
                         <div class="pause-overlay-icon" id="pauseOverlayIcon" style="display: flex;">
@@ -2012,11 +2123,6 @@
                         </div>
                     </div>
                     <div class="touch-zone side left" id="zoneLeft">
-                        <div class="overlay-icon-side" id="overlayIconLeft" style="display: flex;">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" />
-                            </svg>
-                        </div>
                     </div>
                 </div>
                 <div class="focus-container" id="focusContainer">
@@ -2054,15 +2160,15 @@
                         </svg></button><span class="ctrl-btn-label" id="endAyahLabel">نهاية الآية</span></div>
             </div>
 
-            <!-- Stats Bento Grid -->
+            <!-- Simplified Info Bar -->
             <div class="stats-grid">
                 <div class="info-bar">
-                    <div class="info-item"><span class="info-label" id="pageLabel">الصفحة</span><span class="info-value"
-                            id="pageNum">١</span></div>
-                    <div class="info-item"><span class="info-label" id="ayahLabel">الآية</span><span class="info-value"
-                            id="ayahNum">١</span></div>
-                    <div class="info-item"><span class="info-label" id="wordLabel">الكلمة</span><span class="info-value"
-                            id="wordNum">١/٤</span></div>
+                    <div class="info-item"><span class="info-label" id="surahLabel">السورة</span><span class="info-value"
+                            id="surahName">الفاتحة</span></div>
+                    <div class="info-item"><span class="info-label" id="hizbLabel">الحزب</span><span class="info-value"
+                            id="hizbNum">١</span></div>
+                    <div class="info-item"><span class="info-label" id="juzuLabel">الجزء</span><span class="info-value"
+                            id="juzuNum">١</span></div>
                 </div>
 
                 <div class="time-estimates">
@@ -2077,8 +2183,36 @@
                 </div>
             </div>
 
+            <!-- Simplified Speed Control: 4 Buttons -->
+            <div class="speed-presets-simple" style="margin-top: 10px; margin-bottom: 10px; display: flex; gap: 8px; justify-content: center;">
+                <button class="speed-btn-simple" id="speedSlower" data-wpm="100">أبطأ</button>
+                <button class="speed-btn-simple" id="speedSlow" data-wpm="150">بطيء</button>
+                <button class="speed-btn-simple active" id="speedMedium" data-wpm="200">متوسط</button>
+                <button class="speed-btn-simple" id="speedHigh" data-wpm="300">سريع</button>
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-thumb" id="progressThumb">١</div>
+                </div>
+            </div>
+
+            <!-- Playback Controls Moved Up -->
+
+            <!-- More Controls Button -->
+            <button class="more-controls-btn" id="moreControlsBtn" onclick="toggleMoreControls()">
+                <span id="moreControlsLabel">المزيد من التحكم</span>
+                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; transition: transform 0.3s;" id="moreControlsIcon">
+                    <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+                </svg>
+            </button>
+
+            <!-- Advanced Controls (Hidden by default) -->
+            <div class="advanced-controls" id="advancedControls" style="display: none;">
+                <!-- Original Speed Control (Hidden but kept for compatibility) -->
             <div class="control-card compact-speed-control"
-                style="margin-top: 10px; margin-bottom: 5px; padding: 10px;">
+                    style="margin-top: 10px; margin-bottom: 5px; padding: 10px; display: none;">
                 <div class="control-header" style="margin-bottom: 5px; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span id="speedLabel">سرعة القراءة</span>
@@ -2093,14 +2227,14 @@
                 <input type="range" class="speed-slider" id="speedSlider" min="50" max="1000" value="200" step="10">
             </div>
 
-            <div class="progress-track">
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar" id="progressBar"></div>
-                    <div class="progress-thumb" id="progressThumb">١</div>
+            <!-- Variable Speed Control -->
+            <div class="control-card" style="margin-top: 10px; margin-bottom: 10px;">
+                <div class="control-header">
+                    <span id="variableSpeedLabel">سرعة متغيرة</span>
+                    <label class="toggle-switch"><input type="checkbox" id="variableSpeedToggle" checked><span class="toggle-slider"></span></label>
                 </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; padding: 0 4px;" id="variableSpeedTip">نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف</div>
             </div>
-
-            <!-- Playback Controls Moved Up -->
 
             <!-- Tools Grid (Focus + Gaze) -->
             <div class="tools-grid">
@@ -2127,17 +2261,15 @@
                 </div>
             </div>
 
-            <div class="font-size-control">
+            <div class="font-size-control" style="display: none;">
                 <span class="font-size-label" id="fontSizeLabel">حجم الخط</span>
                 <div class="font-size-btns">
-                    <button class="font-btn" data-size="small">ص</button>
-                    <button class="font-btn active" data-size="medium">م</button>
+                    <button class="font-btn active" data-size="small">ص</button>
+                    <button class="font-btn" data-size="medium">م</button>
                     <button class="font-btn" data-size="large">ك</button>
                     <button class="font-btn" data-size="xlarge">+</button>
                 </div>
             </div>
-
-            <!-- Speed Control moved -->
 
             <div class="control-card">
                 <div class="control-header"><span id="loopLabel">تكرار الآيات</span><label class="toggle-switch"><input
@@ -2181,6 +2313,7 @@
                 <div class="stat-item">
                     <div class="stat-label" id="collectiveTimeLabel">وقت القراءة الجماعي</div>
                     <div class="stat-value" id="collectiveTime">--</div>
+                    </div>
                 </div>
             </div>
 
@@ -2300,7 +2433,7 @@
     <script>
         const SURAHS = [{ number: 1, name: "الفاتحة", ayahs: 7 }, { number: 2, name: "البقرة", ayahs: 286 }, { number: 3, name: "آل عمران", ayahs: 200 }, { number: 4, name: "النساء", ayahs: 176 }, { number: 5, name: "المائدة", ayahs: 120 }, { number: 6, name: "الأنعام", ayahs: 165 }, { number: 7, name: "الأعراف", ayahs: 206 }, { number: 8, name: "الأنفال", ayahs: 75 }, { number: 9, name: "التوبة", ayahs: 129 }, { number: 10, name: "يونس", ayahs: 109 }, { number: 11, name: "هود", ayahs: 123 }, { number: 12, name: "يوسف", ayahs: 111 }, { number: 13, name: "الرعد", ayahs: 43 }, { number: 14, name: "إبراهيم", ayahs: 52 }, { number: 15, name: "الحجر", ayahs: 99 }, { number: 16, name: "النحل", ayahs: 128 }, { number: 17, name: "الإسراء", ayahs: 111 }, { number: 18, name: "الكهف", ayahs: 110 }, { number: 19, name: "مريم", ayahs: 98 }, { number: 20, name: "طه", ayahs: 135 }, { number: 21, name: "الأنبياء", ayahs: 112 }, { number: 22, name: "الحج", ayahs: 78 }, { number: 23, name: "المؤمنون", ayahs: 118 }, { number: 24, name: "النور", ayahs: 64 }, { number: 25, name: "الفرقان", ayahs: 77 }, { number: 26, name: "الشعراء", ayahs: 227 }, { number: 27, name: "النمل", ayahs: 93 }, { number: 28, name: "القصص", ayahs: 88 }, { number: 29, name: "العنكبوت", ayahs: 69 }, { number: 30, name: "الروم", ayahs: 60 }, { number: 31, name: "لقمان", ayahs: 34 }, { number: 32, name: "السجدة", ayahs: 30 }, { number: 33, name: "الأحزاب", ayahs: 73 }, { number: 34, name: "سبأ", ayahs: 54 }, { number: 35, name: "فاطر", ayahs: 45 }, { number: 36, name: "يس", ayahs: 83 }, { number: 37, name: "الصافات", ayahs: 182 }, { number: 38, name: "ص", ayahs: 88 }, { number: 39, name: "الزمر", ayahs: 75 }, { number: 40, name: "غافر", ayahs: 85 }, { number: 41, name: "فصلت", ayahs: 54 }, { number: 42, name: "الشورى", ayahs: 53 }, { number: 43, name: "الزخرف", ayahs: 89 }, { number: 44, name: "الدخان", ayahs: 59 }, { number: 45, name: "الجاثية", ayahs: 37 }, { number: 46, name: "الأحقاف", ayahs: 35 }, { number: 47, name: "محمد", ayahs: 38 }, { number: 48, name: "الفتح", ayahs: 29 }, { number: 49, name: "الحجرات", ayahs: 18 }, { number: 50, name: "ق", ayahs: 45 }, { number: 51, name: "الذاريات", ayahs: 60 }, { number: 52, name: "الطور", ayahs: 49 }, { number: 53, name: "النجم", ayahs: 62 }, { number: 54, name: "القمر", ayahs: 55 }, { number: 55, name: "الرحمن", ayahs: 78 }, { number: 56, name: "الواقعة", ayahs: 96 }, { number: 57, name: "الحديد", ayahs: 29 }, { number: 58, name: "المجادلة", ayahs: 22 }, { number: 59, name: "الحشر", ayahs: 24 }, { number: 60, name: "الممتحنة", ayahs: 13 }, { number: 61, name: "الصف", ayahs: 14 }, { number: 62, name: "الجمعة", ayahs: 11 }, { number: 63, name: "المنافقون", ayahs: 11 }, { number: 64, name: "التغابن", ayahs: 18 }, { number: 65, name: "الطلاق", ayahs: 12 }, { number: 66, name: "التحريم", ayahs: 12 }, { number: 67, name: "الملك", ayahs: 30 }, { number: 68, name: "القلم", ayahs: 52 }, { number: 69, name: "الحاقة", ayahs: 52 }, { number: 70, name: "المعارج", ayahs: 44 }, { number: 71, name: "نوح", ayahs: 28 }, { number: 72, name: "الجن", ayahs: 28 }, { number: 73, name: "المزمل", ayahs: 20 }, { number: 74, name: "المدثر", ayahs: 56 }, { number: 75, name: "القيامة", ayahs: 40 }, { number: 76, name: "الإنسان", ayahs: 31 }, { number: 77, name: "المرسلات", ayahs: 50 }, { number: 78, name: "النبأ", ayahs: 40 }, { number: 79, name: "النازعات", ayahs: 46 }, { number: 80, name: "عبس", ayahs: 42 }, { number: 81, name: "التكوير", ayahs: 29 }, { number: 82, name: "الانفطار", ayahs: 19 }, { number: 83, name: "المطففين", ayahs: 36 }, { number: 84, name: "الانشقاق", ayahs: 25 }, { number: 85, name: "البروج", ayahs: 22 }, { number: 86, name: "الطارق", ayahs: 17 }, { number: 87, name: "الأعلى", ayahs: 19 }, { number: 88, name: "الغاشية", ayahs: 26 }, { number: 89, name: "الفجر", ayahs: 30 }, { number: 90, name: "البلد", ayahs: 20 }, { number: 91, name: "الشمس", ayahs: 15 }, { number: 92, name: "الليل", ayahs: 21 }, { number: 93, name: "الضحى", ayahs: 11 }, { number: 94, name: "الشرح", ayahs: 8 }, { number: 95, name: "التين", ayahs: 8 }, { number: 96, name: "العلق", ayahs: 19 }, { number: 97, name: "القدر", ayahs: 5 }, { number: 98, name: "البينة", ayahs: 8 }, { number: 99, name: "الزلزلة", ayahs: 8 }, { number: 100, name: "العاديات", ayahs: 11 }, { number: 101, name: "القارعة", ayahs: 11 }, { number: 102, name: "التكاثر", ayahs: 8 }, { number: 103, name: "العصر", ayahs: 3 }, { number: 104, name: "الهمزة", ayahs: 9 }, { number: 105, name: "الفيل", ayahs: 5 }, { number: 106, name: "قريش", ayahs: 4 }, { number: 107, name: "الماعون", ayahs: 7 }, { number: 108, name: "الكوثر", ayahs: 3 }, { number: 109, name: "الكافرون", ayahs: 6 }, { number: 110, name: "النصر", ayahs: 3 }, { number: 111, name: "المسد", ayahs: 5 }, { number: 112, name: "الإخلاص", ayahs: 4 }, { number: 113, name: "الفلق", ayahs: 5 }, { number: 114, name: "الناس", ayahs: 6 }];
         const TOTAL_QURAN_WORDS = 77430;
-        const state = { lang: 'ar', theme: 'dark', surah: 1, words: [], wordIndex: 0, isPlaying: false, wpm: 200, fontSize: 'medium', enhancedMode: true, loopEnabled: false, loopStart: 1, loopEnd: 7, wordsRead: 0, elapsedSeconds: 0, isFullscreen: false, currentAyah: 1, gazeEnabled: false, faceDetected: false, overlayActive: false, focusStart: 0, rampFactor: 1.0, variableSpeed: true, lastSeen: 0 };
+        const state = { lang: 'ar', theme: 'dark', surah: 1, words: [], wordIndex: 0, isPlaying: false, wpm: 200, fontSize: 'small', enhancedMode: true, loopEnabled: false, loopStart: 1, loopEnd: 7, wordsRead: 0, elapsedSeconds: 0, isFullscreen: false, currentAyah: 1, gazeEnabled: false, faceDetected: false, overlayActive: false, focusStart: 0, rampFactor: 1.0, variableSpeed: true, lastSeen: 0 };
 
         // ── Supabase Config ──
         const SUPABASE_URL  = 'https://olgvhsksnmwevcxrrylu.supabase.co';
@@ -2324,7 +2457,7 @@
                 skip10: '١٠ كلمات', speed: 'سرعة القراءة',
                 variableSpeed: 'سرعة متغيرة',
                 variableSpeedTip: 'نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف',
-                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'وضع التركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slow: 'بطيء', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!', pages: 'الصفحات'
+                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'وضع التركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slower: 'أبطأ', slow: 'بطيء', medium: 'متوسط', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!', pages: 'الصفحات', moreControls: 'المزيد من التحكم', surah: 'السورة', hizb: 'الحزب', juzu: 'الجزء'
             },
             en: {
                 introTitle: 'Quran Reader',
@@ -2341,13 +2474,13 @@
                 skip10: '10 words', speed: 'Reading Speed',
                 variableSpeed: 'Variable Speed',
                 variableSpeedTip: 'Rhythmic mode: Auto-slowing for Madda & Pause markers',
-                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slow: 'Slow', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!', pages: 'Pages'
+                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slower: 'Slower', slow: 'Slow', medium: 'Medium', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!', pages: 'Pages', moreControls: 'More Controls', surah: 'Surah', hizb: 'Hizb', juzu: 'Juzu'
             }
         };
         function $(id) { return document.getElementById(id); }
         function toArabicNum(n) { return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
         function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
-        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; $('pageLabel').textContent = t.page; $('ayahLabel').textContent = t.ayah; $('wordLabel').textContent = t.word; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
+        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
         function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
         // Quranic markings to filter out (pause signs, Hizb marks, recitation indicators)
         const QURAN_MARKS = /^[ۖۗۘۚۛۙ۞ۜ۩ۣ۠ۢۡۤۥۦ]*$|^[صقطعل]{1,4}ۢ?$|^ج$|^صل[ىي]?$/;
@@ -2391,7 +2524,29 @@
             autoSaveBookmark();
             updatePlayButton();
         }
-        function displayWord() { if (!state.words.length) return; const word = state.words[state.wordIndex]; const el = $('currentWord'); el.className = `current-word size-${state.fontSize}`; if (state.enhancedMode) { const text = word.text; el.innerHTML = `<span style="display:inline-block">${text}</span>`; $('focusContainer').classList.remove('focus-lines-hidden'); } else { el.textContent = word.text; $('focusContainer').classList.add('focus-lines-hidden'); } state.currentAyah = word.ayah; $('pageNum').textContent = state.lang === 'ar' ? toArabicNum(word.page) : word.page; $('ayahNum').textContent = state.lang === 'ar' ? toArabicNum(word.ayah) : word.ayah; const wordsInAyah = state.words.filter(w => w.ayah === word.ayah); const posInAyah = wordsInAyah.indexOf(word) + 1; const wordNumEl = $('wordNum'); wordNumEl.style.direction = 'ltr'; wordNumEl.style.unicodeBidi = 'embed'; wordNumEl.textContent = state.lang === 'ar' ? `${toArabicNum(posInAyah)}/${toArabicNum(wordsInAyah.length)}` : `${posInAyah}/${wordsInAyah.length}`; }
+        // Calculate Juzu from page number (each Juzu is ~20 pages, but varies)
+        function getJuzuFromPage(page) {
+            // Standard Quran has 604 pages, 30 Juzus
+            // Juzu boundaries are approximate: Juzu 1 starts at page 1, Juzu 2 at ~22, etc.
+            const juzuBoundaries = [1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 341, 361, 381, 401, 421, 441, 461, 481, 501, 521, 541, 561, 582];
+            for (let i = juzuBoundaries.length - 1; i >= 0; i--) {
+                if (page >= juzuBoundaries[i]) return i + 1;
+            }
+            return 1;
+        }
+        // Calculate Hizb from page number (each Juzu has 2 Hizbs, so 60 Hizbs total)
+        function getHizbFromPage(page) {
+            const juzu = getJuzuFromPage(page);
+            // Each Juzu has 2 Hizbs, but we need to determine which half of the Juzu
+            // Approximate: first Hizb is roughly first half of Juzu pages
+            const juzuBoundaries = [1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 341, 361, 381, 401, 421, 441, 461, 481, 501, 521, 541, 561, 582];
+            const nextJuzuPage = juzu < 30 ? juzuBoundaries[juzu] : 604;
+            const prevJuzuPage = juzuBoundaries[juzu - 1];
+            const midPage = prevJuzuPage + Math.floor((nextJuzuPage - prevJuzuPage) / 2);
+            const hizbInJuzu = page >= midPage ? 2 : 1;
+            return (juzu - 1) * 2 + hizbInJuzu;
+        }
+        function displayWord() { if (!state.words.length) return; const word = state.words[state.wordIndex]; const el = $('currentWord'); el.className = `current-word size-${state.fontSize}`; if (state.enhancedMode) { const text = word.text; el.innerHTML = `<span style="display:inline-block">${text}</span>`; $('focusContainer').classList.remove('focus-lines-hidden'); } else { el.textContent = word.text; $('focusContainer').classList.add('focus-lines-hidden'); } state.currentAyah = word.ayah; const currentPage = word.page; const currentJuzu = getJuzuFromPage(currentPage); const currentHizb = getHizbFromPage(currentPage); const surahName = SURAHS.find(s => s.number === state.surah)?.name || ''; if ($('surahName')) $('surahName').textContent = surahName; if ($('juzuNum')) $('juzuNum').textContent = state.lang === 'ar' ? toArabicNum(currentJuzu) : currentJuzu; if ($('hizbNum')) $('hizbNum').textContent = state.lang === 'ar' ? toArabicNum(currentHizb) : currentHizb; if ($('pageNum')) $('pageNum').textContent = state.lang === 'ar' ? toArabicNum(currentPage) : currentPage; if ($('ayahNum')) $('ayahNum').textContent = state.lang === 'ar' ? toArabicNum(word.ayah) : word.ayah; const wordsInAyah = state.words.filter(w => w.ayah === word.ayah); const posInAyah = wordsInAyah.indexOf(word) + 1; if ($('wordNum')) { const wordNumEl = $('wordNum'); wordNumEl.style.direction = 'ltr'; wordNumEl.style.unicodeBidi = 'embed'; wordNumEl.textContent = state.lang === 'ar' ? `${toArabicNum(posInAyah)}/${toArabicNum(wordsInAyah.length)}` : `${posInAyah}/${wordsInAyah.length}`; } }
         function getWordWeight(text) {
             if (!state.variableSpeed) return 1.0;
             let weight = 0.8 + (text.length * 0.04);
@@ -2791,9 +2946,6 @@
             // Sync Overlay Icon
             const displayStyle = state.isPlaying ? 'none' : 'flex';
             if ($('pauseOverlayIcon')) $('pauseOverlayIcon').style.display = displayStyle;
-            if ($('overlayIconRight')) $('overlayIconRight').style.display = displayStyle;
-            if ($('overlayIconLeft')) $('overlayIconLeft').style.display = displayStyle;
-
             if (state.isPlaying) {
                 statsInterval = setInterval(() => {
                     state.elapsedSeconds++;
@@ -2828,8 +2980,8 @@
                         }
                     }, 50); // Small delay to ensure rendering
                 } else {
-                    // Start recursive loop
-                    gameLoop();
+                // Start recursive loop
+                gameLoop();
                 }
 
             } else {
@@ -2966,9 +3118,16 @@
         }
         function toggleFocusMode() { state.isFullscreen = !state.isFullscreen; document.body.classList.toggle('focus-mode', state.isFullscreen); }
         function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
+        function toggleMoreControls() {
+            const advancedControls = $('advancedControls');
+            const moreControlsBtn = $('moreControlsBtn');
+            const isVisible = advancedControls.style.display !== 'none';
+            advancedControls.style.display = isVisible ? 'none' : 'block';
+            moreControlsBtn.classList.toggle('expanded', !isVisible);
+        }
         let isDragging = false; $('progressContainer').addEventListener('mousedown', e => { isDragging = true; handleProgressDrag(e); }); $('progressContainer').addEventListener('touchstart', e => { isDragging = true; handleProgressDrag(e.touches[0]); }, { passive: true }); document.addEventListener('mousemove', e => { if (isDragging) handleProgressDrag(e); }); document.addEventListener('touchmove', e => { if (isDragging) handleProgressDrag(e.touches[0]); }, { passive: true }); document.addEventListener('mouseup', () => isDragging = false); document.addEventListener('touchend', () => isDragging = false);
         function handleProgressDrag(e) { const rect = $('progressContainer').getBoundingClientRect(); let pct = (e.clientX - rect.left) / rect.width; if (state.lang === 'ar') pct = 1 - pct; pct = Math.max(0, Math.min(1, pct)); state.wordIndex = Math.floor(pct * (state.words.length - 1)); displayWord(); updateProgress(); }
-        document.querySelectorAll('.lang-btn').forEach(btn => { btn.addEventListener('click', async () => { state.lang = btn.dataset.lang; updateUI(); populateSurahSelect(); const hasBookmark = localStorage.getItem('quranReaderBookmark'); if (hasBookmark) { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); $('resumeModal').style.display = 'flex'; } else { updateOnboarding(); showScreen('onboardScreen'); } }); });
+        document.querySelectorAll('.lang-btn').forEach(btn => { btn.addEventListener('click', async () => { state.lang = btn.dataset.lang; updateUI(); populateSurahSelect(); const hasBookmark = localStorage.getItem('quranReaderBookmark'); if (hasBookmark) { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); } else { updateOnboarding(); showScreen('onboardScreen'); } }); });
         function updateOnboarding() {
             const lang = state.lang;
             document.getElementById('onbTitle').textContent = lang === 'ar' ? 'كلمات' : 'Kalimat';
@@ -3005,8 +3164,36 @@
         $('speedSlider').addEventListener('input', e => { state.wpm = parseInt(e.target.value); updateSpeedDisplay(); });
         $('decreaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.max(50, state.wpm - 50); updateSpeedDisplay(); });
         $('increaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.min(1000, state.wpm + 50); updateSpeedDisplay(); });
-        function updateSpeedDisplay() { $('wpmValue').textContent = state.wpm; $('speedSlider').value = state.wpm; updateTimeEstimates(); document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.wpm) === state.wpm)); }
+        function updateSpeedDisplay() { 
+            if ($('wpmValue')) $('wpmValue').textContent = state.wpm; 
+            if ($('speedSlider')) $('speedSlider').value = state.wpm; 
+            updateTimeEstimates(); 
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.wpm) === state.wpm));
+            // Update simplified speed buttons - find closest match
+            document.querySelectorAll('.speed-btn-simple').forEach(b => {
+                b.classList.remove('active');
+            });
+            const speedButtons = Array.from(document.querySelectorAll('.speed-btn-simple'));
+            const currentWpm = state.wpm;
+            let closestBtn = speedButtons[0];
+            let minDiff = Math.abs(parseInt(closestBtn.dataset.wpm) - currentWpm);
+            speedButtons.forEach(btn => {
+                const diff = Math.abs(parseInt(btn.dataset.wpm) - currentWpm);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestBtn = btn;
+                }
+            });
+            if (closestBtn) closestBtn.classList.add('active');
+        }
         document.querySelectorAll('.preset-btn').forEach(btn => { btn.addEventListener('click', () => { state.wpm = parseInt(btn.dataset.wpm); updateSpeedDisplay(); }); });
+        // Simplified speed buttons
+        document.querySelectorAll('.speed-btn-simple').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.wpm = parseInt(btn.dataset.wpm);
+                updateSpeedDisplay();
+            });
+        });
 
         $('loopToggle').addEventListener('change', e => { state.loopEnabled = e.target.checked; if (state.loopEnabled) seekToAyah(state.loopStart); });
         $('loopStartSlider').addEventListener('input', () => syncLoopFromSlider('start'));
@@ -3168,7 +3355,30 @@
             const text = state.lang === 'ar' ? 'كلمات — ختم القرآن بالقراءة السريعة\nبلا إعلانات • صدقة جارية' : 'Kalima — Speed-read the Quran\nAd-free • Ongoing charity';
             if (navigator.share) { navigator.share({ title: 'كلمات', text, url }); } else { navigator.clipboard.writeText(url); showToast(i18n[state.lang].copied); }
         });
-        createParticles(); updateUI(); populateSurahSelect(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
+        createParticles(); updateUI(); populateSurahSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
+        
+        // Auto-initialize: Skip language screen and resume modal, always start from last position
+        (async () => {
+            try {
+                const hasBookmark = localStorage.getItem('quranReaderBookmark');
+                if (hasBookmark) {
+                    // Restore from last position automatically
+                    showScreen('appScreen');
+                    await restoreBookmark();
+                    if (!state.words.length) loadSurah(1);
+                    // Don't show resume modal - just continue from last position
+                } else {
+                    // No bookmark - show onboarding
+                    updateOnboarding();
+                    showScreen('onboardScreen');
+                }
+            } catch (e) {
+                console.error('Error initializing app:', e);
+                // Fallback to onboarding
+                updateOnboarding();
+                showScreen('onboardScreen');
+            }
+        })();
     </script>
     <script>
         // Interaction Overlay Logic
