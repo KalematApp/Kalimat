@@ -1,0 +1,1780 @@
+        function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
+        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; if ($('shareLabel')) $('shareLabel').textContent = t.share; if ($('bookmarkLabel')) $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
+        function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
+
+        function populatePageSelect() {
+            const sel = $('pageSelect');
+            if (!sel) return;
+            const currentPage = state.words[state.wordIndex]?.page || 1;
+            sel.innerHTML = `<option value="">--</option>`;
+            for (let i = 1; i <= 604; i++) {
+                const o = document.createElement('option');
+                o.value = i;
+                o.textContent = state.lang === 'ar' ? toArabicNum(i) : i;
+                if (i === currentPage) o.selected = true;
+                sel.appendChild(o);
+            }
+        }
+
+        async function goToPage(pageNum) {
+            if (pageNum < 1 || pageNum > 604) return;
+
+            // Always pause playback first - use the same logic as togglePlay
+            if (state.isPlaying) {
+                state.isPlaying = false;
+                if (typeof playTimer !== 'undefined' && playTimer !== null) {
+                    clearTimeout(playTimer);
+                    playTimer = null;
+                }
+                if (typeof statsInterval !== 'undefined' && statsInterval !== null) {
+                    clearInterval(statsInterval);
+                    statsInterval = null;
+                }
+                updatePlayButton();
+                // Sync Overlay Icon
+                if ($('pauseOverlayIcon')) $('pauseOverlayIcon').style.display = 'flex';
+            }
+
+            // First, check if the page is in the current surah
+            if (state.words.length) {
+                const wordIndex = state.words.findIndex(w => w.page === pageNum);
+                if (wordIndex !== -1) {
+                    state.wordIndex = wordIndex;
+                    displayWord();
+                    updateProgress();
+                    updateTimeEstimates();
+                    autoSaveBookmark();
+                    // Always update surah dropdown to reflect current surah
+                    if ($('surahSelect')) {
+                        $('surahSelect').value = state.surah;
+                    }
+                    // Always update page dropdown to reflect current page
+                    if ($('pageSelect')) {
+                        $('pageSelect').value = pageNum;
+                    }
+                    return;
+                }
+            }
+
+            // If page is not in current surah, find which surah contains this page
+            // and load that surah, then go to the first word on the page
+            try {
+                const sb = getSB();
+                // Get the first word on this page to find the surah
+                const { data, error } = await sb.from('quran_words')
+                    .select('surah, page_number')
+                    .eq('page_number', pageNum)
+                    .order('ayah')
+                    .order('word_position')
+                    .limit(1)
+                    .single();
+
+                if (error || !data) {
+                    // Fallback: try API to find surah
+                    try {
+                        // Try to find surah by checking multiple surahs
+                        for (let surahNum = 1; surahNum <= 114; surahNum++) {
+                            const res = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${surahNum}?language=en&fields=page_number&per_page=300`);
+                            const apiData = await res.json();
+                            if (apiData.verses && apiData.verses.some(v => v.page_number === pageNum)) {
+                                await loadSurah(surahNum);
+                                // Now find the first word on this page
+                                const wordIndex = state.words.findIndex(w => w.page === pageNum);
+                                if (wordIndex !== -1) {
+                                    state.wordIndex = wordIndex;
+                                    displayWord();
+                                    updateProgress();
+                                    updateTimeEstimates();
+                                    autoSaveBookmark();
+                                    // Always update surah dropdown
+                                    if ($('surahSelect')) {
+                                        $('surahSelect').value = state.surah;
+                                    }
+                                    // Always update page dropdown
+                                    if ($('pageSelect')) {
+                                        $('pageSelect').value = pageNum;
+                                    }
+                                } else {
+                                    console.error('Word not found on page after loading surah');
+                                }
+                                return;
+                            }
+                        }
+                        console.error('Could not find surah containing page:', pageNum);
+                    } catch (apiErr) {
+                        console.error('Failed to find surah for page:', apiErr);
+                    }
+                    return;
+                }
+
+                // Load the surah that contains this page
+                await loadSurah(data.surah);
+
+                // Now find the first word on the selected page
+                const wordIndex = state.words.findIndex(w => w.page === pageNum);
+                if (wordIndex !== -1) {
+                    state.wordIndex = wordIndex;
+                    displayWord();
+                    updateProgress();
+                    updateTimeEstimates();
+                    autoSaveBookmark();
+                    // Always update surah dropdown
+                    if ($('surahSelect')) {
+                        $('surahSelect').value = state.surah;
+                    }
+                    // Always update page dropdown
+                    if ($('pageSelect')) {
+                        $('pageSelect').value = pageNum;
+                    }
+                } else {
+                    console.error('Word not found on page after loading surah:', pageNum);
+                }
+            } catch (err) {
+                console.error('Error loading page:', err);
+            }
+        }
+
+        // Quranic markings to filter out (pause signs, Hizb marks, recitation indicators)
+        const QURAN_MARKS = /^[ۖۗۘۚۛۙ۞ۜ۩ۣ۠ۢۡۤۥۦ]*$|^[صقطعل]{1,4}ۢ?$|^ج$|^صل[ىي]?$/;
+        function isQuranMark(word) { return QURAN_MARKS.test(word) || word.length === 1 && word.charCodeAt(0) >= 0x06D6 && word.charCodeAt(0) <= 0x06ED; }
+        async function loadSurah(num) {
+            state.surah = num;
+            state.words = [];
+            state.wordIndex = 0;
+            // Reset surah completion animation
+            const playBtn = $('playBtn');
+            if (playBtn) playBtn.classList.remove('play-btn-complete');
+            // Show loading dots instead of "جاري التحميل"
+            $('currentWord').innerHTML = '<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>';
+            updateLoopSliders();
+            try {
+                // Primary: Supabase (self-hosted, fast)
+                const sb = getSB();
+                const { data, error } = await sb.from('quran_words').select('text_uthmani, ayah, word_position, page_number').eq('surah', num).order('ayah').order('word_position');
+                if (error || !data || data.length === 0) throw new Error(error?.message || 'empty');
+                data.forEach(w => state.words.push({ text: w.text_uthmani, ayah: w.ayah, page: w.page_number }));
+            } catch (sbErr) {
+                console.warn('Supabase failed, falling back:', sbErr.message);
+                try {
+                    const res = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${num}?language=en&fields=text_uthmani,page_number&per_page=300`);
+                    const data = await res.json();
+                    data.verses.forEach(v => {
+                        const ayahNum = v.verse_key.split(':')[1];
+                        v.text_uthmani.split(/\s+/).filter(Boolean).filter(w => !isQuranMark(w)).forEach(w => {
+                            state.words.push({ text: w, ayah: parseInt(ayahNum), page: v.page_number });
+                        });
+                    });
+                } catch {
+                    try {
+                        const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}`);
+                        const data = await res.json();
+                        data.data.ayahs.forEach(a => a.text.split(/\s+/).filter(Boolean).filter(w => !isQuranMark(w)).forEach(w => state.words.push({ text: w, ayah: a.numberInSurah, page: a.page })));
+                    } catch {
+                        state.words = [{ text: 'خطأ', ayah: 1, page: 1 }];
+                    }
+                }
+            }
+            displayWord();
+            updateProgress();
+            updateTimeEstimates();
+            autoSaveBookmark();
+            updatePlayButton();
+            populatePageSelect();
+            // Update surah dropdown to reflect current surah
+            if ($('surahSelect')) $('surahSelect').value = state.surah;
+        }
+        // Calculate Juzu from page number (each Juzu is ~20 pages, but varies)
+        function getJuzuFromPage(page) {
+            // Standard Quran has 604 pages, 30 Juzus
+            // Juzu boundaries are approximate: Juzu 1 starts at page 1, Juzu 2 at ~22, etc.
+            const juzuBoundaries = [1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 341, 361, 381, 401, 421, 441, 461, 481, 501, 521, 541, 561, 582];
+            for (let i = juzuBoundaries.length - 1; i >= 0; i--) {
+                if (page >= juzuBoundaries[i]) return i + 1;
+            }
+            return 1;
+        }
+        // Calculate Hizb from page number (each Juzu has 2 Hizbs, so 60 Hizbs total)
+        function getHizbFromPage(page) {
+            const juzu = getJuzuFromPage(page);
+            // Each Juzu has 2 Hizbs, but we need to determine which half of the Juzu
+            // Approximate: first Hizb is roughly first half of Juzu pages
+            const juzuBoundaries = [1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 341, 361, 381, 401, 421, 441, 461, 481, 501, 521, 541, 561, 582];
+            const nextJuzuPage = juzu < 30 ? juzuBoundaries[juzu] : 604;
+            const prevJuzuPage = juzuBoundaries[juzu - 1];
+            const midPage = prevJuzuPage + Math.floor((nextJuzuPage - prevJuzuPage) / 2);
+            const hizbInJuzu = page >= midPage ? 2 : 1;
+            return (juzu - 1) * 2 + hizbInJuzu;
+        }
+        function displayWord() { if (!state.words.length) return; const word = state.words[state.wordIndex]; const el = $('currentWord'); el.className = `current-word size-${state.fontSize}`; if (state.enhancedMode) { const text = word.text; el.innerHTML = `<span style="display:inline-block">${text}</span>`; $('focusContainer').classList.remove('focus-lines-hidden'); } else { el.textContent = word.text; $('focusContainer').classList.add('focus-lines-hidden'); } state.currentAyah = word.ayah; const currentPage = word.page; const currentJuzu = getJuzuFromPage(currentPage); const currentHizb = getHizbFromPage(currentPage); const surahName = SURAHS.find(s => s.number === state.surah)?.name || ''; if ($('surahName')) $('surahName').textContent = surahName; if ($('juzuNum')) $('juzuNum').textContent = state.lang === 'ar' ? toArabicNum(currentJuzu) : currentJuzu; if ($('hizbNum')) $('hizbNum').textContent = state.lang === 'ar' ? toArabicNum(currentHizb) : currentHizb; if ($('pageSelect')) $('pageSelect').value = currentPage; if ($('pageNum')) $('pageNum').textContent = state.lang === 'ar' ? toArabicNum(currentPage) : currentPage; if ($('surahSelect')) $('surahSelect').value = state.surah; if ($('ayahNum')) $('ayahNum').textContent = state.lang === 'ar' ? toArabicNum(word.ayah) : word.ayah; const wordsInAyah = state.words.filter(w => w.ayah === word.ayah); const posInAyah = wordsInAyah.indexOf(word) + 1; if ($('wordNum')) { const wordNumEl = $('wordNum'); wordNumEl.style.direction = 'ltr'; wordNumEl.style.unicodeBidi = 'embed'; wordNumEl.textContent = state.lang === 'ar' ? `${toArabicNum(posInAyah)}/${toArabicNum(wordsInAyah.length)}` : `${posInAyah}/${wordsInAyah.length}`; } }
+        function getWordWeight(text) {
+            if (!state.variableSpeed) return 1.0;
+            let weight = 0.8 + (text.length * 0.04);
+            // Mad Detect: Madda (\u0653) or Superscript Alef (\u0670)
+            if (/[\u0653\u0670]/.test(text)) weight += 0.25;
+            // Pause Detect: Superscript markers (\u06D6 - \u06ED)
+            if (/[\u06D6-\u06ED]/.test(text)) weight += 0.35;
+            return weight;
+        }
+        function updateProgress() { if (!state.words.length) return; const pct = (state.wordIndex / (state.words.length - 1)) * 100; $('progressBar').style.width = `${pct}%`; const thumb = $('progressThumb'); const currentAyah = state.words[state.wordIndex]?.ayah || 1; if (state.lang === 'ar') { thumb.style.left = 'auto'; thumb.style.right = `calc(${pct}% - 16px)`; } else { thumb.style.right = 'auto'; thumb.style.left = `calc(${pct}% - 16px)`; } thumb.textContent = state.lang === 'ar' ? toArabicNum(currentAyah) : currentAyah; }
+        function updateTimeEstimates() {
+            if (!state.words.length) return;
+
+            // Precise Surah Time: Sum actual weighted durations
+            let remainingMs = 0;
+            const baseDuration = 60000 / state.wpm; // Duration of 1 weight unit
+            for (let i = state.wordIndex; i < state.words.length; i++) {
+                remainingMs += baseDuration * getWordWeight(state.words[i].text);
+            }
+            const surahMins = Math.ceil(remainingMs / 60000);
+
+            $('surahTime').textContent = surahMins < 60
+                ? `${surahMins} ${state.lang === 'ar' ? 'دقيقة' : 'min'}`
+                : `${Math.floor(surahMins / 60)}:${String(surahMins % 60).padStart(2, '0')}`;
+
+            // Quran Time: Heuristic (Iterating all 77k words is too slow)
+            // If Variable Speed is ON, assume ~15% average increase in time
+            const globalMultiplier = state.variableSpeed ? 1.15 : 1.0;
+            const quranMins = Math.ceil((TOTAL_QURAN_WORDS / state.wpm) * globalMultiplier);
+            const quranHrs = Math.floor(quranMins / 60);
+
+            // Proper Arabic pluralization: ساعات for 1-9 (مفرد أقل من عشرة), ساعة for 10+
+            const hoursText = state.lang === 'ar'
+                ? (quranHrs >= 1 && quranHrs <= 9 ? 'ساعات' : 'ساعة')
+                : (quranHrs === 1 ? 'hr' : 'hrs');
+            $('quranTime').textContent = `${quranHrs} ${hoursText}`;
+        }
+        function updateLoopSliders() { const maxAyah = SURAHS.find(s => s.number === state.surah)?.ayahs || 7; $('loopStartSlider').max = maxAyah; $('loopEndSlider').max = maxAyah; $('loopStartInput').max = maxAyah; $('loopEndInput').max = maxAyah; state.loopEnd = Math.min(state.loopEnd, maxAyah); $('loopStartSlider').value = state.loopStart; $('loopEndSlider').value = state.loopEnd; $('loopStartInput').value = state.loopStart; $('loopEndInput').value = state.loopEnd; updateLoopDisplay(); }
+        function updateLoopDisplay() { $('loopRangeValue').textContent = state.lang === 'ar' ? `${toArabicNum(state.loopStart)} - ${toArabicNum(state.loopEnd)}` : `${state.loopStart} - ${state.loopEnd}`; }
+        function syncLoopFromSlider(type) { if (type === 'start') { state.loopStart = parseInt($('loopStartSlider').value); $('loopStartInput').value = state.loopStart; if (state.loopStart > state.loopEnd) { state.loopEnd = state.loopStart; $('loopEndSlider').value = state.loopEnd; $('loopEndInput').value = state.loopEnd; } } else { state.loopEnd = parseInt($('loopEndSlider').value); $('loopEndInput').value = state.loopEnd; if (state.loopEnd < state.loopStart) { state.loopStart = state.loopEnd; $('loopStartSlider').value = state.loopStart; $('loopStartInput').value = state.loopStart; } } updateLoopDisplay(); if (state.loopEnabled && type === 'start') seekToAyah(state.loopStart); }
+        function syncLoopFromInput(type) { const max = SURAHS.find(s => s.number === state.surah)?.ayahs || 7; if (type === 'start') { state.loopStart = Math.max(1, Math.min(max, parseInt($('loopStartInput').value) || 1)); $('loopStartSlider').value = state.loopStart; $('loopStartInput').value = state.loopStart; if (state.loopStart > state.loopEnd) { state.loopEnd = state.loopStart; $('loopEndSlider').value = state.loopEnd; $('loopEndInput').value = state.loopEnd; } } else { state.loopEnd = Math.max(1, Math.min(max, parseInt($('loopEndInput').value) || max)); $('loopEndSlider').value = state.loopEnd; $('loopEndInput').value = state.loopEnd; if (state.loopEnd < state.loopStart) { state.loopStart = state.loopEnd; $('loopStartSlider').value = state.loopStart; $('loopStartInput').value = state.loopStart; } } updateLoopDisplay(); if (state.loopEnabled && type === 'start') seekToAyah(state.loopStart); }
+        function seekToAyah(ayahNum) { const idx = state.words.findIndex(w => w.ayah === ayahNum); if (idx !== -1) { state.wordIndex = idx; displayWord(); updateProgress(); } }
+        let playTimer = null;
+        let statsInterval = null;
+
+        // Gaze Logic
+        let faceMesh = null;
+        let camera = null;
+
+        async function initGaze() {
+            if (faceMesh) return;
+            $('gazeStatus').textContent = 'جاري التحميل...';
+
+            try {
+                faceMesh = new FaceMesh({
+                    locateFile: (file) => {
+                        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                    }
+                });
+                faceMesh.setOptions({
+                    maxNumFaces: 1,
+                    refineLandmarks: true,
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+                faceMesh.onResults(onGazeResults);
+
+                // Setup Canvas
+                const c = $('gazeCanvas');
+                ctx = c.getContext('2d');
+
+                const videoElement = $('gazeVideo');
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        if (state.gazeEnabled) await faceMesh.send({ image: videoElement });
+                    },
+                    width: 320,
+                    height: 240
+                });
+                await camera.start();
+                $('gazeStatus').textContent = 'الكاميرا تعمل';
+            } catch (e) {
+                console.error(e);
+                $('gazeStatus').textContent = 'فشل الوصول للكاميرا';
+                state.gazeEnabled = false;
+                $('gazeToggle').checked = false;
+            }
+        }
+
+        function onGazeResults(results) {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, 120, 30);
+
+            // Draw Eyes Base (Relative to canvas size)
+            const cw = ctx.canvas.width;
+            const ch = ctx.canvas.height;
+            const eyeY = ch * 0.5;
+            const eyeX1 = cw * 0.3;
+            const eyeX2 = cw * 0.7;
+            const eyeRx = cw * 0.15;
+            const eyeRy = ch * 0.35;
+
+            function drawEyeBase(x, y) {
+                ctx.fillStyle = '#334155';
+                ctx.beginPath();
+                ctx.ellipse(x, y, eyeRx, eyeRy, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            drawEyeBase(eyeX1, eyeY);
+            drawEyeBase(eyeX2, eyeY);
+
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                const landmarks = results.multiFaceLandmarks[0];
+                state.faceDetected = true;
+
+                // 1. Iris Gaze Sensing (High Precision)
+                // Left Iris: 468, Left Corners: 33(outer), 133(inner)
+                // Right Iris: 473, Right Corners: 362(inner), 263(outer)
+                const irisL = landmarks[468];
+                const irisR = landmarks[473];
+                const eyeOuterL = landmarks[33];
+                const eyeInnerL = landmarks[133];
+                const eyeInnerR = landmarks[362];
+                const eyeOuterR = landmarks[263];
+
+                // Define vertical landmarks HERE (Top level) so EAR can use them
+                const eyeTopL = landmarks[159];
+                const eyeBotL = landmarks[145];
+                const eyeTopR = landmarks[386];
+                const eyeBotR = landmarks[374];
+
+                let gazeDeviation = 0;
+                let hasEyes = false;
+                let vertDeviation = 0;
+
+                if (irisL && irisR && eyeOuterL && eyeOuterR) {
+                    hasEyes = true;
+                    // Horizontal Gaze
+                    const midEyeX = (eyeInnerL.x + eyeOuterL.x + eyeInnerR.x + eyeOuterR.x) / 4;
+                    const midIrisX = (irisL.x + irisR.x) / 2;
+                    const eyeWidthTotal = Math.abs(eyeOuterL.x - eyeOuterR.x);
+                    gazeDeviation = (midIrisX - midEyeX) / (eyeWidthTotal * 0.10 || 0.01);
+
+                    // Vertical Gaze
+                    const eyeHeightL = Math.abs(eyeTopL.y - eyeBotL.y);
+                    const midEyeY = (eyeTopL.y + eyeBotL.y) / 2;
+                    vertDeviation = (irisL.y - midEyeY) / (eyeHeightL * 0.3 || 0.01);
+
+                    // Final Gaze Magnitude (2D Vector)
+                    gazeDeviation = Math.sqrt(gazeDeviation * gazeDeviation + vertDeviation * vertDeviation);
+                    // Preserve sign for horizontal pupil drawing
+                    const pupilSign = (midIrisX - midEyeX) > 0 ? 1 : -1;
+                    gazeDeviation = gazeDeviation * pupilSign;
+                }
+
+                // 2. Face Fallback (If eyes are squinted/not detected well)
+                const nose = landmarks[1];
+                const leftPoint = landmarks[33];
+                const rightPoint = landmarks[263];
+                const faceWidth = Math.abs(leftPoint.x - rightPoint.x);
+                const faceMidX = (leftPoint.x + rightPoint.x) / 2;
+                const faceRatio = (nose.x - faceMidX) / (faceWidth || 0.01);
+
+                // Combine: Use Eye Gaze Primarily (85% weight), fallback to Face Ratio if eyes noisy
+                const rawRatio = hasEyes ? (gazeDeviation * 0.85 + faceRatio * 0.15) : faceRatio;
+
+                // EMA Smoothing (Exponential Moving Average) to kill jitter
+                if (typeof state.gazeSmoothed === 'undefined') state.gazeSmoothed = rawRatio;
+                state.gazeSmoothed = state.gazeSmoothed * 0.7 + rawRatio * 0.3;
+
+                const finalRatio = state.gazeSmoothed;
+
+                // --- BLINK DETECTION (Eye Aspect Ratio - EAR) ---
+                // Left Eye Width/Height
+                const ewL = Math.abs(eyeOuterL.x - eyeInnerL.x);
+                const ehL = Math.abs(eyeTopL.y - eyeBotL.y);
+                const earL = ehL / (ewL || 0.1);
+
+                // Right Eye (Indices: Top=386, Bot=374)
+                // eyeTopR and eyeBotR are now defined above
+                const ewR = Math.abs(eyeOuterR.x - eyeInnerR.x);
+                const ehR = eyeTopR && eyeBotR ? Math.abs(eyeTopR.y - eyeBotR.y) : ehL;
+                const earR = ehR / (ewR || 0.1);
+
+                const avgEar = (earL + earR) / 2;
+
+                // Debug EAR (Temporary)
+                // ctx.font = "12px Arial";
+                // ctx.fillStyle = "red";
+                // ctx.fillText(avgEar.toFixed(3), 10, 20);
+
+                // Threshold decreased to 0.15 to avoid false positives on narrow eyes
+                let isBlinking = avgEar < 0.15;
+
+                // Fail-Safe: If "blinking" for > 800ms, assume eyes are just squinty and FORCE it false
+                if (isBlinking) {
+                    if (!state.blinkStart) state.blinkStart = Date.now();
+                    if (Date.now() - state.blinkStart > 800) {
+                        isBlinking = false; // Override: User is likely just squinting/looking down
+                    }
+                } else {
+                    state.blinkStart = 0;
+                }
+
+                // If blinking, FORCE "Looking at Screen" (ignore gaze deviation)
+                const isLookingAway = isBlinking ? false : (Math.abs(finalRatio) > 0.32);
+
+                // Draw Pupils (Relative)
+                const pupilOffset = Math.max(-eyeRx * 0.8, Math.min(eyeRx * 0.8, finalRatio * cw * 0.2));
+                const pupilSize = ch * 0.2;
+
+                function drawPupil(x, y) {
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.beginPath();
+                    ctx.arc(x + pupilOffset, y, pupilSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                drawPupil(eyeX1, eyeY);
+                drawPupil(eyeX2, eyeY);
+
+                if (isLookingAway) {
+                    // Anti-Jitter Buffer: Only pause if looked away for > 150ms
+                    // This filters out signal noise while remaining perceptibly "instant"
+                    if (state.lastSeen && (Date.now() - state.lastSeen > 150)) {
+                        showOverlay();
+                        state.focusStart = 0;
+                        state.rampFactor = Math.max(0.5, (state.wpm - 150) / state.wpm);
+                    }
+                } else {
+                    state.lastSeen = Date.now();
+                    if (state.overlayActive) {
+                        if (state.focusStart === 0) state.focusStart = Date.now();
+                        const elapsed = Date.now() - state.focusStart;
+                        const progress = Math.min(1, elapsed / 1500);
+
+                        // Update Progress Ring
+                        const ring = $('focusFillRing');
+                        if (ring) {
+                            const offset = 377 * (1 - progress);
+                            ring.style.strokeDashoffset = offset;
+                            if (progress > 0.1) $('focusRingContainer').classList.add('focus-active');
+                        }
+
+                        if (elapsed > 1500) {
+                            hideOverlay();
+                        }
+                    } else {
+                        state.focusStart = 0;
+                    }
+                }
+
+                if (!state.overlayActive) {
+                    $('gazeStatus').textContent = state.isPlaying ? 'نشط' : 'توقف';
+                } else {
+                    $('gazeStatus').textContent = 'مؤقت';
+                }
+
+            } else {
+                // No face detected - wait 450ms before pausing (for deep blink/momentary loss)
+                if (state.faceDetected && (Date.now() - state.lastSeen > 450)) {
+                    state.faceDetected = false;
+                    showOverlay();
+                    state.focusStart = 0;
+                } else if (!state.faceDetected) {
+                    showOverlay(); // Already lost, keep overlaying
+                }
+            }
+        }
+
+        function showOverlay() {
+            if (state.overlayActive) return;
+            state.overlayActive = true;
+            $('pauseOverlay').style.display = 'flex';
+            setTimeout(() => $('pauseOverlay').style.opacity = '1', 10);
+
+            $('overlayAyah').textContent = `${i18n[state.lang].ayah} ${state.lang === 'ar' ? toArabicNum(state.currentAyah) : state.currentAyah}`;
+            $('overlayWords').textContent = state.lang === 'ar' ? toArabicNum(state.wordsRead) : state.wordsRead;
+            $('overlayTime').textContent = $('timeSpent').textContent;
+
+            // Reset Focus Ring
+            const ring = $('focusFillRing');
+            if (ring) ring.style.strokeDashoffset = '377';
+            $('focusRingContainer').classList.remove('focus-active');
+        }
+
+        function showToast(text) {
+            let toast = $('toastNotify');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toastNotify';
+                toast.className = 'toast-notify';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function hideOverlay() {
+            if (!state.overlayActive) return;
+            state.overlayActive = false;
+            state.rampFactor = Math.max(0.5, (state.wpm - 150) / state.wpm);
+            $('pauseOverlay').style.opacity = '0';
+            setTimeout(() => {
+                if (!state.overlayActive) $('pauseOverlay').style.display = 'none';
+            }, 300);
+        }
+
+        function gameLoop() {
+            if (!state.isPlaying) return;
+
+            let effectiveWpm = state.wpm;
+
+            if (state.gazeEnabled) {
+                if (state.overlayActive) {
+                    effectiveWpm = 0;
+                } else {
+                    if (state.rampFactor < 1.0) {
+                        state.rampFactor += 0.05;
+                        if (state.rampFactor > 1.0) state.rampFactor = 1.0;
+                    }
+                    effectiveWpm = state.wpm * state.rampFactor;
+                }
+            }
+
+            if (effectiveWpm < 10) {
+                playTimer = setTimeout(gameLoop, 200);
+                return;
+            }
+
+            state.wordIndex++;
+            state.wordsRead++;
+            $('wordsRead').textContent = state.lang === 'ar' ? toArabicNum(state.wordsRead) : state.wordsRead;
+
+            if (state.loopEnabled) {
+                const currentWord = state.words[state.wordIndex];
+                if (!currentWord || currentWord.ayah > state.loopEnd) {
+                    seekToAyah(state.loopStart);
+                    playTimer = setTimeout(gameLoop, 60000 / effectiveWpm);
+                    return;
+                }
+            }
+
+            if (state.wordIndex >= state.words.length) {
+                state.wordIndex = state.words.length - 1;
+                togglePlay();
+                return;
+            }
+
+            displayWord();
+            updateProgress();
+            updateTimeEstimates();
+            autoSaveBookmark();
+
+            // Sajda Check
+            const currIdx = state.wordIndex;
+            const nextWord = state.words[currIdx + 1];
+            const currentWord = state.words[currIdx];
+
+            // If it's the end of an ayah, check if it was a Sajda ayah
+            if (!nextWord || nextWord.ayah !== currentWord.ayah) {
+                const isSajda = SAJDA_VERSES.some(v => v.s === state.surah && v.a === currentWord.ayah);
+                if (isSajda) {
+                    togglePlay();
+                    showSajda();
+                    return;
+                }
+            }
+
+            const duration = (60000 / effectiveWpm) * getWordWeight(state.words[state.wordIndex].text);
+            playTimer = setTimeout(gameLoop, duration);
+        }
+
+        let _sajdaAlternator = 0;
+        function showSajda() {
+            const el = $('sajdaNotif');
+            if (el) {
+                const d1 = $('sajdaDua1'), d2 = $('sajdaDua2');
+                if (d1 && d2) {
+                    d1.style.display = (_sajdaAlternator % 2 === 0) ? 'block' : 'none';
+                    d2.style.display = (_sajdaAlternator % 2 === 1) ? 'block' : 'none';
+                    _sajdaAlternator++;
+                }
+                el.style.display = 'flex';
+                setTimeout(() => el.classList.add('show'), 10);
+            }
+        }
+        function hideSajda() {
+            const el = $('sajdaNotif');
+            if (el) {
+                el.classList.remove('show');
+                setTimeout(() => { if (!el.classList.contains('show')) el.style.display = 'none'; }, 400);
+            }
+        }
+
+        function updatePlayButton() {
+            const isFinished = state.words.length > 0 && state.wordIndex >= state.words.length - 1 && !state.isPlaying;
+            const currentSurahIndex = SURAHS.findIndex(s => s.number === state.surah);
+            const hasNextSurah = currentSurahIndex !== -1 && currentSurahIndex < SURAHS.length - 1;
+            const showNextSurah = isFinished && hasNextSurah;
+            const playBtn = $('playBtn');
+            const playbackControls = document.querySelector('.playback-controls');
+
+            if (state.isPlaying) {
+                // Pause icon - dim labels
+                $('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                $('playLabel').textContent = i18n[state.lang].pause;
+                if (playBtn) playBtn.classList.remove('play-btn-complete');
+                if (playbackControls) playbackControls.classList.add('playback-playing');
+            } else if (showNextSurah) {
+                // Next surah icon with green completion animation (RTL: flipped arrow pointing left)
+                $('playIcon').innerHTML = '<path d="M16 5v14l-7-7 7-7zm-8 0v14H6V5h2z"/>';
+                $('playLabel').textContent = i18n[state.lang].nextSurah;
+                if (playBtn) playBtn.classList.add('play-btn-complete');
+                if (playbackControls) playbackControls.classList.remove('playback-playing');
+            } else {
+                // Play icon
+                $('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+                $('playLabel').textContent = i18n[state.lang].play;
+                if (playBtn) playBtn.classList.remove('play-btn-complete');
+                if (playbackControls) playbackControls.classList.remove('playback-playing');
+            }
+        }
+
+        async function togglePlay() {
+            // Check if we've finished reading the current surah and user wants to play again
+            if (!state.isPlaying && state.words.length > 0 && state.wordIndex >= state.words.length - 1) {
+                // Find the next surah
+                const currentSurahIndex = SURAHS.findIndex(s => s.number === state.surah);
+                if (currentSurahIndex !== -1 && currentSurahIndex < SURAHS.length - 1) {
+                    const nextSurah = SURAHS[currentSurahIndex + 1];
+                    // Reset completion animation before loading next surah
+                    const playBtn = $('playBtn');
+                    if (playBtn) playBtn.classList.remove('play-btn-complete');
+                    // Load the next surah
+                    await loadSurah(nextSurah.number);
+                    // Update the surah selector
+                    $('surahSelect').value = nextSurah.number;
+                }
+            }
+
+            state.isPlaying = !state.isPlaying;
+            updatePlayButton();
+
+            // Sync Overlay Icon
+            const displayStyle = state.isPlaying ? 'none' : 'flex';
+            if ($('pauseOverlayIcon')) $('pauseOverlayIcon').style.display = displayStyle;
+            if (state.isPlaying) {
+                statsInterval = setInterval(() => {
+                    state.elapsedSeconds++;
+                    const mins = Math.floor(state.elapsedSeconds / 60);
+                    $('timeSpent').textContent = `${mins}:${String(state.elapsedSeconds % 60).padStart(2, '0')}`;
+                    updateCollectiveTime();
+                }, 1000);
+
+                // If at the start of a surah (wordIndex 0), ensure first word gets full duration
+                if (state.wordIndex === 0 && state.words.length > 0) {
+                    // Refresh display to ensure word is visible
+                    displayWord();
+                    updateProgress();
+                    updateTimeEstimates();
+                    autoSaveBookmark();
+
+                    // Calculate effective WPM
+                    let effectiveWpm = state.wpm;
+                    if (state.gazeEnabled && !state.overlayActive) {
+                        effectiveWpm = state.wpm * state.rampFactor;
+                    }
+
+                    // Small delay to ensure display is rendered, then start timer for first word
+                    // After timer expires, gameLoop() will increment to index 1 and continue
+                    setTimeout(() => {
+                        if (!state.isPlaying) return; // Check if still playing
+                        if (effectiveWpm < 10) {
+                            playTimer = setTimeout(gameLoop, 200);
+                        } else {
+                            const duration = (60000 / effectiveWpm) * getWordWeight(state.words[0].text);
+                            playTimer = setTimeout(gameLoop, duration);
+                        }
+                    }, 50); // Small delay to ensure rendering
+                } else {
+                    // Start recursive loop
+                    gameLoop();
+                }
+
+            } else {
+                clearTimeout(playTimer);
+                playTimer = null;
+                clearInterval(statsInterval);
+                statsInterval = null;
+            }
+        }
+
+        // Wire up Gaze Toggle
+        // Wire up Gaze Toggle & Modals
+        $('gazeToggle').addEventListener('click', (e) => {
+            if (e.target.checked) {
+                e.preventDefault();
+                $('privacyModal').style.display = 'flex';
+            } else {
+                state.gazeEnabled = false;
+                $('gazeStatus').textContent = 'مغلق';
+            }
+        });
+
+        $('privacyConfirmBtn').addEventListener('click', async () => {
+            $('privacyModal').style.display = 'none';
+            $('gazeToggle').checked = true;
+            state.gazeEnabled = true;
+            await initGaze();
+        });
+
+        $('privacyCancelBtn').addEventListener('click', () => {
+            $('privacyModal').style.display = 'none';
+        });
+
+        // Resume Modal Listeners
+        $('resumeLastBtn').addEventListener('click', () => {
+            $('resumeModal').style.display = 'none';
+            restoreBookmark();
+            showScreen('appScreen');
+        });
+        $('resumeAyahBtn').addEventListener('click', () => {
+            $('resumeModal').style.display = 'none';
+            const saved = JSON.parse(localStorage.getItem('quranReaderBookmark'));
+            if (saved) {
+                $('surahSelect').value = saved.surah;
+                loadSurah(saved.surah).then(() => {
+                    const w = state.words[saved.wordIndex];
+                    if (w) seekToAyah(w.ayah);
+                    showScreen('appScreen');
+                });
+            }
+        });
+        $('resumeSurahBtn').addEventListener('click', () => {
+            $('resumeModal').style.display = 'none';
+            const saved = JSON.parse(localStorage.getItem('quranReaderBookmark'));
+            if (saved) {
+                $('surahSelect').value = saved.surah;
+                loadSurah(saved.surah).then(() => {
+                    showScreen('appScreen');
+                });
+            }
+        });
+        function autoSaveBookmark() { localStorage.setItem('quranReaderBookmark', JSON.stringify({ surah: state.surah, wordIndex: state.wordIndex, wordsRead: state.wordsRead })); try { getSB().rpc('upsert_session', { p_device_id: getDeviceId(), p_surah: state.surah, p_word_index: state.wordIndex, p_words_read: state.wordsRead, p_total_seconds: state.elapsedSeconds, p_lang: state.lang, p_theme: state.theme, p_font_size: state.fontSize, p_wpm: state.wpm, p_enhanced_mode: state.enhancedMode }); } catch (e) { console.warn('Session sync:', e.message); } }
+        async function restoreBookmark() {
+            let surah, wordIndex, wordsRead;
+            try {
+                const sb = getSB();
+                const { data } = await sb.from('user_sessions').select('*').eq('device_id', getDeviceId()).single();
+                if (data) { surah = data.surah; wordIndex = data.word_index; wordsRead = data.words_read; state.elapsedSeconds = data.total_seconds || 0; }
+            } catch (e) { console.warn('Supabase restore:', e.message); }
+            if (!surah) {
+                const saved = localStorage.getItem('quranReaderBookmark');
+                if (saved) { const p = JSON.parse(saved); surah = p.surah; wordIndex = p.wordIndex; wordsRead = p.wordsRead; }
+            }
+            if (surah) {
+                state.wordsRead = wordsRead || 0;
+                $('wordsRead').textContent = state.lang === 'ar' ? toArabicNum(state.wordsRead) : state.wordsRead;
+                if (surah !== state.surah) { $('surahSelect').value = surah; await loadSurah(surah); }
+                state.wordIndex = wordIndex || 0; displayWord(); updateProgress();
+            }
+        }
+        function saveManualBookmark() { autoSaveBookmark(); showToast(i18n[state.lang].bookmarkSaved); }
+        function showToast(msg) { const toast = document.createElement('div'); toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--bg-card-solid);color:var(--accent-1);padding:12px 24px;border-radius:25px;border:1px solid var(--border-accent);z-index:1001;animation:fadeIn 0.3s ease'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
+        function shareApp() { const surahName = SURAHS.find(s => s.number === state.surah)?.name || ''; const url = window.location.href; const text = state.lang === 'ar' ? `أقرأ سورة ${surahName} - كلمات` : `Reading Surah ${surahName}`; if (navigator.share) { navigator.share({ title: 'كلمات', text, url }); } else { navigator.clipboard.writeText(url); showToast(i18n[state.lang].copied); } }
+        // ── Supabase Global Stats ──
+        function formatTime(totalSecs) {
+            const hrs = Math.floor(totalSecs / 3600);
+            const mins = Math.floor((totalSecs % 3600) / 60);
+            return `${state.lang === 'ar' ? toArabicNum(hrs) : hrs} ${state.lang === 'ar' ? 'س' : 'h'} ${state.lang === 'ar' ? toArabicNum(mins) : mins} ${state.lang === 'ar' ? 'د' : 'm'}`;
+        }
+
+        async function initVisitorCounter() {
+            try {
+                const sb = getSB();
+                const { data, error } = await sb.rpc('increment_visitors');
+                if (error) throw error;
+                $('visitorsCount').textContent = state.lang === 'ar' ? toArabicNum(data) : data;
+            } catch (e) {
+                console.warn('Visitor counter:', e.message);
+                let visitors = parseInt(localStorage.getItem('quranReaderVisitors') || '0') + 1;
+                localStorage.setItem('quranReaderVisitors', visitors);
+                $('visitorsCount').textContent = state.lang === 'ar' ? toArabicNum(visitors) : visitors;
+            }
+        }
+
+        async function updateCollectiveTime() {
+            let localTotal = parseInt(localStorage.getItem('quranReaderTotalSeconds') || '0') + 1;
+            localStorage.setItem('quranReaderTotalSeconds', localTotal);
+            if (state.elapsedSeconds > 0 && state.elapsedSeconds % 60 === 0) {
+                try {
+                    const sb = getSB();
+                    const { data, error } = await sb.rpc('add_reading_time', { seconds_to_add: 60 });
+                    if (!error && data) { $('collectiveTime').textContent = formatTime(data); return; }
+                } catch (e) { /* fallback below */ }
+            }
+            $('collectiveTime').textContent = formatTime(localTotal);
+        }
+
+        async function loadCollectiveTime() {
+            try {
+                const sb = getSB();
+                const { data, error } = await sb.from('global_stats').select('total_seconds, total_visitors').eq('id', 1).single();
+                if (!error && data) { $('collectiveTime').textContent = formatTime(data.total_seconds); return; }
+            } catch (e) { /* fallback below */ }
+            let localTotal = parseInt(localStorage.getItem('quranReaderTotalSeconds') || '0');
+            $('collectiveTime').textContent = formatTime(localTotal);
+        }
+        async function getGlobalStats() {
+            try {
+                const sb = getSB();
+                const { data, error } = await sb.from('global_stats').select('*').eq('id', 1).single();
+                if (!error && data) return data;
+            } catch (e) { }
+            return { total_visitors: parseInt(localStorage.getItem('quranReaderVisitors') || '0'), total_seconds: parseInt(localStorage.getItem('quranReaderTotalSeconds') || '0'), total_khatmas: 0 };
+        }
+        function toggleFocusMode() { state.isFullscreen = !state.isFullscreen; document.body.classList.toggle('focus-mode', state.isFullscreen); }
+        function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
+        function toggleMoreControls() {
+            const advancedControls = $('advancedControls');
+            const moreControlsBtn = $('moreControlsBtn');
+            const isVisible = advancedControls.style.display !== 'none';
+            advancedControls.style.display = isVisible ? 'none' : 'block';
+            moreControlsBtn.classList.toggle('expanded', !isVisible);
+        }
+        let isDragging = false; $('progressContainer').addEventListener('mousedown', e => { isDragging = true; handleProgressDrag(e); }); $('progressContainer').addEventListener('touchstart', e => { isDragging = true; handleProgressDrag(e.touches[0]); }, { passive: true }); document.addEventListener('mousemove', e => { if (isDragging) handleProgressDrag(e); }); document.addEventListener('touchmove', e => { if (isDragging) handleProgressDrag(e.touches[0]); }, { passive: true }); document.addEventListener('mouseup', () => isDragging = false); document.addEventListener('touchend', () => isDragging = false);
+        function handleProgressDrag(e) { const rect = $('progressContainer').getBoundingClientRect(); let pct = (e.clientX - rect.left) / rect.width; if (state.lang === 'ar') pct = 1 - pct; pct = Math.max(0, Math.min(1, pct)); state.wordIndex = Math.floor(pct * (state.words.length - 1)); displayWord(); updateProgress(); }
+        document.querySelectorAll('.lang-btn').forEach(btn => { btn.addEventListener('click', async () => { state.lang = btn.dataset.lang; updateUI(); populateSurahSelect(); const hasBookmark = localStorage.getItem('quranReaderBookmark'); if (hasBookmark) { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); } else { updateOnboarding(); showScreen('onboardScreen'); } }); });
+        function updateOnboarding() {
+            const lang = state.lang;
+            document.getElementById('onbTitle').textContent = lang === 'ar' ? 'كلمات' : 'Kalimat';
+            document.getElementById('onbSub').textContent = lang === 'ar' ? 'رفيقك في تلاوة القرآن الكريم' : 'Your companion in reciting the Noble Quran';
+            document.getElementById('onbStartBtn').textContent = lang === 'ar' ? 'ابدأ القراءة' : 'Start Reading';
+            document.getElementById('onbTip').textContent = lang === 'ar' ? 'اضغط على الشاشة للتشغيل والإيقاف — انقر مرتين على الأطراف للتنقل' : 'Tap the screen to play/pause — double-tap edges to skip';
+            document.querySelectorAll('.onb-feat-title').forEach(el => { el.textContent = el.getAttribute('data-' + lang); });
+            document.querySelectorAll('.onb-feat-desc').forEach(el => { el.textContent = el.getAttribute('data-' + lang); });
+            document.getElementById('onboardScreen').dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.querySelectorAll('.onb-feature').forEach(f => f.style.textAlign = lang === 'ar' ? 'right' : 'left');
+        }
+        document.getElementById('onbStartBtn').addEventListener('click', async () => { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); });
+        $('surahSelect').addEventListener('change', async e => {
+            if (e.target.value) {
+                // Pause playback if currently playing
+                if (state.isPlaying) {
+                    state.isPlaying = false;
+                    clearTimeout(playTimer);
+                    playTimer = null;
+                    clearInterval(statsInterval);
+                    statsInterval = null;
+                    updatePlayButton();
+                }
+                await loadSurah(parseInt(e.target.value));
+            }
+        });
+        $('pageSelect').addEventListener('change', async e => { if (e.target.value) await goToPage(parseInt(e.target.value)); });
+        $('playBtn').addEventListener('click', togglePlay);
+        // Logic Corrected: skipBack decreases index (Previous), skipFwd increases index (Next)
+        $('skipBackBtn').addEventListener('click', () => { state.wordIndex = Math.max(0, state.wordIndex - 10); displayWord(); updateProgress(); });
+        $('skipFwdBtn').addEventListener('click', () => { state.wordIndex = Math.min(state.words.length - 1, state.wordIndex + 10); displayWord(); updateProgress(); });
+        // Double-click on startAyah goes to previous ayah
+        let startAyahLastClick = 0;
+        $('startAyahBtn').addEventListener('click', () => { const now = Date.now(); if (now - startAyahLastClick < 500 && state.currentAyah > 1) { seekToAyah(state.currentAyah - 1); } else { seekToAyah(state.currentAyah); } startAyahLastClick = now; });
+        $('endAyahBtn').addEventListener('click', () => { const nextAyah = state.words.find((w, i) => i > state.wordIndex && w.ayah !== state.currentAyah); if (nextAyah) seekToAyah(nextAyah.ayah); else { state.wordIndex = state.words.length - 1; displayWord(); updateProgress(); } });
+        $('themeBtn').addEventListener('click', () => {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', state.theme);
+            localStorage.setItem('quranReaderTheme', state.theme);
+            if (typeof updateUmmahGlobeTheme === 'function') updateUmmahGlobeTheme();
+        });
+        $('focusModeBtn').addEventListener('click', toggleFocusMode);
+        $('focusExit').addEventListener('click', toggleFocusMode);
+        // shareBtn removed from UI — sharing available from Ummah screen
+        // bookmarkBtn removed from UI - saving is automatic
+        $('langSwitchBtn').addEventListener('click', () => { state.lang = state.lang === 'ar' ? 'en' : 'ar'; updateUI(); populateSurahSelect(); displayWord(); });
+        $('enhancedToggle').addEventListener('change', e => { state.enhancedMode = e.target.checked; displayWord(); });
+        $('variableSpeedToggle').addEventListener('change', e => {
+            state.variableSpeed = e.target.checked;
+            if (state.variableSpeed) showToast(i18n[state.lang].variableSpeedTip);
+        });
+
+        $('speedSlider').addEventListener('input', e => { state.wpm = parseInt(e.target.value); updateSpeedDisplay(); });
+        $('decreaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.max(50, state.wpm - 50); updateSpeedDisplay(); });
+        $('increaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.min(600, state.wpm + 50); updateSpeedDisplay(); });
+        function updateSpeedDisplay() {
+            if ($('wpmValue')) $('wpmValue').textContent = state.wpm;
+            if ($('speedSlider')) $('speedSlider').value = state.wpm;
+            updateTimeEstimates();
+            localStorage.setItem('kalima_wpm', state.wpm);
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.wpm) === state.wpm));
+            // Update simplified speed buttons - find closest match
+            document.querySelectorAll('.speed-btn-simple').forEach(b => {
+                b.classList.remove('active');
+            });
+            const speedButtons = Array.from(document.querySelectorAll('.speed-btn-simple'));
+            const currentWpm = state.wpm;
+            let closestBtn = speedButtons[0];
+            let minDiff = Math.abs(parseInt(closestBtn.dataset.wpm) - currentWpm);
+            speedButtons.forEach(btn => {
+                const diff = Math.abs(parseInt(btn.dataset.wpm) - currentWpm);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestBtn = btn;
+                }
+            });
+            if (closestBtn) closestBtn.classList.add('active');
+        }
+        document.querySelectorAll('.preset-btn').forEach(btn => { btn.addEventListener('click', () => { state.wpm = parseInt(btn.dataset.wpm); updateSpeedDisplay(); }); });
+        // Simplified speed buttons
+        document.querySelectorAll('.speed-btn-simple').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.wpm = parseInt(btn.dataset.wpm);
+                updateSpeedDisplay();
+            });
+        });
+
+        $('loopToggle').addEventListener('change', e => { state.loopEnabled = e.target.checked; if (state.loopEnabled) seekToAyah(state.loopStart); });
+        $('loopStartSlider').addEventListener('input', () => syncLoopFromSlider('start'));
+        $('loopEndSlider').addEventListener('input', () => syncLoopFromSlider('end'));
+        $('loopStartInput').addEventListener('change', () => syncLoopFromInput('start'));
+        $('loopEndInput').addEventListener('change', () => syncLoopFromInput('end'));
+        document.querySelectorAll('.font-btn').forEach(btn => { btn.addEventListener('click', () => { state.fontSize = btn.dataset.size; document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); displayWord(); }); });
+
+        window.addEventListener('beforeunload', () => { autoSaveBookmark(); });
+        window.addEventListener('pagehide', () => { autoSaveBookmark(); });
+        // Ummah Globe: anonymous location ping — only if permission already granted, no popup on load
+        async function updateUmmahLocation() {
+            try {
+                if (navigator.permissions) {
+                    const result = await navigator.permissions.query({ name: 'geolocation' });
+                    if (result.state !== 'granted') return; // Don't prompt — only use if already allowed
+                }
+                const referredBy = localStorage.getItem('kalima_referred_by') || '';
+                const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: false, timeout: 5000 }));
+                // Pass referral code when upserting so referred readers can be identified
+                await getSB().rpc('upsert_location', { p_device_id: getDeviceId(), p_latitude: pos.coords.latitude, p_longitude: pos.coords.longitude, p_referred_by: referredBy });
+            } catch (e) { /* geolocation denied or unavailable */ }
+        }
+        async function getActiveReaders() { try { const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); const { data } = await getSB().from('ummah_locations').select('latitude, longitude, city, country_code, last_active, referred_by').gte('last_active', cutoff); return data || []; } catch { return []; } }
+
+
+        function toArabicNumGlobe(n) { return String(n).replace(/[0-9]/g, d => String.fromCharCode(0x0660 + +d)); }
+        // Number formatting: use standard comma (,) and period (.) not raised Arabic separators
+        function fmtArNum(n) { if (n >= 1e6) { const m = (Math.floor(n / 1e5) / 10).toFixed(1).split('.'); return toArabicNumGlobe(m[0]) + '.' + toArabicNumGlobe(m[1]) + ' مليون'; } if (n >= 1000) { const s = String(Math.floor(n)); let o = '', c = 0; for (let i = s.length - 1; i >= 0; i--) { if (c > 0 && c % 3 === 0) o = ',' + o; o = s[i] + o; c++; } return toArabicNumGlobe(o); } return toArabicNumGlobe(n); }
+
+        // ── Referral System ──
+        function getReferralCode() {
+            let code = localStorage.getItem('kalima_ref_code');
+            if (!code) {
+                // Derive a short 8-char code from the device ID
+                code = getDeviceId().replace(/-/g, '').substring(0, 8);
+                localStorage.setItem('kalima_ref_code', code);
+            }
+            return code;
+        }
+        // Check URL for incoming referral code and save it
+        (function checkIncomingRef() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const incomingRef = params.get('ref');
+                if (incomingRef) localStorage.setItem('kalima_referred_by', incomingRef);
+            } catch (e) { }
+        })();
+        function shareReferral() {
+            const code = getReferralCode();
+            const refUrl = `https://onelink.to/dmwgt8?ref=${code}`;
+            const msg = state.lang === 'ar'
+                ? `📖 أقرأ معي القرآن الكريم على تطبيق *كلمات*\nكلمة بكلمة — بلا إعلانات — صدقة جارية\n\nتحميل التطبيق:\n${refUrl}`
+                : `📖 Read the Quran with me on *Kalimat*\nWord by word — No ads — Ongoing charity\n\nDownload the app:\n${refUrl}`;
+            if (navigator.share) {
+                navigator.share({ title: 'كلمات', text: msg, url: refUrl }).catch(() => {
+                    navigator.clipboard.writeText(msg).then(() => showToast(i18n[state.lang].copied));
+                });
+            } else {
+                navigator.clipboard.writeText(msg).then(() => showToast(i18n[state.lang].copied)).catch(() => showToast(refUrl));
+            }
+        }
+
+        // ── Three.js Globe ──
+        let _UMMAH3 = { renderer: null, rafId: null, readerDots: [], scene: null, globeGroup: null, camera: null, clock: null, isDragging: false, prevMouse: { x: 0, y: 0 }, markerMeshes: [], beamMeshes: [], radius: 2.6, targetRot: { x: 0, y: 0 }, targetCamZ: 4.2 };
+
+        function latLngToVec3(lat, lng, r) {
+            const latRad = lat * Math.PI / 180;
+            const lngRad = lng * Math.PI / 180;
+            return new THREE.Vector3(
+                r * Math.cos(latRad) * Math.sin(lngRad),
+                r * Math.sin(latRad),
+                r * Math.cos(latRad) * Math.cos(lngRad)
+            );
+        }
+
+        function initUmmahGlobe() {
+            if (typeof THREE === 'undefined') return;
+            const container = document.getElementById('ummahGlobeContainer');
+            if (!container || _UMMAH3.renderer) return;
+
+            const W = container.clientWidth, H = container.clientHeight;
+            const scene = new THREE.Scene();
+            _UMMAH3.scene = scene;
+            _UMMAH3.clock = new THREE.Clock();
+
+            const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
+            camera.position.z = 10; // Start far out for a "zoom in" effect
+            _UMMAH3.targetCamZ = 4.2;
+            _UMMAH3.camera = camera;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setSize(W, H);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x000000, 0);
+            container.appendChild(renderer.domElement);
+            _UMMAH3.renderer = renderer;
+
+            const globeGroup = new THREE.Group();
+            _UMMAH3.globeGroup = globeGroup;
+            scene.add(globeGroup);
+
+            const RADIUS = _UMMAH3.radius;
+
+            // Sphere (transparent)
+            const isDark = state.theme === 'dark';
+            const sphereGeo = new THREE.SphereGeometry(RADIUS - 0.01, 64, 64);
+            const sphereMat = new THREE.MeshBasicMaterial({
+                color: isDark ? 0x06060e : 0xffffff,
+                transparent: true,
+                opacity: isDark ? 0.85 : 0.4
+            });
+            const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
+            globeGroup.add(globeMesh);
+
+            // Topology dots
+            let topologyPoints = null;
+            const texLoader = new THREE.TextureLoader();
+            texLoader.load('https://unpkg.com/three-globe@2.31.1/example/img/earth-topology.png', tex => {
+                const img = tex.image;
+                const tc = document.createElement('canvas');
+                tc.width = img.width; tc.height = img.height;
+                const ctx = tc.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const data = ctx.getImageData(0, 0, tc.width, tc.height);
+                const positions = [];
+                const samples = 24000;
+                for (let i = 0; i < samples; i++) {
+                    const phi = Math.acos(-1 + (2 * i) / samples);
+                    const theta = Math.sqrt(samples * Math.PI) * phi;
+                    const lat = 90 - phi * 180 / Math.PI;
+                    const lon = (theta * 180 / Math.PI) % 360 - 180;
+
+                    const u = ((lon + 180) / 360) * tc.width;
+                    const v = ((90 - lat) / 180) * tc.height;
+                    const idx = (Math.floor(v) * tc.width + Math.floor(u)) * 4;
+                    const brightness = (data.data[idx] + data.data[idx + 1] + data.data[idx + 2]) / 3;
+                    if (brightness > 30) {
+                        const p = latLngToVec3(lat, lon, RADIUS);
+                        positions.push(p.x, p.y, p.z);
+                    }
+                }
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                const mat = new THREE.PointsMaterial({
+                    color: isDark ? 0xd4af37 : 0xb8860b,
+                    size: 0.007,
+                    transparent: true,
+                    opacity: isDark ? 0.55 : 0.8,
+                    sizeAttenuation: true
+                });
+                topologyPoints = new THREE.Points(geo, mat);
+                globeGroup.add(topologyPoints);
+            });
+
+            // Handle theme response
+            window.updateUmmahGlobeTheme = () => {
+                const dark = state.theme === 'dark';
+                sphereMat.color.setHex(dark ? 0x06060e : 0xffffff);
+                sphereMat.opacity = dark ? 0.85 : 0.4;
+                if (topologyPoints) {
+                    topologyPoints.material.color.setHex(dark ? 0xd4af37 : 0xb8860b);
+                    topologyPoints.material.opacity = dark ? 0.55 : 0.8;
+                }
+            };
+
+            // Country borders
+            fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json')
+                .then(r => r.json()).then(world => {
+                    const topo = window.topojson;
+                    if (!topo) return;
+                    const features = topo.feature(world, world.objects.countries).features;
+                    const drawRing = coords => {
+                        const pts = coords.map(c => latLngToVec3(c[1], c[0], RADIUS + 0.003));
+                        if (pts.length < 2) return;
+                        const geo = new THREE.BufferGeometry().setFromPoints(pts);
+                        const mat = new THREE.LineBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.18 });
+                        globeGroup.add(new THREE.Line(geo, mat));
+                    };
+                    features.forEach(f => {
+                        const t = f.geometry.type;
+                        if (t === 'Polygon') f.geometry.coordinates.forEach(r => drawRing(r));
+                        else if (t === 'MultiPolygon') f.geometry.coordinates.forEach(p => p.forEach(r => drawRing(r)));
+                    });
+                }).catch(() => { });
+
+            // Lat/lng grid
+            for (let la = -60; la <= 60; la += 20) {
+                const pts = [];
+                for (let lo = -180; lo <= 180; lo += 4) pts.push(latLngToVec3(la, lo, RADIUS + 0.005));
+                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x3a3020, transparent: true, opacity: 0.2 })));
+            }
+            for (let lo = -180; lo < 180; lo += 20) {
+                const pts = [];
+                for (let la = -90; la <= 90; la += 4) pts.push(latLngToVec3(la, lo, RADIUS + 0.005));
+                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x3a3020, transparent: true, opacity: 0.2 })));
+            }
+
+            // Orbital rings
+            [{ rx: Math.PI / 2, ry: 0 }, { rx: Math.PI / 3, ry: Math.PI / 5 }].forEach(r => {
+                const rGeo = new THREE.TorusGeometry(RADIUS + 0.28, 0.004, 16, 100);
+                const rMat = new THREE.MeshBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.15 });
+                const ring = new THREE.Mesh(rGeo, rMat);
+                ring.rotation.x = r.rx; ring.rotation.y = r.ry;
+                globeGroup.add(ring);
+            });
+
+            // Ambient light
+            scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+
+            // Drag to rotate
+            const dom = renderer.domElement;
+            dom.style.touchAction = 'none';
+            dom.addEventListener('pointerdown', e => { _UMMAH3.isDragging = true; _UMMAH3.prevMouse = { x: e.clientX, y: e.clientY }; });
+            window.addEventListener('pointermove', e => {
+                if (!_UMMAH3.isDragging || !_UMMAH3.globeGroup) return;
+                const dx = e.clientX - _UMMAH3.prevMouse.x, dy = e.clientY - _UMMAH3.prevMouse.y;
+                _UMMAH3.globeGroup.rotation.y += dx * 0.006;
+                _UMMAH3.globeGroup.rotation.x += dy * 0.006;
+                _UMMAH3.prevMouse = { x: e.clientX, y: e.clientY };
+            });
+            window.addEventListener('pointerup', () => { _UMMAH3.isDragging = false; });
+
+            // Resize
+            const onResize = () => {
+                if (!_UMMAH3.renderer) return;
+                const W2 = container.clientWidth, H2 = container.clientHeight;
+                camera.aspect = W2 / H2;
+                camera.updateProjectionMatrix();
+                _UMMAH3.renderer.setSize(W2, H2);
+            };
+            window.addEventListener('resize', onResize);
+            _UMMAH3._onResize = onResize;
+
+            // Animate
+            const animate = () => {
+                _UMMAH3.rafId = requestAnimationFrame(animate);
+                const t = _UMMAH3.clock.getElapsedTime();
+                // Smoothly interpolate camera and rotation
+                if (_UMMAH3.camera) {
+                    _UMMAH3.camera.position.z += (_UMMAH3.targetCamZ - _UMMAH3.camera.position.z) * 0.05;
+                }
+                if (!_UMMAH3.isDragging && _UMMAH3.globeGroup) {
+                    // Constant slow orbit PLUS target rotation drift
+                    _UMMAH3.globeGroup.rotation.y += 0.001;
+                    _UMMAH3.globeGroup.rotation.y += (_UMMAH3.targetRot.y - _UMMAH3.globeGroup.rotation.y) * 0.02;
+                    _UMMAH3.globeGroup.rotation.x += (_UMMAH3.targetRot.x - _UMMAH3.globeGroup.rotation.x) * 0.02;
+                }
+                // Pulsing glow rings and beams
+                _UMMAH3.markerMeshes.forEach(m => {
+                    if (m.userData.glowRing) {
+                        const pulse = 0.6 + 0.4 * Math.sin(t * 2 + m.userData.offset);
+                        m.userData.glowRing.material.opacity = pulse * 0.5;
+                        const scale = 1 + 0.25 * Math.sin(t * 2 + m.userData.offset);
+                        m.userData.glowRing.scale.setScalar(scale);
+                    }
+                });
+                _UMMAH3.beamMeshes.forEach(b => {
+                    const pulse = 0.7 + 0.3 * Math.sin(t * 1.5 + b.userData.offset);
+                    b.material.opacity = pulse * 0.4;
+                    b.scale.x = b.scale.y = 0.8 + 0.2 * pulse;
+                });
+                renderer.render(scene, camera);
+            };
+            animate();
+        }
+
+        function stopUmmahGlobe() {
+            if (_UMMAH3.rafId) { cancelAnimationFrame(_UMMAH3.rafId); _UMMAH3.rafId = null; }
+            if (_UMMAH3.renderer) { _UMMAH3.renderer.dispose(); _UMMAH3.renderer.domElement.remove(); _UMMAH3.renderer = null; }
+            if (_UMMAH3._onResize) { window.removeEventListener('resize', _UMMAH3._onResize); _UMMAH3._onResize = null; }
+            _UMMAH3.scene = null; _UMMAH3.globeGroup = null; _UMMAH3.clock = null; _UMMAH3.markerMeshes = [];
+        }
+
+        function closeUmmahScreen() { stopUmmahGlobe(); if (_UMMAH3._feedInterval) { clearInterval(_UMMAH3._feedInterval); _UMMAH3._feedInterval = null; } showScreen('appScreen'); }
+
+        function updateGlobeReaders(dots) {
+            if (!_UMMAH3.globeGroup) return;
+            const RADIUS = _UMMAH3.radius;
+            // Remove old items
+            _UMMAH3.markerMeshes.forEach(m => { _UMMAH3.globeGroup.remove(m); if (m.userData.glowRing) _UMMAH3.globeGroup.remove(m.userData.glowRing); });
+            _UMMAH3.beamMeshes.forEach(b => { _UMMAH3.globeGroup.remove(b); });
+            _UMMAH3.markerMeshes = [];
+            _UMMAH3.beamMeshes = [];
+
+            if (dots.length > 0) {
+                // Group dots by location (approximate to 0.5 degree)
+                const clusters = {};
+                dots.forEach(d => {
+                    const key = `${Math.round(d.lat * 2) / 2},${Math.round(d.lng * 2) / 2}`;
+                    if (!clusters[key]) clusters[key] = { lat: d.lat, lng: d.lng, count: 0, isRef: false };
+                    clusters[key].count++;
+                    if (d.ref) clusters[key].isRef = true;
+                });
+
+                let meanLat = 0, meanLng = 0;
+                let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
+
+                Object.values(clusters).forEach((c, idx) => {
+                    const pos = latLngToVec3(c.lat, c.lng, RADIUS);
+                    const col = c.isRef ? 0x37d4a5 : 0xd4af37;
+
+                    // Individual Dot (Smaller)
+                    const geo = new THREE.SphereGeometry(0.015, 12, 12);
+                    const mat = new THREE.MeshBasicMaterial({ color: col });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.position.copy(pos);
+                    mesh.userData.offset = idx * 0.7;
+
+                    // Glow Ring
+                    const rGeo = new THREE.RingGeometry(0.03, 0.05, 24);
+                    const rMat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+                    const ring = new THREE.Mesh(rGeo, rMat);
+                    ring.position.copy(pos);
+                    ring.lookAt(0, 0, 0);
+                    mesh.userData.glowRing = ring;
+
+                    _UMMAH3.globeGroup.add(mesh);
+                    _UMMAH3.globeGroup.add(ring);
+                    _UMMAH3.markerMeshes.push(mesh);
+
+                    // Cluster Beam (Column of Light)
+                    if (c.count > 1) {
+                        const beamHeight = Math.min(0.8, 0.2 + (c.count * 0.05));
+                        const bGeo = new THREE.CylinderGeometry(0.005, 0.015, beamHeight, 8, 1, true);
+                        const bMat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+                        const beam = new THREE.Mesh(bGeo, bMat);
+
+                        // Position beam pointing outward
+                        const beamPos = latLngToVec3(c.lat, c.lng, RADIUS + beamHeight / 2);
+                        beam.position.copy(beamPos);
+                        beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+                        beam.userData.offset = idx * 0.5;
+
+                        _UMMAH3.globeGroup.add(beam);
+                        _UMMAH3.beamMeshes.push(beam);
+                    }
+
+                    meanLat += c.lat; meanLng += c.lng;
+                    minLat = Math.min(minLat, c.lat); maxLat = Math.max(maxLat, c.lat);
+                    minLng = Math.min(minLng, c.lng); maxLng = Math.max(maxLng, c.lng);
+                });
+
+                // Set target rotation to centroid (facing camera at Z+)
+                meanLat /= Object.keys(clusters).length; meanLng /= Object.keys(clusters).length;
+                _UMMAH3.targetRot.y = - (meanLng) * Math.PI / 180;
+                _UMMAH3.targetRot.x = (meanLat) * Math.PI / 180;
+
+                // Set target zoom based on spread
+                const spread = Math.max(maxLat - minLat, maxLng - minLng);
+                _UMMAH3.targetCamZ = 3.6 + (spread / 180) * 2.5; // Zoom in more for tight clusters
+            } else {
+                _UMMAH3.targetCamZ = 4.2; // Return to neutral
+            }
+        }
+
+        // Populate reader dots — from Supabase or simulated
+        async function loadUmmahData() {
+            const COUNTRIES = [
+                { n: 'السعودية', lat: 24.7, lng: 46.7, w: 30 }, { n: 'مصر', lat: 30, lng: 31.2, w: 22 },
+                { n: 'الإمارات', lat: 24.5, lng: 54.4, w: 12 }, { n: 'تركيا', lat: 41, lng: 28.9, w: 9 },
+                { n: 'إندونيسيا', lat: -6.2, lng: 106.8, w: 18 }, { n: 'باكستان', lat: 33.7, lng: 73, w: 14 },
+                { n: 'المغرب', lat: 33.6, lng: -7.6, w: 10 }, { n: 'العراق', lat: 33.3, lng: 44.4, w: 8 },
+                { n: 'الهند', lat: 28.6, lng: 77.2, w: 12 }, { n: 'نيجيريا', lat: 9.1, lng: 7.5, w: 8 },
+                { n: 'بنغلاديش', lat: 23.8, lng: 90.4, w: 7 }, { n: 'أمريكا', lat: 40.7, lng: -74, w: 6 },
+                { n: 'الكويت', lat: 29.4, lng: 47.9, w: 5 }, { n: 'الأردن', lat: 31.9, lng: 35.9, w: 7 }
+            ];
+            const SURAH_NAMES = ['الفاتحة', 'البقرة', 'آل عمران', 'الكهف', 'مريم', 'طه', 'يس', 'الملك', 'الرحمن', 'الواقعة', 'النساء', 'يوسف'];
+            const totalW = COUNTRIES.reduce((a, c) => a + c.w, 0);
+            const pick = () => { let r = Math.random() * totalW; for (const c of COUNTRIES) { r -= c.w; if (r <= 0) return c; } return COUNTRIES[0]; };
+
+            // Load ONLY real readers from Supabase — no simulated padding
+            let realReaders = [];
+            try { realReaders = await getActiveReaders(); } catch (e) { }
+
+            const myCode = getReferralCode();
+            let referredCount = 0;
+
+            // Build dots for Three.js globe — green = referred by me, gold = others
+            const globeDots = [];
+            realReaders.forEach(r => {
+                const isReferred = r.referred_by === myCode;
+                if (isReferred) referredCount++;
+                globeDots.push({ lat: r.latitude, lng: r.longitude, ref: isReferred });
+            });
+            updateGlobeReaders(globeDots);
+
+            // Show popup if user has referred readers
+            if (referredCount > 0) {
+                const popup = document.getElementById('refPopup');
+                if (popup) {
+                    popup.textContent = state.lang === 'ar'
+                        ? `✨ ${toArabicNumGlobe(referredCount)} من الأصدقاء الذين دعوتهم يقرأون الآن — النقاط الخضراء!`
+                        : `✨ ${referredCount} friend${referredCount > 1 ? 's' : ''} you referred are reading now — green dots!`;
+                    popup.style.display = 'block';
+                    setTimeout(() => { popup.style.display = 'none'; }, 5000);
+                }
+            }
+
+            // ── Fetch global stats ──
+            const l = state.lang;
+            try {
+                const stats = await getGlobalStats() || {};
+                const totalSeconds = stats.total_seconds || 0;
+                const totalWords = totalSeconds * 3.3;
+
+                $('ummahTotalWords').textContent = l === 'ar' ? fmtArNum(Math.floor(totalWords)) : Math.floor(totalWords).toLocaleString();
+                $('ummahKhatmas').textContent = l === 'ar' ? toArabicNumGlobe(Math.floor(totalWords / 77430)) : Math.floor(totalWords / 77430);
+                $('ummahHours').textContent = l === 'ar' ? toArabicNumGlobe(Math.floor(totalSeconds / 3600)) : Math.floor(totalSeconds / 3600);
+                $('ummahCountries').textContent = l === 'ar' ? toArabicNumGlobe(new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || 0) : (new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || 12);
+            } catch (e) {
+                console.error('Ummah stats load fail:', e);
+                $('ummahTotalWords').textContent = l === 'ar' ? '٠' : '0';
+                $('ummahHours').textContent = l === 'ar' ? '٠' : '0';
+                $('ummahCountries').textContent = l === 'ar' ? '١٢' : '12';
+                $('ummahKhatmas').textContent = l === 'ar' ? '٠' : '0';
+            }
+
+            // ── Smart Counter: show active readers if high, else community size ──
+            const ACTIVE_THRESHOLD = 5; // Show "reading now" if this many active readers
+            const badge = document.getElementById('ummahCounterBadge');
+            const dot = document.getElementById('ummahCounterDot');
+            const readingNowEl = $('ummahReadingNow');
+            const countEl = $('ummahReaderCount');
+            const lang = state.lang;
+
+            // Read previous count from localStorage for change detection
+            const prevCount = parseInt(localStorage.getItem('kalima_prev_reader_count') || '0');
+
+            let displayCount, isLive;
+            if (realReaders.length >= ACTIVE_THRESHOLD) {
+                // Enough real readers — show "reading now" in green
+                displayCount = realReaders.length;
+                isLive = true;
+            } else {
+                // Few/no readers with location — show total community size honestly
+                displayCount = stats ? (stats.total_visitors || realReaders.length) : realReaders.length;
+                isLive = false;
+            }
+
+            // Update the badge color & label depending on mode
+            if (isLive) {
+                badge.style.background = 'rgba(55,212,165,0.08)';
+                badge.style.border = '1px solid rgba(55,212,165,0.2)';
+                dot.style.background = '#37d4a5';
+                dot.style.boxShadow = '0 0 6px rgba(55,212,165,0.6)';
+                readingNowEl.textContent = lang === 'ar' ? 'يقرأون الآن' : 'reading now';
+                readingNowEl.style.color = '#37d4a5';
+            } else {
+                // Community size mode — warm gold tone
+                badge.style.background = 'rgba(196,164,46,0.06)';
+                badge.style.border = '1px solid rgba(196,164,46,0.15)';
+                dot.style.background = '#c4a42e';
+                dot.style.boxShadow = 'none';
+                readingNowEl.textContent = lang === 'ar' ? 'في المجتمع' : 'community';
+                readingNowEl.style.color = '#6a5a20';
+            }
+
+            countEl.textContent = lang === 'ar' ? toArabicNumGlobe(displayCount) : displayCount;
+
+            // Visual cue if count grew since last visit (flash badge)
+            if (displayCount > prevCount && prevCount > 0) {
+                const diff = displayCount - prevCount;
+                badge.style.transition = 'transform 0.15s ease, box-shadow 0.3s ease';
+                badge.style.transform = 'scale(1.08)';
+                badge.style.boxShadow = isLive
+                    ? '0 0 16px rgba(55,212,165,0.5)'
+                    : '0 0 16px rgba(196,164,46,0.4)';
+                // Show a +N toast
+                showToast(lang === 'ar' ? `+${toArabicNumGlobe(diff)} انضموا للمجتمع ✨` : `+${diff} joined ✨`);
+                setTimeout(() => {
+                    badge.style.transform = 'scale(1)';
+                    badge.style.boxShadow = 'none';
+                }, 1200);
+            }
+            localStorage.setItem('kalima_prev_reader_count', displayCount);
+
+            // Live feed — show real readers who have location data
+            const feedEl = $('ummahFeed');
+            const feedEmptyEl = $('ummahFeedEmpty');
+
+            // Filter only readers that have a meaningful location
+            const locatedReaders = realReaders.filter(r => r.country_code || r.city);
+
+            if (locatedReaders.length === 0) {
+                if (feedEmptyEl) feedEmptyEl.style.display = 'block';
+            } else {
+                if (feedEmptyEl) feedEmptyEl.style.display = 'none';
+                // Country code → flag emoji helper
+                function countryFlag(code) {
+                    if (!code || code.length !== 2) return '🌐';
+                    return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E0 + c.charCodeAt(0) - 65));
+                }
+                // Time since label
+                function timeSince(iso) {
+                    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+                    if (mins < 2) return 'الآن';
+                    if (mins < 60) return `منذ ${toArabicNumGlobe(mins)} دقيقة`;
+                    const hrs = Math.round(mins / 60);
+                    return `منذ ${toArabicNumGlobe(hrs)} ساعة`;
+                }
+
+                // Show up to 6 most recent readers
+                const toShow = locatedReaders
+                    .slice()
+                    .sort((a, b) => new Date(b.last_active) - new Date(a.last_active))
+                    .slice(0, 6);
+
+                toShow.forEach(reader => {
+                    const isReferred = reader.referred_by === myCode;
+                    const flag = countryFlag(reader.country_code);
+                    const location = reader.city
+                        ? `${flag} ${reader.city}${reader.country_code ? ', ' + reader.country_code : ''}`
+                        : `${flag} ${reader.country_code}`;
+                    const when = reader.last_active ? timeSince(reader.last_active) : '';
+                    const accentCol = isReferred ? '#37d4a5' : 'rgba(255,255,255,0.12)';
+                    const dotCol = isReferred ? '#37d4a5' : '#d4af37';
+
+                    const row = document.createElement('div');
+                    row.style.cssText = `display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);animation:fadeIn 0.4s ease;`;
+                    row.innerHTML = `
+                        <span style="width:7px;height:7px;border-radius:50%;background:${dotCol};box-shadow:0 0 5px ${dotCol};flex-shrink:0;"></span>
+                        <span style="flex:1;font-size:13px;font-weight:700;color:var(--text-primary);">${location}</span>
+                        ${isReferred ? `<span style="font-size:9px;font-weight:700;color:#37d4a5;background:rgba(55,212,165,0.1);border:1px solid rgba(55,212,165,0.25);border-radius:8px;padding:2px 6px;">دعوتك</span>` : ''}
+                        <span style="font-size:10px;color:var(--text-muted);font-weight:600;flex-shrink:0;">${when}</span>
+                    `;
+                    feedEl.appendChild(row);
+                });
+            }
+        }
+
+
+        function openUmmahScreen() { showScreen('ummahScreen'); initUmmahGlobe(); loadUmmahData(); createParticles(); }
+
+        $('ummahBtn').addEventListener('click', openUmmahScreen);
+        $('ummahShareBtn').addEventListener('click', shareReferral);
+        // Restore preferred speed from last session
+        const savedWpm = parseInt(localStorage.getItem('kalima_wpm'));
+        if (savedWpm && savedWpm >= 50 && savedWpm <= 600) state.wpm = savedWpm;
+        createParticles(); updateUI(); populateSurahSelect(); populatePageSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
+
+        // Load theme from localStorage and apply it
+        const savedTheme = localStorage.getItem('quranReaderTheme') || state.theme;
+        state.theme = savedTheme;
+        document.documentElement.setAttribute('data-theme', state.theme);
+        // Save theme to localStorage to ensure it's available for other pages
+        localStorage.setItem('quranReaderTheme', state.theme);
+
+        // Auto-initialize: Skip language screen and resume modal, always start from last position
+        (async () => {
+            try {
+                const hasBookmark = localStorage.getItem('quranReaderBookmark');
+                if (hasBookmark) {
+                    // Restore from last position automatically
+                    showScreen('appScreen');
+                    await restoreBookmark();
+                    if (!state.words.length) loadSurah(1);
+                    // Don't show resume modal - just continue from last position
+                } else {
+                    // No bookmark - show onboarding
+                    updateOnboarding();
+                    showScreen('onboardScreen');
+                }
+            } catch (e) {
+                console.error('Error initializing app:', e);
+                // Fallback to onboarding
+                updateOnboarding();
+                showScreen('onboardScreen');
+            }
+        })();
+    </script>
+    <script>
+        // Interaction Overlay Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const center = $('zoneCenter');
+            const right = $('zoneRight');
+            const left = $('zoneLeft');
+
+            if (center) {
+                center.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent bubbling
+                    togglePlay();
+                });
+            }
+
+            function handleDoubleTap(el, action) {
+                let lastTap = 0;
+                if (!el) return;
+                el.addEventListener('click', (e) => {
+                    const now = new Date().getTime();
+                    const diff = now - lastTap;
+                    if (diff < 300 && diff > 0) {
+                        action(e);
+                        e.preventDefault();
+                    }
+                    lastTap = now;
+                });
+            }
+
+            // Right Zone (RTL) -> Previous 10 Words (Skip Back)
+            handleDoubleTap(right, () => {
+                const btn = $('skipBackBtn');
+                if (btn) btn.click();
+            });
+
+            // Left Zone (RTL) -> Next 10 Words (Skip Fwd)
+            handleDoubleTap(left, () => {
+                const btn = $('skipFwdBtn');
+                if (btn) btn.click();
+            });
+        });
+    </script>
+    <!-- PWA Install Banner -->
+    <div class="install-banner" id="installBanner">
+        <img src="/icons/icon-96.png" alt="" class="install-banner-icon">
+        <div class="install-banner-text">
+            <div class="install-banner-title" id="installTitle">تثبيت التطبيق</div>
+            <div class="install-banner-desc" id="installDesc">أضف القرآن لشاشتك الرئيسية - بدون متجر</div>
+        </div>
+        <button class="install-banner-btn" id="installBtn" onclick="handleInstallClick()">تثبيت</button>
+        <button class="install-banner-close" id="installClose" onclick="dismissInstall()">&times;</button>
+    </div>
+
+    <!-- iOS Install Instructions Modal -->
+    <div class="ios-install-modal" id="iosModal">
+        <div class="ios-install-content">
+            <h3 id="iosTitle">تثبيت على الشاشة الرئيسية</h3>
+            <div class="ios-step">
+                <span class="ios-step-num">1</span>
+                <span id="iosStep1">اضغط على زر المشاركة <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z" />
+                    </svg> في أسفل الشاشة</span>
+            </div>
+            <div class="ios-step">
+                <span class="ios-step-num">2</span>
+                <span id="iosStep2">مرر للأسفل واختر "إضافة إلى الشاشة الرئيسية"</span>
+            </div>
+            <div class="ios-step">
+                <span class="ios-step-num">3</span>
+                <span id="iosStep3">اضغط "إضافة" في الأعلى</span>
+            </div>
+            <button class="modal-btn primary" style="margin-top:20px;width:100%"
+                onclick="document.getElementById('iosModal').classList.remove('show')">
+                <span id="iosGotIt">فهمت!</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Offline Bar -->
+    <div class="offline-bar" id="offlineBar">⚡ أنت غير متصل - الأجزاء المحملة مسبقاً متوفرة</div>
+
+    <script>
+        // ============================================
+        // PWA: Service Worker Registration
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => {
+                        console.log('SW registered:', reg.scope);
+                        // Check for updates periodically
+                        setInterval(() => reg.update(), 60 * 60 * 1000); // hourly
+                    })
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        // ============================================
+        // PWA: Install Prompt Handling
+        // ============================================
+        let deferredPrompt = null;
+        const installBanner = document.getElementById('installBanner');
+        const iosModal = document.getElementById('iosModal');
+
+        // Detect if already installed
+        function isStandalone() {
+            return window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true
+                || document.referrer.includes('android-app://');
+        }
+
+        // Detect iOS
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+
+        // Check if dismissed recently (don't nag - show only once per 7 days)
+        function wasDismissed() {
+            const dismissed = localStorage.getItem('pwaInstallDismissed');
+            if (!dismissed) return false;
+            const daysSince = (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24);
+            return daysSince < 7;
+        }
+
+        // Listen for the beforeinstallprompt event (Chrome/Edge/Samsung)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!isStandalone() && !wasDismissed()) {
+                updateInstallBannerLang();
+                setTimeout(() => installBanner.classList.add('show'), 2000);
+            }
+        });
+
+        // For iOS - show after a brief delay if not installed
+        window.addEventListener('load', () => {
+            if (isIOS() && !isStandalone() && !wasDismissed()) {
+                setTimeout(() => {
+                    updateInstallBannerLang();
+                    installBanner.classList.add('show');
+                }, 3000);
+            }
+        });
+
+        function updateInstallBannerLang() {
+            const lang = (typeof state !== 'undefined' && state.lang) || 'ar';
+            if (lang === 'en') {
+                document.getElementById('installTitle').textContent = 'Install App';
+                document.getElementById('installDesc').textContent = 'Add Quran to your home screen - no app store needed';
+                document.getElementById('installBtn').textContent = 'Install';
+                document.getElementById('iosTitle').textContent = 'Add to Home Screen';
+                document.getElementById('iosStep1').innerHTML = 'Tap the Share button <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent-1);vertical-align:middle"><path d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z"/></svg> at the bottom';
+                document.getElementById('iosStep2').textContent = 'Scroll down and tap "Add to Home Screen"';
+                document.getElementById('iosStep3').textContent = 'Tap "Add" in the top right';
+                document.getElementById('iosGotIt').textContent = 'Got it!';
+                document.getElementById('offlineBar').textContent = '⚡ You\'re offline - previously loaded content is available';
+            }
+        }
+
+        function handleInstallClick() {
+            if (isIOS()) {
+                // iOS doesn't support beforeinstallprompt, show instructions
+                installBanner.classList.remove('show');
+                iosModal.classList.add('show');
+            } else if (deferredPrompt) {
+                // Chrome/Edge/Samsung - trigger native install
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                    if (choice.outcome === 'accepted') {
+                        console.log('PWA installed');
+                    }
+                    deferredPrompt = null;
+                    installBanner.classList.remove('show');
+                });
+            }
+        }
+
+        function dismissInstall() {
+            installBanner.classList.remove('show');
+            localStorage.setItem('pwaInstallDismissed', Date.now().toString());
+        }
+
+        // Track successful install
+        window.addEventListener('appinstalled', () => {
+            installBanner.classList.remove('show');
+            deferredPrompt = null;
+            console.log('PWA was installed');
+        });
+
+        // ============================================
+        // PWA: Offline / Online Detection
+        // ============================================
+        const offlineBar = document.getElementById('offlineBar');
+
+        function updateOnlineStatus() {
+            if (!navigator.onLine) {
+                offlineBar.classList.add('show');
+            } else {
+                offlineBar.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+// Restore preferred speed from last session
+const savedWpm = parseInt(localStorage.getItem('kalima_wpm'));
+if (savedWpm && savedWpm >= 50 && savedWpm <= 600) state.wpm = savedWpm;
+
+// Initialize Application
+createParticles();
+updateUI();
+populateSurahSelect();
+populatePageSelect();
+updateSpeedDisplay();
+initVisitorCounter();
+loadCollectiveTime();
+updateUmmahLocation();
+
+
+// Screen Helper
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+}
+
+// Event Listeners
+const startBtn = document.getElementById('startBtn');
+if (startBtn) {
+    startBtn.addEventListener('click', () => {
+        showScreen('onboardScreen');
+    });
+}
+
+const onbStartBtn = document.getElementById('onbStartBtn');
+if (onbStartBtn) {
+    onbStartBtn.addEventListener('click', () => {
+        localStorage.setItem('kalima_seen_intro', 'true');
+        showScreen('appScreen');
+        // Resume last session
+        const savedSurah = localStorage.getItem('kalima_surah');
+        const savedWord = localStorage.getItem('kalima_word');
+        if (savedSurah) loadSurah(parseInt(savedSurah)).then(() => {
+            if (savedWord) {
+                state.wordIndex = parseInt(savedWord);
+                displayWord();
+                updateProgress();
+            }
+        });
+    });
+}
+
+const langSwitchBtn = document.getElementById('langSwitchBtn');
+if (langSwitchBtn) {
+    langSwitchBtn.addEventListener('click', () => {
+        state.lang = state.lang === 'ar' ? 'en' : 'ar';
+        updateUI();
+        document.documentElement.lang = state.lang;
+        document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+    });
+}
+
+// Initial Load Logic
+if (localStorage.getItem('kalima_seen_intro')) {
+    showScreen('appScreen');
+    const savedSurah = localStorage.getItem('kalima_surah');
+    const savedWord = localStorage.getItem('kalima_word');
+    if (savedSurah) {
+        loadSurah(parseInt(savedSurah)).then(() => {
+            if (savedWord) {
+                state.wordIndex = parseInt(savedWord);
+                displayWord();
+                updateProgress();
+            }
+        });
+    } else {
+        loadSurah(1);
+    }
+} else {
+    showScreen('introScreen');
+    loadSurah(1); // Preload Fatiha
+}
+

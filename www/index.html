@@ -8,7 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="القرآن">
     <meta name="theme-color" content="#0a0a0f">
-    <meta name="description" content="رفيقك في تلاوة القرآن الكريم — تدبّر كلمة بكلمة في سكينة تامة، بلا إعلانات ولا تتبّع. صدقة جارية.">
+    <meta name="description"
+        content="رفيقك في تلاوة القرآن الكريم — تدبّر كلمة بكلمة في سكينة تامة، بلا إعلانات ولا تتبّع. صدقة جارية.">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="msapplication-TileColor" content="#0a0a0f">
     <meta name="msapplication-TileImage" content="/icons/icon-144.png">
@@ -32,11 +33,12 @@
         @font-face {
             font-family: 'KFGQPC Uthmanic Script HAFS';
             src: url('https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff') format('woff');
+                url('https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff') format('woff');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
         }
+
         @font-face {
             font-family: 'Scheherazade New';
             src: url('https://fonts.gstatic.com/s/scheherazadenew/v9/4iCp6KhlaNHb2oeD7Vamy7lsnA7gL1kzLad.woff2') format('woff2');
@@ -44,6 +46,7 @@
             font-style: normal;
             font-display: swap;
         }
+
         * {
             margin: 0;
             padding: 0;
@@ -53,15 +56,21 @@
         }
 
         /* Prevent text selection on mobile for better UX */
-        button, .ctrl-btn, .speed-btn-simple, .top-bar-btn {
+        button,
+        .ctrl-btn,
+        .speed-btn-simple,
+        .top-bar-btn {
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
         }
 
         /* Prevent zoom on double tap for iOS */
-        input, select, textarea {
-            font-size: 16px; /* Prevents iOS zoom on focus */
+        input,
+        select,
+        textarea {
+            font-size: 16px;
+            /* Prevents iOS zoom on focus */
         }
 
         :root {
@@ -103,6 +112,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            overflow-y: auto;
             transition: all 0.4s ease;
         }
 
@@ -113,8 +123,33 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 101;
             overflow: hidden;
+            opacity: 0.4;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                box-shadow: 0 0 6px 2px rgba(55, 212, 165, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 12px 4px rgba(55, 212, 165, 0.8);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
         }
 
         .particle {
@@ -125,6 +160,51 @@
             background: var(--accent-1);
             opacity: 0.3;
             animation: float 15s infinite ease-in-out;
+        }
+
+        .sajda-notif {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(6, 6, 14, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--accent-1);
+            border-radius: 30px;
+            padding: 30px;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px var(--accent-glow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            text-align: center;
+        }
+
+        .sajda-notif.show {
+            display: flex;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .sajda-icon-container {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 5px;
+        }
+
+        .sajda-icon-container svg {
+            width: 40px;
+            height: 40px;
+            fill: #000;
         }
 
         @keyframes float {
@@ -309,7 +389,8 @@
         .app-screen {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
+            /* overscroll-behavior: contain; */
+            /* Removed to ensure natural scroll if needed */
         }
 
         /* Mobile: Full width and height for reading area */
@@ -392,10 +473,18 @@
         }
 
         .top-bar-btn:hover,
-        .top-bar-btn:active {
+        .top-bar-btn:active,
+        .top-bar-btn.active {
             background: var(--bg-hover);
-            color: var(--accent-1);
-            border-color: var(--border-accent);
+            color: #fff;
+            border-color: var(--accent-1);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .top-bar-item:hover .btn-label,
+        .top-bar-item:active .btn-label,
+        .top-bar-item.active .btn-label {
+            color: #fff;
         }
 
         .top-bar-btn svg {
@@ -410,10 +499,10 @@
         }
 
         .btn-label {
-            font-size: 0.6rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             text-align: center;
-            max-width: 50px;
+            max-width: 60px;
         }
 
         /* Surah Selector */
@@ -720,7 +809,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            gap: 12px;
+            gap: 16px;
             padding: 16px 0;
             direction: ltr;
         }
@@ -733,10 +822,16 @@
         }
 
         .ctrl-btn-label {
-            font-size: 0.65rem;
-            color: var(--text-muted);
+            font-size: 0.8rem;
+            color: var(--text-primary);
             text-align: center;
             max-width: 60px;
+            transition: color 0.3s ease;
+        }
+
+        /* Dim labels during playback for reduced distraction */
+        .playback-playing .ctrl-btn-label {
+            color: var(--text-muted);
         }
 
         .ctrl-btn {
@@ -789,11 +884,33 @@
             color: #0a0a0f;
             border: none;
             box-shadow: 0 8px 30px var(--accent-glow);
+            transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.2s ease;
         }
 
         .ctrl-btn-play:hover {
             transform: scale(1.1);
             box-shadow: 0 12px 40px var(--accent-glow);
+        }
+
+        /* Surah completion: green pulse animation */
+        .ctrl-btn-play.play-btn-complete {
+            background: linear-gradient(135deg, #22c55e, #4ade80) !important;
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.45) !important;
+            animation: playBtnFlash 1.6s ease-in-out infinite;
+        }
+
+        @keyframes playBtnFlash {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 30px rgba(34, 197, 94, 0.45);
+            }
+
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 12px 45px rgba(34, 197, 94, 0.7);
+            }
         }
 
         .ctrl-btn-play svg {
@@ -960,7 +1077,7 @@
         /* Simplified Speed Buttons */
         .speed-presets-simple {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
             margin-top: 14px;
@@ -973,7 +1090,7 @@
             color: var(--text-muted);
             border-radius: 20px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 500;
             font-family: inherit;
             transition: all 0.3s ease;
@@ -1034,6 +1151,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1285,10 +1403,14 @@
         }
 
         @keyframes dotPulse {
-            0%, 60%, 100% {
+
+            0%,
+            60%,
+            100% {
                 opacity: 0.3;
                 transform: scale(1);
             }
+
             30% {
                 opacity: 1;
                 transform: scale(1.2);
@@ -2128,6 +2250,7 @@
             transform: translateX(20px);
             background-color: #000;
         }
+
         /* Onboarding Features */
         .onb-feature {
             display: flex;
@@ -2139,7 +2262,11 @@
             border-radius: 14px;
             text-align: right;
         }
-        [dir="rtl"] .onb-feature { text-align: right; }
+
+        [dir="rtl"] .onb-feature {
+            text-align: right;
+        }
+
         .onb-icon {
             font-size: 1.4rem;
             flex-shrink: 0;
@@ -2148,21 +2275,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(212,175,55,0.1);
+            background: rgba(212, 175, 55, 0.1);
             border-radius: 10px;
         }
-        .onb-text { flex: 1; }
+
+        .onb-text {
+            flex: 1;
+        }
+
         .onb-feat-title {
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--accent-1);
             margin-bottom: 3px;
         }
+
         .onb-feat-desc {
             font-size: 0.78rem;
             color: var(--text-secondary);
             line-height: 1.5;
         }
+
         /* PWA Install Banner */
         .install-banner {
             position: fixed;
@@ -2178,32 +2311,46 @@
             align-items: center;
             gap: 14px;
             animation: slideUpBanner 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 -8px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
         }
-        .install-banner.show { display: flex; }
+
+        .install-banner.show {
+            display: flex;
+        }
+
         @keyframes slideUpBanner {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
         }
+
         .install-banner-icon {
             width: 48px;
             height: 48px;
             border-radius: 12px;
             flex-shrink: 0;
         }
+
         .install-banner-text {
             flex: 1;
         }
+
         .install-banner-title {
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 2px;
         }
+
         .install-banner-desc {
             font-size: 0.75rem;
             color: var(--text-secondary);
         }
+
         .install-banner-btn {
             background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
             color: #0a0a0f;
@@ -2216,6 +2363,7 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+
         .install-banner-close {
             background: none;
             border: none;
@@ -2226,18 +2374,23 @@
             line-height: 1;
             flex-shrink: 0;
         }
+
         /* iOS install instructions modal */
         .ios-install-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             z-index: 6000;
             display: none;
             align-items: center;
             justify-content: center;
         }
-        .ios-install-modal.show { display: flex; }
+
+        .ios-install-modal.show {
+            display: flex;
+        }
+
         .ios-install-content {
             background: var(--bg-card-solid);
             padding: 30px;
@@ -2248,11 +2401,13 @@
             text-align: center;
             color: var(--text-primary);
         }
+
         .ios-install-content h3 {
             color: var(--accent-1);
             margin-bottom: 20px;
             font-size: 1.2rem;
         }
+
         .ios-step {
             display: flex;
             align-items: center;
@@ -2263,7 +2418,11 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-        .ios-step:last-of-type { border-bottom: none; }
+
+        .ios-step:last-of-type {
+            border-bottom: none;
+        }
+
         .ios-step-num {
             width: 28px;
             height: 28px;
@@ -2277,12 +2436,14 @@
             font-size: 0.8rem;
             flex-shrink: 0;
         }
+
         .ios-step svg {
             width: 20px;
             height: 20px;
             flex-shrink: 0;
             fill: var(--accent-1);
         }
+
         /* Offline indicator */
         .offline-bar {
             position: fixed;
@@ -2298,14 +2459,37 @@
             z-index: 9999;
             display: none;
         }
-        .offline-bar.show { display: block; }
+
+        .offline-bar.show {
+            display: block;
+        }
     </style>
 </head>
 
 <body>
+    <div class="sajda-notif" id="sajdaNotif">
+        <div class="sajda-icon-container">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l5.59-5.58L18 9l-7 7z" />
+            </svg>
+        </div>
+        <h2 style="font-family:'Amiri', serif; color:var(--accent-1); margin:0;">سجدة تلاوة</h2>
+        <div style="font-size: 13px; color: var(--text-secondary); margin:10px 0; line-height:1.6; max-width:280px;"
+            id="sajdaText">
+            <p id="sajdaDua1" style="margin:5px 0;">سجد وجهي للذي خلقه وصوره، وشق سمعه وبصره بحوله وقوته، تبارك الله
+                أحسن الخالقين</p>
+            <p id="sajdaDua2" style="margin:5px 0; opacity:0.8; display:none;">اللهم اكتب لي بها عندك أجراً، وضع عني بها
+                وِزراً، واجعلها لي عندك ذخراً، وتقبلها مني كما تقبلتها من عبدك داود</p>
+        </div>
+        <button onclick="hideSajda()" class="intro-btn"
+            style="margin-top:10px; padding:10px 30px; border-radius:15px; font-size:14px; height:auto;">متابعـة</button>
+    </div>
+
     <div class="ambient-bg" id="ambientBg"></div>
     <button class="focus-exit" id="focusExit"><svg viewBox="0 0 24 24">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
         </svg><span id="exitFocusLabel">خروج</span></button>
 
     <!-- INTRO SCREEN -->
@@ -2333,51 +2517,72 @@
     </div>
 
     <!-- ONBOARDING SCREEN -->
-    <div class="screen intro-screen" id="onboardScreen" style="padding:24px 20px;justify-content:flex-start;padding-top:50px;">
-        <img src="icons/icon-192.png" alt="" style="width:80px;height:80px;border-radius:20px;margin-bottom:24px;box-shadow:0 8px 30px rgba(212,175,55,0.3);">
-        <h1 style="font-family:'Amiri',serif;font-size:1.8rem;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;" id="onbTitle">كلمات</h1>
-        <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:30px;" id="onbSub">رفيقك في تلاوة القرآن الكريم</p>
-        
-        <div id="onbFeatures" style="width:100%;max-width:380px;display:flex;flex-direction:column;gap:16px;margin-bottom:36px;">
+    <div class="screen intro-screen" id="onboardScreen"
+        style="padding:24px 20px;justify-content:flex-start;padding-top:50px;">
+        <img src="icons/icon-192.png" alt=""
+            style="width:80px;height:80px;border-radius:20px;margin-bottom:24px;box-shadow:0 8px 30px rgba(212,175,55,0.3);">
+        <h1 style="font-family:'Amiri',serif;font-size:1.8rem;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;"
+            id="onbTitle">كلمات</h1>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:30px;" id="onbSub">رفيقك في تلاوة القرآن
+            الكريم</p>
+
+        <div id="onbFeatures"
+            style="width:100%;max-width:380px;display:flex;flex-direction:column;gap:16px;margin-bottom:36px;">
             <div class="onb-feature">
                 <div class="onb-icon">📖</div>
                 <div class="onb-text">
-                    <div class="onb-feat-title" data-ar="قراءة كلمة بكلمة" data-en="Word-by-Word Reading">قراءة كلمة بكلمة</div>
-                    <div class="onb-feat-desc" data-ar="اعرض كلمات القرآن واحدة تلو الأخرى بالسرعة التي تناسبك" data-en="Display Quran words one at a time at your own pace">اعرض كلمات القرآن واحدة تلو الأخرى بالسرعة التي تناسبك</div>
+                    <div class="onb-feat-title" data-ar="قراءة كلمة بكلمة" data-en="Word-by-Word Reading">قراءة كلمة
+                        بكلمة</div>
+                    <div class="onb-feat-desc" data-ar="اعرض كلمات القرآن واحدة تلو الأخرى بالسرعة التي تناسبك"
+                        data-en="Display Quran words one at a time at your own pace">اعرض كلمات القرآن واحدة تلو الأخرى
+                        بالسرعة التي تناسبك</div>
                 </div>
             </div>
             <div class="onb-feature">
                 <div class="onb-icon">⏱️</div>
                 <div class="onb-text">
-                    <div class="onb-feat-title" data-ar="تحكّم بسرعة القراءة" data-en="Control Reading Speed">تحكّم بسرعة القراءة</div>
-                    <div class="onb-feat-desc" data-ar="اضبط السرعة من ٥٠ إلى ١٠٠٠ كلمة بالدقيقة — أو فعّل السرعة المتغيرة" data-en="Adjust from 50 to 1000 WPM — or enable variable speed">اضبط السرعة من ٥٠ إلى ١٠٠٠ كلمة بالدقيقة — أو فعّل السرعة المتغيرة</div>
+                    <div class="onb-feat-title" data-ar="تحكّم بسرعة القراءة" data-en="Control Reading Speed">تحكّم
+                        بسرعة القراءة</div>
+                    <div class="onb-feat-desc"
+                        data-ar="اضبط السرعة من ٥٠ إلى ١٠٠٠ كلمة بالدقيقة — أو فعّل السرعة المتغيرة"
+                        data-en="Adjust from 50 to 1000 WPM — or enable variable speed">اضبط السرعة من ٥٠ إلى ١٠٠٠ كلمة
+                        بالدقيقة — أو فعّل السرعة المتغيرة</div>
                 </div>
             </div>
             <div class="onb-feature">
                 <div class="onb-icon">🔁</div>
                 <div class="onb-text">
-                    <div class="onb-feat-title" data-ar="تكرار الآيات للحفظ" data-en="Loop Ayahs for Memorization">تكرار الآيات للحفظ</div>
-                    <div class="onb-feat-desc" data-ar="حدّد نطاق آيات وكرّرها تلقائياً لتسهيل الحفظ والمراجعة" data-en="Set an ayah range and loop automatically for memorization">حدّد نطاق آيات وكرّرها تلقائياً لتسهيل الحفظ والمراجعة</div>
+                    <div class="onb-feat-title" data-ar="تكرار الآيات للحفظ" data-en="Loop Ayahs for Memorization">تكرار
+                        الآيات للحفظ</div>
+                    <div class="onb-feat-desc" data-ar="حدّد نطاق آيات وكرّرها تلقائياً لتسهيل الحفظ والمراجعة"
+                        data-en="Set an ayah range and loop automatically for memorization">حدّد نطاق آيات وكرّرها
+                        تلقائياً لتسهيل الحفظ والمراجعة</div>
                 </div>
             </div>
             <div class="onb-feature">
                 <div class="onb-icon">🌙</div>
                 <div class="onb-text">
-                    <div class="onb-feat-title" data-ar="وضع ليلي ونهاري" data-en="Dark & Light Mode">وضع ليلي ونهاري</div>
-                    <div class="onb-feat-desc" data-ar="اختر ما يريح عينيك — مع حفظ تلقائي لموضع القراءة" data-en="Choose what's comfortable — with automatic bookmark saving">اختر ما يريح عينيك — مع حفظ تلقائي لموضع القراءة</div>
+                    <div class="onb-feat-title" data-ar="وضع ليلي ونهاري" data-en="Dark & Light Mode">وضع ليلي ونهاري
+                    </div>
+                    <div class="onb-feat-desc" data-ar="اختر ما يريح عينيك — مع حفظ تلقائي لموضع القراءة"
+                        data-en="Choose what's comfortable — with automatic bookmark saving">اختر ما يريح عينيك — مع حفظ
+                        تلقائي لموضع القراءة</div>
                 </div>
             </div>
             <div class="onb-feature">
                 <div class="onb-icon">🚫</div>
                 <div class="onb-text">
-                    <div class="onb-feat-title" data-ar="بلا إعلانات — بلا تتبّع" data-en="No Ads — No Tracking">بلا إعلانات — بلا تتبّع</div>
-                    <div class="onb-feat-desc" data-ar="تطبيق مجاني بالكامل — صدقة جارية" data-en="Completely free — an ongoing charity">تطبيق مجاني بالكامل — صدقة جارية</div>
+                    <div class="onb-feat-title" data-ar="بلا إعلانات — بلا تتبّع" data-en="No Ads — No Tracking">بلا
+                        إعلانات — بلا تتبّع</div>
+                    <div class="onb-feat-desc" data-ar="تطبيق مجاني بالكامل — صدقة جارية"
+                        data-en="Completely free — an ongoing charity">تطبيق مجاني بالكامل — صدقة جارية</div>
                 </div>
             </div>
         </div>
 
         <button class="intro-btn" id="onbStartBtn" style="padding:16px 60px;font-size:1.1rem;">ابدأ القراءة</button>
-        <p style="color:var(--text-muted);font-size:0.7rem;margin-top:16px;text-align:center;" id="onbTip">اضغط على الشاشة للتشغيل والإيقاف — انقر مرتين على الأطراف للتنقل</p>
+        <p style="color:var(--text-muted);font-size:0.7rem;margin-top:16px;text-align:center;" id="onbTip">اضغط على
+            الشاشة للتشغيل والإيقاف — انقر مرتين على الأطراف للتنقل</p>
     </div>
 
     <!-- MAIN APP SCREEN -->
@@ -2393,10 +2598,12 @@
                 </div>
                 <div class="top-bar-center">
                     <div class="top-bar-item">
-                        <button class="top-bar-btn" id="pagesBtn" onclick="window.location.href='quran-pages-reader.html'"><svg viewBox="0 0 24 24">
-                                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                        <button class="top-bar-btn" id="pagesBtn"
+                            onclick="window.location.href='quran-pages-reader.html'"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
                             </svg></button>
-                        <span class="btn-label" id="pagesLabel">الصفحات</span>
+                        <span class="btn-label" id="pagesLabel">المصحف</span>
                     </div>
                     <div class="top-bar-item">
                         <button class="top-bar-btn" id="focusModeBtn"><svg viewBox="0 0 24 24">
@@ -2407,22 +2614,10 @@
                     </div>
                     <div class="top-bar-item">
                         <button class="top-bar-btn" id="ummahBtn"><svg viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                             </svg></button>
                         <span class="btn-label" id="ummahLabel">الأمة</span>
-                    </div>
-                    <div class="top-bar-item">
-                        <button class="top-bar-btn" id="shareBtn"><svg viewBox="0 0 24 24">
-                                <path
-                                    d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
-                            </svg></button>
-                        <span class="btn-label" id="shareLabel">مشاركة</span>
-                    </div>
-                    <div class="top-bar-item">
-                        <button class="top-bar-btn" id="bookmarkBtn"><svg viewBox="0 0 24 24">
-                                <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
-                            </svg></button>
-                        <span class="btn-label" id="bookmarkLabel">حفظ</span>
                     </div>
                 </div>
                 <div class="top-bar-item">
@@ -2436,14 +2631,18 @@
 
             <div class="surah-row" style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px;">
                 <div class="surah-selector" style="flex: 1; margin: 0; position: relative; padding-top: 20px;">
-                    <label for="surahSelect" style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;" id="surahSelectLabel">السورة</label>
+                    <label for="surahSelect"
+                        style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;"
+                        id="surahSelectLabel">السورة</label>
                     <select id="surahSelect" style="margin-top: 0;">
                         <option value="">اختر سورة...</option>
                     </select>
                 </div>
                 <!-- Page Selector Dropdown -->
                 <div class="surah-selector" style="flex: 1; margin: 0; position: relative; padding-top: 20px;">
-                    <label for="pageSelect" style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;" id="pageNumberLabel">رقم الصفحة</label>
+                    <label for="pageSelect"
+                        style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;"
+                        id="pageNumberLabel">رقم الصفحة</label>
                     <select id="pageSelect" style="margin-top: 0;">
                         <option value="">--</option>
                     </select>
@@ -2505,8 +2704,8 @@
             <!-- Simplified Info Bar -->
             <div class="stats-grid">
                 <div class="info-bar">
-                    <div class="info-item"><span class="info-label" id="surahLabel">السورة</span><span class="info-value"
-                            id="surahName">الفاتحة</span></div>
+                    <div class="info-item"><span class="info-label" id="surahLabel">السورة</span><span
+                            class="info-value" id="surahName">الفاتحة</span></div>
                     <div class="info-item"><span class="info-label" id="hizbLabel">الحزب</span><span class="info-value"
                             id="hizbNum">١</span></div>
                     <div class="info-item"><span class="info-label" id="juzuLabel">الجزء</span><span class="info-value"
@@ -2526,7 +2725,8 @@
             </div>
 
             <!-- Simplified Speed Control: 5 Buttons -->
-            <div class="speed-presets-simple" style="margin-top: 10px; margin-bottom: 10px; display: flex; gap: 8px; justify-content: center;">
+            <div class="speed-presets-simple"
+                style="margin-top: 10px; margin-bottom: 10px; display: flex; gap: 8px; justify-content: center;">
                 <button class="speed-btn-simple" id="speedSlower" data-wpm="100">أبطأ</button>
                 <button class="speed-btn-simple" id="speedSlow" data-wpm="150">بطيء</button>
                 <button class="speed-btn-simple active" id="speedMedium" data-wpm="200">متوسط</button>
@@ -2546,116 +2746,120 @@
             <!-- More Controls Button -->
             <button class="more-controls-btn" id="moreControlsBtn" onclick="toggleMoreControls()">
                 <span id="moreControlsLabel">المزيد من التحكم</span>
-                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; transition: transform 0.3s;" id="moreControlsIcon">
-                    <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; transition: transform 0.3s;"
+                    id="moreControlsIcon">
+                    <path d="M7 10l5 5 5-5z" fill="currentColor" />
                 </svg>
             </button>
 
             <!-- Advanced Controls (Hidden by default) -->
             <div class="advanced-controls" id="advancedControls" style="display: none;">
                 <!-- Custom Speed Control Slider -->
-            <div class="control-card compact-speed-control"
+                <div class="control-card compact-speed-control"
                     style="margin-top: 10px; margin-bottom: 5px; padding: 10px;">
-                <div class="control-header" style="margin-bottom: 5px; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span id="speedLabel">سرعة القراءة المخصصة</span>
-                    </div>
-                    <div class="speed-adjuster">
-                        <button class="adjust-btn" id="decreaseSpeedBtn">-50</button>
-                        <span class="control-value" style="min-width: 40px; text-align: center;"><span
-                                id="wpmValue">200</span></span>
-                        <button class="adjust-btn" id="increaseSpeedBtn">+50</button>
-                    </div>
-                </div>
-                <input type="range" class="speed-slider" id="speedSlider" min="50" max="600" value="200" step="10">
-            </div>
-
-            <!-- Variable Speed Control -->
-            <div class="control-card" style="margin-top: 10px; margin-bottom: 10px;">
-                <div class="control-header">
-                    <span id="variableSpeedLabel">سرعة متغيرة</span>
-                    <label class="toggle-switch"><input type="checkbox" id="variableSpeedToggle" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; padding: 0 4px;" id="variableSpeedTip">نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف</div>
-            </div>
-
-            <!-- Tools Grid (Focus + Gaze) -->
-            <div class="tools-grid">
-                <div class="tool-item">
-                    <div class="tool-header">
-                        <span class="tool-title" id="enhancedTitle">وضع التركيز</span>
-                        <div class="toggle-wrapper"><label class="toggle-switch"><input type="checkbox"
-                                    id="enhancedToggle" checked><span class="toggle-slider"></span></label></div>
-                    </div>
-                    <div class="tool-desc" id="enhancedDesc">تمييز نقطة التركيز</div>
-                </div>
-
-                <div class="tool-item">
-                    <div class="tool-header">
-                        <span class="tool-title">التحكم بالنظر</span>
-                        <div class="toggle-wrapper"><label class="toggle-switch"><input type="checkbox"
-                                    id="gazeToggle"><span class="toggle-slider"></span></label></div>
-                    </div>
-                    <div class="gaze-ui-compact">
-                        <span id="gazeStatus">مغلق</span>
-                        <canvas id="gazeCanvas" class="gaze-canvas-micro" width="60" height="15"></canvas>
-                    </div>
-                    <video id="gazeVideo" class="gaze-video-hidden" playsinline muted autoplay></video>
-                </div>
-            </div>
-
-            <div class="font-size-control" style="display: none;">
-                <span class="font-size-label" id="fontSizeLabel">حجم الخط</span>
-                <div class="font-size-btns">
-                    <button class="font-btn active" data-size="small">ص</button>
-                    <button class="font-btn" data-size="medium">م</button>
-                    <button class="font-btn" data-size="large">ك</button>
-                    <button class="font-btn" data-size="xlarge">+</button>
-                </div>
-            </div>
-
-            <div class="control-card">
-                <div class="control-header"><span id="loopLabel">تكرار الآيات</span><label class="toggle-switch"><input
-                            type="checkbox" id="loopToggle"><span class="toggle-slider"></span></label></div>
-                <div class="loop-control">
-                    <div class="loop-range-display"><span id="loopRangeText">نطاق التكرار:</span><span
-                            class="loop-range-value" id="loopRangeValue">١ - ٧</span></div>
-                    <div class="loop-slider-container">
-                        <div class="loop-slider-row">
-                            <span class="loop-slider-label" id="fromLabel">من الآية</span>
-                            <input type="number" class="loop-input" id="loopStartInput" min="1" max="7" value="1">
-                            <input type="range" class="speed-slider loop-slider" id="loopStartSlider" min="1" max="7"
-                                value="1">
+                    <div class="control-header" style="margin-bottom: 5px; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="speedLabel">سرعة القراءة المخصصة</span>
                         </div>
-                        <div class="loop-slider-row">
-                            <span class="loop-slider-label" id="toLabel">إلى الآية</span>
-                            <input type="number" class="loop-input" id="loopEndInput" min="1" max="7" value="7">
-                            <input type="range" class="speed-slider loop-slider" id="loopEndSlider" min="1" max="7"
-                                value="7">
+                        <div class="speed-adjuster">
+                            <button class="adjust-btn" id="decreaseSpeedBtn">-50</button>
+                            <span class="control-value" style="min-width: 40px; text-align: center;"><span
+                                    id="wpmValue">200</span></span>
+                            <button class="adjust-btn" id="increaseSpeedBtn">+50</button>
                         </div>
                     </div>
+                    <input type="range" class="speed-slider" id="speedSlider" min="50" max="600" value="200" step="10">
                 </div>
-            </div>
 
-            <div class="stats-row">
-                <div class="stat-item">
-                    <div class="stat-label" id="wordsReadLabel">كلمات قرأتها</div>
-                    <div class="stat-value" id="wordsRead">0</div>
+                <!-- Variable Speed Control -->
+                <div class="control-card" style="margin-top: 10px; margin-bottom: 10px;">
+                    <div class="control-header">
+                        <span id="variableSpeedLabel">سرعة متغيرة</span>
+                        <label class="toggle-switch"><input type="checkbox" id="variableSpeedToggle" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; padding: 0 4px;"
+                        id="variableSpeedTip">نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label" id="timeSpentLabel">وقت القراءة</div>
-                    <div class="stat-value" id="timeSpent">0:00</div>
-                </div>
-            </div>
 
-            <div class="stats-row" style="margin-top:12px;">
-                <div class="stat-item">
-                    <div class="stat-label" id="visitorsLabel">زوار الصفحة</div>
-                    <div class="stat-value" id="visitorsCount">--</div>
+                <!-- Tools Grid (Focus + Gaze) -->
+                <div class="tools-grid">
+                    <div class="tool-item">
+                        <div class="tool-header">
+                            <span class="tool-title" id="enhancedTitle">وضع التركيز</span>
+                            <div class="toggle-wrapper"><label class="toggle-switch"><input type="checkbox"
+                                        id="enhancedToggle" checked><span class="toggle-slider"></span></label></div>
+                        </div>
+                        <div class="tool-desc" id="enhancedDesc">تمييز نقطة التركيز</div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-header">
+                            <span class="tool-title">التحكم بالنظر</span>
+                            <div class="toggle-wrapper"><label class="toggle-switch"><input type="checkbox"
+                                        id="gazeToggle"><span class="toggle-slider"></span></label></div>
+                        </div>
+                        <div class="gaze-ui-compact">
+                            <span id="gazeStatus">مغلق</span>
+                            <canvas id="gazeCanvas" class="gaze-canvas-micro" width="60" height="15"></canvas>
+                        </div>
+                        <video id="gazeVideo" class="gaze-video-hidden" playsinline muted autoplay></video>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label" id="collectiveTimeLabel">وقت القراءة الجماعي</div>
-                    <div class="stat-value" id="collectiveTime">--</div>
+
+                <div class="font-size-control" style="display: none;">
+                    <span class="font-size-label" id="fontSizeLabel">حجم الخط</span>
+                    <div class="font-size-btns">
+                        <button class="font-btn active" data-size="small">ص</button>
+                        <button class="font-btn" data-size="medium">م</button>
+                        <button class="font-btn" data-size="large">ك</button>
+                        <button class="font-btn" data-size="xlarge">+</button>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-header"><span id="loopLabel">تكرار الآيات</span><label
+                            class="toggle-switch"><input type="checkbox" id="loopToggle"><span
+                                class="toggle-slider"></span></label></div>
+                    <div class="loop-control">
+                        <div class="loop-range-display"><span id="loopRangeText">نطاق التكرار:</span><span
+                                class="loop-range-value" id="loopRangeValue">١ - ٧</span></div>
+                        <div class="loop-slider-container">
+                            <div class="loop-slider-row">
+                                <span class="loop-slider-label" id="fromLabel">من الآية</span>
+                                <input type="number" class="loop-input" id="loopStartInput" min="1" max="7" value="1">
+                                <input type="range" class="speed-slider loop-slider" id="loopStartSlider" min="1"
+                                    max="7" value="1">
+                            </div>
+                            <div class="loop-slider-row">
+                                <span class="loop-slider-label" id="toLabel">إلى الآية</span>
+                                <input type="number" class="loop-input" id="loopEndInput" min="1" max="7" value="7">
+                                <input type="range" class="speed-slider loop-slider" id="loopEndSlider" min="1" max="7"
+                                    value="7">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-label" id="wordsReadLabel">كلمات قرأتها</div>
+                        <div class="stat-value" id="wordsRead">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label" id="timeSpentLabel">وقت القراءة</div>
+                        <div class="stat-value" id="timeSpent">0:00</div>
+                    </div>
+                </div>
+
+                <div class="stats-row" style="margin-top:12px;">
+                    <div class="stat-item">
+                        <div class="stat-label" id="visitorsLabel">زوار الصفحة</div>
+                        <div class="stat-value" id="visitorsCount">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label" id="collectiveTimeLabel">وقت القراءة الجماعي</div>
+                        <div class="stat-value" id="collectiveTime">--</div>
                     </div>
                 </div>
             </div>
@@ -2665,62 +2869,160 @@
     </div>
 
     <!-- ═══ Ummah Globe Screen ═══ -->
-    <div class="screen" id="ummahScreen" style="background:#020208;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-        <div style="max-width:420px;margin:0 auto;font-family:'Amiri','Cairo','Segoe UI',sans-serif;color:#c0bca8;direction:rtl;">
-            <!-- Header -->
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;">
+    <div class="screen" id="ummahScreen"
+        style="background:var(--bg-gradient-1);overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;">
+        <!-- Referral popup -->
+        <div id="refPopup"
+            style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;padding:10px 20px;background:rgba(74,222,128,0.12);backdrop-filter:blur(16px);border:1px solid rgba(74,222,128,0.35);border-radius:24px;font-size:13px;font-weight:700;color:#4ade80;white-space:nowrap;animation:fadeIn 0.4s ease;pointer-events:none;">
+        </div>
+
+        <!-- ── Globe Hero (full-width, edge-to-edge) ── -->
+        <div style="position:relative;width:100%;flex-shrink:0;">
+
+            <!-- Globe fills the top -->
+            <div id="ummahGlobeContainer" style="width:100%;height:380px;overflow:hidden;"></div>
+
+            <!-- Gradient fade at bottom so content blends in -->
+            <div
+                style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,var(--bg-gradient-1) 0%,transparent 100%);pointer-events:none;">
+            </div>
+
+            <!-- Floating top bar (over globe) -->
+            <div
+                style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(to bottom,rgba(6,6,14,0.7) 0%,transparent 100%);">
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-size:18px;font-weight:800;color:#c4a42e;">الأمة تقرأ</span>
-                    <span style="width:7px;height:7px;border-radius:50%;background:#37d4a5;box-shadow:0 0 8px rgba(55,212,165,0.5);"></span>
-                    <span style="font-size:11px;color:#37d4a5;font-weight:700;" id="ummahLiveLabel">مباشر</span>
+                    <span style="font-size:18px;font-weight:900;color:var(--accent-1);letter-spacing:-0.3px;">الأمة
+                        تقرأ</span>
+                    <span
+                        style="width:6px;height:6px;border-radius:50%;background:#37d4a5;box-shadow:0 0 8px rgba(55,212,165,0.7);animation:pulse-dot 2s infinite;flex-shrink:0;"></span>
+                    <span style="font-size:10px;color:#37d4a5;font-weight:700;letter-spacing:1px;"
+                        id="ummahLiveLabel">مباشر</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(55,212,165,0.06);border-radius:16px;border:1px solid rgba(55,212,165,0.08);">
-                        <span style="width:5px;height:5px;border-radius:50%;background:#37d4a5;"></span>
-                        <span style="font-size:14px;font-weight:800;" id="ummahReaderCount">--</span>
-                        <span style="font-size:10px;color:#3a5545;font-weight:600;" id="ummahReadingNow">يقرأون الآن</span>
-                    </div>
-                    <button onclick="showScreen('appScreen')" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#c0bca8;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">✕</button>
+                <button onclick="closeUmmahScreen()"
+                    style="background:rgba(255,255,255,0.07);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">✕</button>
+            </div>
+
+            <!-- Big reader counter — overlaid at bottom of globe -->
+            <div style="position:absolute;bottom:24px;left:0;right:0;text-align:center;pointer-events:none;">
+                <div id="ummahCounterBadge"
+                    style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:rgba(6,6,14,0.65);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);border-radius:28px;transition:all 0.4s ease;">
+                    <span id="ummahCounterDot"
+                        style="width:6px;height:6px;border-radius:50%;background:#37d4a5;flex-shrink:0;box-shadow:0 0 6px #37d4a5;"></span>
+                    <span style="font-size:22px;font-weight:900;color:var(--text-primary);letter-spacing:-0.5px;"
+                        id="ummahReaderCount">--</span>
+                    <span style="font-size:11px;font-weight:700;color:var(--text-muted);" id="ummahReadingNow">يقرأون
+                        الآن</span>
                 </div>
-            </div>
-            <!-- Globe Canvas -->
-            <div style="padding:0 16px;position:relative;">
-                <canvas id="ummahCanvas" style="display:block;margin:0 auto;touch-action:none;cursor:grab;"></canvas>
-            </div>
-            <!-- Big Counter -->
-            <div style="text-align:center;padding:12px 16px 8px;">
-                <div style="font-size:36px;font-weight:800;color:#c4a42e;line-height:1;" id="ummahTotalWords">--</div>
-                <div style="font-size:12px;color:#5a5545;font-weight:600;margin-top:3px;" id="ummahWordsLabel">كلمة قرأتها الأمة معاً</div>
-            </div>
-            <!-- Stats Row -->
-            <div style="display:flex;gap:8px;padding:0 16px;margin-bottom:8px;">
-                <div style="flex:1;text-align:center;background:rgba(255,255,255,0.02);border-radius:12px;padding:10px 4px;border:1px solid rgba(255,255,255,0.03);">
-                    <div style="font-size:17px;font-weight:800;color:#c0bca8;" id="ummahKhatmas">--</div>
-                    <div style="font-size:9px;color:#4a4838;font-weight:600;margin-top:2px;" id="ummahKhatmasLabel">ختمة كاملة</div>
-                </div>
-                <div style="flex:1;text-align:center;background:rgba(255,255,255,0.02);border-radius:12px;padding:10px 4px;border:1px solid rgba(255,255,255,0.03);">
-                    <div style="font-size:17px;font-weight:800;color:#c0bca8;" id="ummahCountries">--</div>
-                    <div style="font-size:9px;color:#4a4838;font-weight:600;margin-top:2px;" id="ummahCountriesLabel">دولة</div>
-                </div>
-                <div style="flex:1;text-align:center;background:rgba(255,255,255,0.02);border-radius:12px;padding:10px 4px;border:1px solid rgba(255,255,255,0.03);">
-                    <div style="font-size:17px;font-weight:800;color:#c0bca8;" id="ummahHours">--</div>
-                    <div style="font-size:9px;color:#4a4838;font-weight:600;margin-top:2px;" id="ummahHoursLabel">ساعة قراءة</div>
-                </div>
-            </div>
-            <!-- Live Feed -->
-            <div style="padding:4px 16px;flex:1;">
-                <div style="font-size:9px;color:#3a3830;font-weight:700;letter-spacing:1.5px;margin-bottom:4px;" id="ummahFeedTitle">نشاط مباشر</div>
-                <div id="ummahFeed"></div>
-            </div>
-            <!-- Share CTA -->
-            <div style="padding:10px 16px 30px;position:sticky;bottom:0;background:linear-gradient(0deg,#020208 60%,transparent);">
-                <button id="ummahShareBtn" style="width:100%;padding:15px;border-radius:16px;border:none;background:linear-gradient(135deg,#c4a42e,#9a7d18);color:#020208;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(196,164,46,0.2);letter-spacing:0.5px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-                    <span id="ummahShareLabel">ادعُ أصدقاءك وشارك الأجر</span>
-                </button>
             </div>
         </div>
+
+        <!-- ── Content below globe ── -->
+        <div style="padding:0 16px 100px;flex:1;">
+
+            <!-- Words mega-stat -->
+            <div style="text-align:center;padding:18px 0 16px;">
+                <div style="font-size:44px;font-weight:900;color:var(--accent-1);line-height:1;letter-spacing:-2px;font-variant-numeric:tabular-nums;"
+                    id="ummahTotalWords">--</div>
+                <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-top:6px;letter-spacing:0.8px;text-transform:uppercase;"
+                    id="ummahWordsLabel">كلمة قرأتها الأمة معاً</div>
+            </div>
+
+            <!-- Stat row — 3 pills side by side -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
+                <div
+                    style="background:rgba(255,255,255,0.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px 8px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+                    <div
+                        style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-1);opacity:0.6;">
+                    </div>
+                    <div style="color:var(--accent-1);margin-bottom:8px;display:flex;justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div style="font-size:20px;font-weight:900;color:var(--text-primary);line-height:1;"
+                        id="ummahHours">--</div>
+                    <div
+                        style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
+                        ساعة</div>
+                </div>
+                <div
+                    style="background:rgba(255,255,255,0.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px 8px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#d4af37;opacity:0.6;">
+                    </div>
+                    <div style="color:#d4af37;margin-bottom:8px;display:flex;justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div style="font-size:20px;font-weight:900;color:var(--text-primary);line-height:1;"
+                        id="ummahCountries">--</div>
+                    <div
+                        style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
+                        دولة</div>
+                </div>
+                <div
+                    style="background:rgba(255,255,255,0.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px 8px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#c084fc;opacity:0.6;">
+                    </div>
+                    <div style="color:#c084fc;margin-bottom:8px;display:flex;justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <div style="font-size:20px;font-weight:900;color:var(--text-primary);line-height:1;"
+                        id="ummahKhatmas">--</div>
+                    <div
+                        style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
+                        ختمة</div>
+                </div>
+            </div>
+
+            <!-- Live readers section -->
+            <div
+                style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:14px 16px;margin-bottom:16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span
+                            style="width:5px;height:5px;border-radius:50%;background:#37d4a5;box-shadow:0 0 4px #37d4a5;animation:pulse-dot 2s infinite;"></span>
+                        <span
+                            style="font-size:10px;color:#37d4a5;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;"
+                            id="ummahFeedTitle">قراء الآن</span>
+                    </div>
+                    <span style="font-size:10px;color:var(--text-muted);font-weight:600;">آخر 24 ساعة</span>
+                </div>
+                <div id="ummahFeed" style="display:flex;flex-direction:column;gap:0;"></div>
+                <div id="ummahFeedEmpty"
+                    style="display:none;text-align:center;padding:16px 0;color:var(--text-muted);font-size:12px;font-weight:600;opacity:0.6;">
+                    لا يوجد قراء نشطون الآن
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky CTA at bottom -->
+        <div
+            style="position:sticky;bottom:0;left:0;right:0;padding:24px 20px;background:linear-gradient(to top,var(--bg-gradient-1) 70%,transparent 100%);z-index:210;">
+            <button class="intro-btn" id="ummahShareBtn"
+                style="margin:0;width:100%;box-shadow:0 10px 30px rgba(184,134,11,0.25);display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:28px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16 6 12 2 8 6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                </svg>
+                <span>ادعُ أصدقاءك وشارك الأجر</span>
+            </button>
+        </div>
     </div>
+
 
     <!-- Privacy Modal -->
     <div id="privacyModal" class="modal-overlay">
@@ -2767,6 +3069,8 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
         crossorigin="anonymous"></script>
@@ -2779,7 +3083,7 @@
         const state = { lang: 'ar', theme: 'dark', surah: 1, words: [], wordIndex: 0, isPlaying: false, wpm: 200, fontSize: 'small', enhancedMode: true, loopEnabled: false, loopStart: 1, loopEnd: 7, wordsRead: 0, elapsedSeconds: 0, isFullscreen: false, currentAyah: 1, gazeEnabled: false, faceDetected: false, overlayActive: false, focusStart: 0, rampFactor: 1.0, variableSpeed: true, lastSeen: 0 };
 
         // ── Supabase Config ──
-        const SUPABASE_URL  = 'https://olgvhsksnmwevcxrrylu.supabase.co';
+        const SUPABASE_URL = 'https://olgvhsksnmwevcxrrylu.supabase.co';
         const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3Zoc2tzbm13ZXZjeHJyeWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5ODg4OTYsImV4cCI6MjA4NjU2NDg5Nn0.o11M5WnI_Bk4F0zztyZeGjH-8Br1W7K5fFfSjngAdyU';
         let _sb = null;
         function getSB() { if (!_sb) _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON); return _sb; }
@@ -2800,7 +3104,7 @@
                 skip10: '١٠ كلمات', speed: 'سرعة القراءة', customSpeed: 'سرعة القراءة المخصصة',
                 variableSpeed: 'سرعة متغيرة',
                 variableSpeedTip: 'نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف',
-                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'وضع التركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slower: 'أبطأ', slow: 'بطيء', medium: 'متوسط', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!', pages: 'الصفحات', moreControls: 'المزيد من التحكم', surah: 'السورة', hizb: 'الحزب', juzu: 'الجزء'
+                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'تركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slower: 'أبطأ', slow: 'بطيء', medium: 'متوسط', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!', pages: 'المصحف', moreControls: 'المزيد من التحكم', surah: 'السورة', hizb: 'الحزب', juzu: 'الجزء'
             },
             en: {
                 introTitle: 'Quran Reader',
@@ -2817,15 +3121,22 @@
                 skip10: '10 words', speed: 'Reading Speed', customSpeed: 'Custom Reading Speed',
                 variableSpeed: 'Variable Speed',
                 variableSpeedTip: 'Rhythmic mode: Auto-slowing for Madda & Pause markers',
-                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slower: 'Slower', slow: 'Slow', medium: 'Medium', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!', pages: 'Pages', moreControls: 'More Controls', surah: 'Surah', hizb: 'Hizb', juzu: 'Juzu'
+                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slower: 'Slower', slow: 'Slow', medium: 'Medium', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!', pages: 'Mus-haf', moreControls: 'More Controls', surah: 'Surah', hizb: 'Hizb', juzu: 'Juzu'
             }
         };
         function $(id) { return document.getElementById(id); }
         function toArabicNum(n) { return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
+        const SAJDA_VERSES = [
+            { s: 7, a: 206 }, { s: 13, a: 15 }, { s: 16, a: 50 }, { s: 17, a: 109 },
+            { s: 19, a: 58 }, { s: 22, a: 18 }, { s: 22, a: 77 }, { s: 25, a: 60 },
+            { s: 27, a: 26 }, { s: 32, a: 15 }, { s: 38, a: 24 }, { s: 41, a: 38 },
+            { s: 53, a: 62 }, { s: 84, a: 21 }, { s: 96, a: 19 }
+        ];
+
         function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
-        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; $('shareLabel').textContent = t.share; $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
+        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; if ($('shareLabel')) $('shareLabel').textContent = t.share; if ($('bookmarkLabel')) $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
         function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
-        
+
         function populatePageSelect() {
             const sel = $('pageSelect');
             if (!sel) return;
@@ -2839,10 +3150,10 @@
                 sel.appendChild(o);
             }
         }
-        
+
         async function goToPage(pageNum) {
             if (pageNum < 1 || pageNum > 604) return;
-            
+
             // Always pause playback first - use the same logic as togglePlay
             if (state.isPlaying) {
                 state.isPlaying = false;
@@ -2858,7 +3169,7 @@
                 // Sync Overlay Icon
                 if ($('pauseOverlayIcon')) $('pauseOverlayIcon').style.display = 'flex';
             }
-            
+
             // First, check if the page is in the current surah
             if (state.words.length) {
                 const wordIndex = state.words.findIndex(w => w.page === pageNum);
@@ -2879,7 +3190,7 @@
                     return;
                 }
             }
-            
+
             // If page is not in current surah, find which surah contains this page
             // and load that surah, then go to the first word on the page
             try {
@@ -2892,7 +3203,7 @@
                     .order('word_position')
                     .limit(1)
                     .single();
-                
+
                 if (error || !data) {
                     // Fallback: try API to find surah
                     try {
@@ -2930,10 +3241,10 @@
                     }
                     return;
                 }
-                
+
                 // Load the surah that contains this page
                 await loadSurah(data.surah);
-                
+
                 // Now find the first word on the selected page
                 const wordIndex = state.words.findIndex(w => w.page === pageNum);
                 if (wordIndex !== -1) {
@@ -2957,7 +3268,7 @@
                 console.error('Error loading page:', err);
             }
         }
-        
+
         // Quranic markings to filter out (pause signs, Hizb marks, recitation indicators)
         const QURAN_MARKS = /^[ۖۗۘۚۛۙ۞ۜ۩ۣ۠ۢۡۤۥۦ]*$|^[صقطعل]{1,4}ۢ?$|^ج$|^صل[ىي]?$/;
         function isQuranMark(word) { return QURAN_MARKS.test(word) || word.length === 1 && word.charCodeAt(0) >= 0x06D6 && word.charCodeAt(0) <= 0x06ED; }
@@ -2965,6 +3276,9 @@
             state.surah = num;
             state.words = [];
             state.wordIndex = 0;
+            // Reset surah completion animation
+            const playBtn = $('playBtn');
+            if (playBtn) playBtn.classList.remove('play-btn-complete');
             // Show loading dots instead of "جاري التحميل"
             $('currentWord').innerHTML = '<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>';
             updateLoopSliders();
@@ -3059,7 +3373,7 @@
             const quranHrs = Math.floor(quranMins / 60);
 
             // Proper Arabic pluralization: ساعات for 1-9 (مفرد أقل من عشرة), ساعة for 10+
-            const hoursText = state.lang === 'ar' 
+            const hoursText = state.lang === 'ar'
                 ? (quranHrs >= 1 && quranHrs <= 9 ? 'ساعات' : 'ساعة')
                 : (quranHrs === 1 ? 'hr' : 'hrs');
             $('quranTime').textContent = `${quranHrs} ${hoursText}`;
@@ -3381,8 +3695,45 @@
             updateTimeEstimates();
             autoSaveBookmark();
 
+            // Sajda Check
+            const currIdx = state.wordIndex;
+            const nextWord = state.words[currIdx + 1];
+            const currentWord = state.words[currIdx];
+
+            // If it's the end of an ayah, check if it was a Sajda ayah
+            if (!nextWord || nextWord.ayah !== currentWord.ayah) {
+                const isSajda = SAJDA_VERSES.some(v => v.s === state.surah && v.a === currentWord.ayah);
+                if (isSajda) {
+                    togglePlay();
+                    showSajda();
+                    return;
+                }
+            }
+
             const duration = (60000 / effectiveWpm) * getWordWeight(state.words[state.wordIndex].text);
             playTimer = setTimeout(gameLoop, duration);
+        }
+
+        let _sajdaAlternator = 0;
+        function showSajda() {
+            const el = $('sajdaNotif');
+            if (el) {
+                const d1 = $('sajdaDua1'), d2 = $('sajdaDua2');
+                if (d1 && d2) {
+                    d1.style.display = (_sajdaAlternator % 2 === 0) ? 'block' : 'none';
+                    d2.style.display = (_sajdaAlternator % 2 === 1) ? 'block' : 'none';
+                    _sajdaAlternator++;
+                }
+                el.style.display = 'flex';
+                setTimeout(() => el.classList.add('show'), 10);
+            }
+        }
+        function hideSajda() {
+            const el = $('sajdaNotif');
+            if (el) {
+                el.classList.remove('show');
+                setTimeout(() => { if (!el.classList.contains('show')) el.style.display = 'none'; }, 400);
+            }
         }
 
         function updatePlayButton() {
@@ -3390,19 +3741,27 @@
             const currentSurahIndex = SURAHS.findIndex(s => s.number === state.surah);
             const hasNextSurah = currentSurahIndex !== -1 && currentSurahIndex < SURAHS.length - 1;
             const showNextSurah = isFinished && hasNextSurah;
+            const playBtn = $('playBtn');
+            const playbackControls = document.querySelector('.playback-controls');
 
             if (state.isPlaying) {
-                // Pause icon
+                // Pause icon - dim labels
                 $('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
                 $('playLabel').textContent = i18n[state.lang].pause;
+                if (playBtn) playBtn.classList.remove('play-btn-complete');
+                if (playbackControls) playbackControls.classList.add('playback-playing');
             } else if (showNextSurah) {
-                // Next surah icon (skip forward style)
-                $('playIcon').innerHTML = '<path d="M8 5v14l7-7-7-7zm8 0v14h2V5h-2z"/>';
+                // Next surah icon with green completion animation (RTL: flipped arrow pointing left)
+                $('playIcon').innerHTML = '<path d="M16 5v14l-7-7 7-7zm-8 0v14H6V5h2z"/>';
                 $('playLabel').textContent = i18n[state.lang].nextSurah;
+                if (playBtn) playBtn.classList.add('play-btn-complete');
+                if (playbackControls) playbackControls.classList.remove('playback-playing');
             } else {
                 // Play icon
                 $('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
                 $('playLabel').textContent = i18n[state.lang].play;
+                if (playBtn) playBtn.classList.remove('play-btn-complete');
+                if (playbackControls) playbackControls.classList.remove('playback-playing');
             }
         }
 
@@ -3413,6 +3772,9 @@
                 const currentSurahIndex = SURAHS.findIndex(s => s.number === state.surah);
                 if (currentSurahIndex !== -1 && currentSurahIndex < SURAHS.length - 1) {
                     const nextSurah = SURAHS[currentSurahIndex + 1];
+                    // Reset completion animation before loading next surah
+                    const playBtn = $('playBtn');
+                    if (playBtn) playBtn.classList.remove('play-btn-complete');
                     // Load the next surah
                     await loadSurah(nextSurah.number);
                     // Update the surah selector
@@ -3441,13 +3803,13 @@
                     updateProgress();
                     updateTimeEstimates();
                     autoSaveBookmark();
-                    
+
                     // Calculate effective WPM
                     let effectiveWpm = state.wpm;
                     if (state.gazeEnabled && !state.overlayActive) {
                         effectiveWpm = state.wpm * state.rampFactor;
                     }
-                    
+
                     // Small delay to ensure display is rendered, then start timer for first word
                     // After timer expires, gameLoop() will increment to index 1 and continue
                     setTimeout(() => {
@@ -3460,8 +3822,8 @@
                         }
                     }, 50); // Small delay to ensure rendering
                 } else {
-                // Start recursive loop
-                gameLoop();
+                    // Start recursive loop
+                    gameLoop();
                 }
 
             } else {
@@ -3523,14 +3885,14 @@
                 });
             }
         });
-        function autoSaveBookmark() { localStorage.setItem('quranReaderBookmark', JSON.stringify({ surah: state.surah, wordIndex: state.wordIndex, wordsRead: state.wordsRead })); try { getSB().rpc('upsert_session', { p_device_id: getDeviceId(), p_surah: state.surah, p_word_index: state.wordIndex, p_words_read: state.wordsRead, p_total_seconds: state.elapsedSeconds, p_lang: state.lang, p_theme: state.theme, p_font_size: state.fontSize, p_wpm: state.wpm, p_enhanced_mode: state.enhancedMode }); } catch(e) { console.warn('Session sync:', e.message); } }
+        function autoSaveBookmark() { localStorage.setItem('quranReaderBookmark', JSON.stringify({ surah: state.surah, wordIndex: state.wordIndex, wordsRead: state.wordsRead })); try { getSB().rpc('upsert_session', { p_device_id: getDeviceId(), p_surah: state.surah, p_word_index: state.wordIndex, p_words_read: state.wordsRead, p_total_seconds: state.elapsedSeconds, p_lang: state.lang, p_theme: state.theme, p_font_size: state.fontSize, p_wpm: state.wpm, p_enhanced_mode: state.enhancedMode }); } catch (e) { console.warn('Session sync:', e.message); } }
         async function restoreBookmark() {
             let surah, wordIndex, wordsRead;
             try {
                 const sb = getSB();
                 const { data } = await sb.from('user_sessions').select('*').eq('device_id', getDeviceId()).single();
                 if (data) { surah = data.surah; wordIndex = data.word_index; wordsRead = data.words_read; state.elapsedSeconds = data.total_seconds || 0; }
-            } catch(e) { console.warn('Supabase restore:', e.message); }
+            } catch (e) { console.warn('Supabase restore:', e.message); }
             if (!surah) {
                 const saved = localStorage.getItem('quranReaderBookmark');
                 if (saved) { const p = JSON.parse(saved); surah = p.surah; wordIndex = p.wordIndex; wordsRead = p.wordsRead; }
@@ -3558,7 +3920,7 @@
                 const { data, error } = await sb.rpc('increment_visitors');
                 if (error) throw error;
                 $('visitorsCount').textContent = state.lang === 'ar' ? toArabicNum(data) : data;
-            } catch(e) {
+            } catch (e) {
                 console.warn('Visitor counter:', e.message);
                 let visitors = parseInt(localStorage.getItem('quranReaderVisitors') || '0') + 1;
                 localStorage.setItem('quranReaderVisitors', visitors);
@@ -3574,7 +3936,7 @@
                     const sb = getSB();
                     const { data, error } = await sb.rpc('add_reading_time', { seconds_to_add: 60 });
                     if (!error && data) { $('collectiveTime').textContent = formatTime(data); return; }
-                } catch(e) { /* fallback below */ }
+                } catch (e) { /* fallback below */ }
             }
             $('collectiveTime').textContent = formatTime(localTotal);
         }
@@ -3584,7 +3946,7 @@
                 const sb = getSB();
                 const { data, error } = await sb.from('global_stats').select('total_seconds, total_visitors').eq('id', 1).single();
                 if (!error && data) { $('collectiveTime').textContent = formatTime(data.total_seconds); return; }
-            } catch(e) { /* fallback below */ }
+            } catch (e) { /* fallback below */ }
             let localTotal = parseInt(localStorage.getItem('quranReaderTotalSeconds') || '0');
             $('collectiveTime').textContent = formatTime(localTotal);
         }
@@ -3593,7 +3955,7 @@
                 const sb = getSB();
                 const { data, error } = await sb.from('global_stats').select('*').eq('id', 1).single();
                 if (!error && data) return data;
-            } catch(e) {}
+            } catch (e) { }
             return { total_visitors: parseInt(localStorage.getItem('quranReaderVisitors') || '0'), total_seconds: parseInt(localStorage.getItem('quranReaderTotalSeconds') || '0'), total_khatmas: 0 };
         }
         function toggleFocusMode() { state.isFullscreen = !state.isFullscreen; document.body.classList.toggle('focus-mode', state.isFullscreen); }
@@ -3620,7 +3982,7 @@
             document.querySelectorAll('.onb-feature').forEach(f => f.style.textAlign = lang === 'ar' ? 'right' : 'left');
         }
         document.getElementById('onbStartBtn').addEventListener('click', async () => { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); });
-        $('surahSelect').addEventListener('change', async e => { 
+        $('surahSelect').addEventListener('change', async e => {
             if (e.target.value) {
                 // Pause playback if currently playing
                 if (state.isPlaying) {
@@ -3643,11 +4005,16 @@
         let startAyahLastClick = 0;
         $('startAyahBtn').addEventListener('click', () => { const now = Date.now(); if (now - startAyahLastClick < 500 && state.currentAyah > 1) { seekToAyah(state.currentAyah - 1); } else { seekToAyah(state.currentAyah); } startAyahLastClick = now; });
         $('endAyahBtn').addEventListener('click', () => { const nextAyah = state.words.find((w, i) => i > state.wordIndex && w.ayah !== state.currentAyah); if (nextAyah) seekToAyah(nextAyah.ayah); else { state.wordIndex = state.words.length - 1; displayWord(); updateProgress(); } });
-        $('themeBtn').addEventListener('click', () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', state.theme); localStorage.setItem('quranReaderTheme', state.theme); });
+        $('themeBtn').addEventListener('click', () => {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', state.theme);
+            localStorage.setItem('quranReaderTheme', state.theme);
+            if (typeof updateUmmahGlobeTheme === 'function') updateUmmahGlobeTheme();
+        });
         $('focusModeBtn').addEventListener('click', toggleFocusMode);
         $('focusExit').addEventListener('click', toggleFocusMode);
-        $('shareBtn').addEventListener('click', shareApp);
-        $('bookmarkBtn').addEventListener('click', saveManualBookmark);
+        // shareBtn removed from UI — sharing available from Ummah screen
+        // bookmarkBtn removed from UI - saving is automatic
         $('langSwitchBtn').addEventListener('click', () => { state.lang = state.lang === 'ar' ? 'en' : 'ar'; updateUI(); populateSurahSelect(); displayWord(); });
         $('enhancedToggle').addEventListener('change', e => { state.enhancedMode = e.target.checked; displayWord(); });
         $('variableSpeedToggle').addEventListener('change', e => {
@@ -3658,10 +4025,11 @@
         $('speedSlider').addEventListener('input', e => { state.wpm = parseInt(e.target.value); updateSpeedDisplay(); });
         $('decreaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.max(50, state.wpm - 50); updateSpeedDisplay(); });
         $('increaseSpeedBtn').addEventListener('click', () => { state.wpm = Math.min(600, state.wpm + 50); updateSpeedDisplay(); });
-        function updateSpeedDisplay() { 
-            if ($('wpmValue')) $('wpmValue').textContent = state.wpm; 
-            if ($('speedSlider')) $('speedSlider').value = state.wpm; 
-            updateTimeEstimates(); 
+        function updateSpeedDisplay() {
+            if ($('wpmValue')) $('wpmValue').textContent = state.wpm;
+            if ($('speedSlider')) $('speedSlider').value = state.wpm;
+            updateTimeEstimates();
+            localStorage.setItem('kalima_wpm', state.wpm);
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.wpm) === state.wpm));
             // Update simplified speed buttons - find closest match
             document.querySelectorAll('.speed-btn-simple').forEach(b => {
@@ -3695,88 +4063,354 @@
         $('loopStartInput').addEventListener('change', () => syncLoopFromInput('start'));
         $('loopEndInput').addEventListener('change', () => syncLoopFromInput('end'));
         document.querySelectorAll('.font-btn').forEach(btn => { btn.addEventListener('click', () => { state.fontSize = btn.dataset.size; document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); displayWord(); }); });
-        
+
         window.addEventListener('beforeunload', () => { autoSaveBookmark(); });
         window.addEventListener('pagehide', () => { autoSaveBookmark(); });
-        // Ummah Globe: anonymous location ping
-        async function updateUmmahLocation() { try { const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: false, timeout: 5000 })); await getSB().rpc('upsert_location', { p_device_id: getDeviceId(), p_latitude: pos.coords.latitude, p_longitude: pos.coords.longitude }); } catch(e) { /* geolocation denied or unavailable */ } }
-        async function getActiveReaders() { try { const cutoff = new Date(Date.now() - 24*60*60*1000).toISOString(); const { data } = await getSB().from('ummah_locations').select('latitude, longitude, city, country_code, last_active').gte('last_active', cutoff); return data || []; } catch { return []; } }
+        // Ummah Globe: anonymous location ping — only if permission already granted, no popup on load
+        async function updateUmmahLocation() {
+            try {
+                if (navigator.permissions) {
+                    const result = await navigator.permissions.query({ name: 'geolocation' });
+                    if (result.state !== 'granted') return; // Don't prompt — only use if already allowed
+                }
+                const referredBy = localStorage.getItem('kalima_referred_by') || '';
+                const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: false, timeout: 5000 }));
+                // Pass referral code when upserting so referred readers can be identified
+                await getSB().rpc('upsert_location', { p_device_id: getDeviceId(), p_latitude: pos.coords.latitude, p_longitude: pos.coords.longitude, p_referred_by: referredBy });
+            } catch (e) { /* geolocation denied or unavailable */ }
+        }
+        async function getActiveReaders() { try { const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); const { data } = await getSB().from('ummah_locations').select('latitude, longitude, city, country_code, last_active, referred_by').gte('last_active', cutoff); return data || []; } catch { return []; } }
 
-        // ═══ Ummah Globe Engine (vanilla canvas) ═══
-        const UMMAH = {
-            rotL: -30, tiltA: -0.12, dragging: false, prevX: 0, momentum: 0,
-            readerDots: [], raf: null, running: false
-        };
-        const LM = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000001111110000000000000000000000000001100000000000001111111100000000000000001111111111000000000001000000000001110000000000011111111110000000001001111111111111100000000001000000000011100000000000111111111111000001111111111111111111110000000000000000000111100000000001111111111111000001111111111111111111111000000000000000001111000000000001111111111111100011111111111111111111111100000000000000011110000000000011111111111111110011111111111111111111111110000000000000011100000000000011111111111111111011111111111111111111111111000000000000111000000000000011111111111111111001111111111111111111111111100000000001110000001100000001111111111111110001111111111111111111111111110000000011100000001100000000111111111111100001111111111111111111111111111000001111000000000000000000011111111110000001111111111111111111111111111100011110000000000000000000001111111100000001111111111111111111111111111110111100000000000000000000000111111000000001111111111111111011111111111111111000000000000000000000000011110000000001111111111111111001111111111111110000000000000000000000000011100000000000111111111111110001111111011111100001110000000000000000000011100000000000011111111111110001111110001111000011111100000000000000000011110000000000011111111111100001111100000110000111111100000000000000000011111000000000001111111111000001111000000000000011111000000000000000000011111100000000001111111110000001110000000000000001100000000000000000011111110000000000111111100000011100000000000000110000000001000000000001111110000000000011111000000011100000000000001111000000011100000000001111100000000000001110000000011000000000000011111100001111100000000000000111000000000000000100000000010000000000000011111110011111000000000000000011000000000000000000000000000000000000000001111111011110000000000000000010000000000000000000000000000000000000000000111110001100000000000000000010000000000000000000000000000000000000000000011100000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111111111111111111111111000000000000000000000000000011111111111111111111111111111111111111111111111111100000000000000011111111111111111111111111111111111111111111111111111111000000000000001111111111111111111111111111111111111111111111111111111100000000";
-        const isLand = (lat, lng) => { const r = Math.floor((87.5 - lat) / 5), c = Math.floor((lng + 177.5) / 5); return r >= 0 && r < 36 && c >= 0 && c < 72 && LM[r * 72 + c] === '1'; };
-        const landDots = [];
-        for (let la = -85; la <= 85; la += 2.5) for (let lo = -180; lo < 180; lo += 2.5) if (isLand(la, lo)) landDots.push([la, lo]);
-        const latLines = [], lngLines = [];
-        for (let la = -60; la <= 60; la += 20) { const p = []; for (let lo = -180; lo <= 180; lo += 2) p.push([la, lo]); latLines.push(p); }
-        for (let lo = -180; lo < 180; lo += 20) { const p = []; for (let la = -90; la <= 90; la += 2) p.push([la, lo]); lngLines.push(p); }
 
         function toArabicNumGlobe(n) { return String(n).replace(/[0-9]/g, d => String.fromCharCode(0x0660 + +d)); }
-        function fmtArNum(n) { if (n >= 1e6) { const m = (Math.floor(n / 1e5) / 10).toFixed(1).split('.'); return toArabicNumGlobe(m[0]) + '\u066B' + toArabicNumGlobe(m[1]) + ' مليون'; } if (n >= 1000) { const s = String(Math.floor(n)); let o = '', c = 0; for (let i = s.length - 1; i >= 0; i--) { if (c > 0 && c % 3 === 0) o = '\u066C' + o; o = s[i] + o; c++; } return toArabicNumGlobe(o); } return toArabicNumGlobe(n); }
+        // Number formatting: use standard comma (,) and period (.) not raised Arabic separators
+        function fmtArNum(n) { if (n >= 1e6) { const m = (Math.floor(n / 1e5) / 10).toFixed(1).split('.'); return toArabicNumGlobe(m[0]) + '.' + toArabicNumGlobe(m[1]) + ' مليون'; } if (n >= 1000) { const s = String(Math.floor(n)); let o = '', c = 0; for (let i = s.length - 1; i >= 0; i--) { if (c > 0 && c % 3 === 0) o = ',' + o; o = s[i] + o; c++; } return toArabicNumGlobe(o); } return toArabicNumGlobe(n); }
 
-        function initUmmahGlobe() {
-            const cv = document.getElementById('ummahCanvas'); if (!cv) return;
-            const g = cv.getContext('2d');
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            const cssSize = Math.min(280, window.innerWidth - 40);
-            cv.style.width = cssSize + 'px'; cv.style.height = cssSize + 'px';
-            cv.width = cssSize * dpr; cv.height = cssSize * dpr;
-            g.scale(dpr, dpr);
-            const W = cssSize, H = cssSize, cx = W / 2, cy = H / 2, R = W * 0.45;
-            const DEG = Math.PI / 180;
-            const s = UMMAH;
-
-            function project(lat, lng) {
-                const la = lat * DEG, lo = (lng - s.rotL) * DEG, tilt = s.tiltA;
-                const x0 = Math.cos(la) * Math.sin(lo), y0 = -Math.sin(la), z0 = Math.cos(la) * Math.cos(lo);
-                const y1 = y0 * Math.cos(tilt) - z0 * Math.sin(tilt), z1 = y0 * Math.sin(tilt) + z0 * Math.cos(tilt);
-                if (z1 < -0.05) return null;
-                return [cx + x0 * R, cy + y1 * R, z1];
+        // ── Referral System ──
+        function getReferralCode() {
+            let code = localStorage.getItem('kalima_ref_code');
+            if (!code) {
+                // Derive a short 8-char code from the device ID
+                code = getDeviceId().replace(/-/g, '').substring(0, 8);
+                localStorage.setItem('kalima_ref_code', code);
             }
-
-            function draw() {
-                g.clearRect(0, 0, W, H);
-                // Globe bg
-                const gb = g.createRadialGradient(cx - R * 0.15, cy - R * 0.15, R * 0.2, cx, cy, R);
-                gb.addColorStop(0, 'rgba(20,20,35,0.5)'); gb.addColorStop(1, 'rgba(5,5,15,0.3)');
-                g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.fillStyle = gb; g.fill();
-                // Grid
-                g.strokeStyle = 'rgba(60,55,40,0.12)'; g.lineWidth = 0.5;
-                [...latLines, ...lngLines].forEach(line => { g.beginPath(); let started = false; line.forEach(([la, lo]) => { const p = project(la, lo); if (p) { if (!started) { g.moveTo(p[0], p[1]); started = true; } else g.lineTo(p[0], p[1]); } else started = false; }); g.stroke(); });
-                // Land dots
-                landDots.forEach(([la, lo]) => { const p = project(la, lo); if (p) { const a = 0.25 + p[2] * 0.35; g.fillStyle = `rgba(110,105,80,${a})`; g.fillRect(p[0] - 0.8, p[1] - 0.8, 1.6, 1.6); } });
-                // Reader dots
-                const now = Date.now();
-                s.readerDots.forEach(d => {
-                    const p = project(d.lat, d.lng); if (!p) return;
-                    const age = (now - d.b) / d.ttl, alpha = age < 0.1 ? age * 10 : age > 0.8 ? (1 - age) * 5 : 1;
-                    const pulse = 1 + 0.3 * Math.sin(now * 0.003 * d.it);
-                    const col = d.ref ? '55,212,165' : '196,164,46';
-                    const sz = (d.ref ? 3 : 2.2) * pulse;
-                    g.beginPath(); g.arc(p[0], p[1], sz, 0, Math.PI * 2);
-                    g.fillStyle = `rgba(${col},${alpha * 0.8})`; g.fill();
-                    g.beginPath(); g.arc(p[0], p[1], sz + 3, 0, Math.PI * 2);
-                    g.fillStyle = `rgba(${col},${alpha * 0.15})`; g.fill();
+            return code;
+        }
+        // Check URL for incoming referral code and save it
+        (function checkIncomingRef() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const incomingRef = params.get('ref');
+                if (incomingRef) localStorage.setItem('kalima_referred_by', incomingRef);
+            } catch (e) { }
+        })();
+        function shareReferral() {
+            const code = getReferralCode();
+            const refUrl = `https://onelink.to/dmwgt8?ref=${code}`;
+            const msg = state.lang === 'ar'
+                ? `📖 أقرأ معي القرآن الكريم على تطبيق *كلمات*\nكلمة بكلمة — بلا إعلانات — صدقة جارية\n\nتحميل التطبيق:\n${refUrl}`
+                : `📖 Read the Quran with me on *Kalimat*\nWord by word — No ads — Ongoing charity\n\nDownload the app:\n${refUrl}`;
+            if (navigator.share) {
+                navigator.share({ title: 'كلمات', text: msg, url: refUrl }).catch(() => {
+                    navigator.clipboard.writeText(msg).then(() => showToast(i18n[state.lang].copied));
                 });
-                // Rotation
-                if (!s.dragging) { s.momentum *= 0.97; if (Math.abs(s.momentum) < 0.01) s.momentum = 0; s.rotL += s.momentum || 0.08; }
-                if (s.running) s.raf = requestAnimationFrame(draw);
+            } else {
+                navigator.clipboard.writeText(msg).then(() => showToast(i18n[state.lang].copied)).catch(() => showToast(refUrl));
             }
-
-            // Pointer events
-            cv.addEventListener('pointerdown', e => { s.dragging = true; s.prevX = e.clientX; s.momentum = 0; });
-            window.addEventListener('pointermove', e => { if (!s.dragging) return; const dx = (e.clientX - s.prevX) * 0.4; s.momentum = dx; s.rotL += dx; s.prevX = e.clientX; });
-            window.addEventListener('pointerup', () => { s.dragging = false; });
-
-            s.running = true;
-            draw();
         }
 
-        function stopUmmahGlobe() { UMMAH.running = false; if (UMMAH.raf) cancelAnimationFrame(UMMAH.raf); }
+        // ── Three.js Globe ──
+        let _UMMAH3 = { renderer: null, rafId: null, readerDots: [], scene: null, globeGroup: null, camera: null, clock: null, isDragging: false, prevMouse: { x: 0, y: 0 }, markerMeshes: [], beamMeshes: [], radius: 2.6, targetRot: { x: 0, y: 0 }, targetCamZ: 4.2 };
+
+        function latLngToVec3(lat, lng, r) {
+            const latRad = lat * Math.PI / 180;
+            const lngRad = lng * Math.PI / 180;
+            return new THREE.Vector3(
+                r * Math.cos(latRad) * Math.sin(lngRad),
+                r * Math.sin(latRad),
+                r * Math.cos(latRad) * Math.cos(lngRad)
+            );
+        }
+
+        function initUmmahGlobe() {
+            if (typeof THREE === 'undefined') return;
+            const container = document.getElementById('ummahGlobeContainer');
+            if (!container || _UMMAH3.renderer) return;
+
+            const W = container.clientWidth, H = container.clientHeight;
+            const scene = new THREE.Scene();
+            _UMMAH3.scene = scene;
+            _UMMAH3.clock = new THREE.Clock();
+
+            const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
+            camera.position.z = 10; // Start far out for a "zoom in" effect
+            _UMMAH3.targetCamZ = 4.2;
+            _UMMAH3.camera = camera;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setSize(W, H);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x000000, 0);
+            container.appendChild(renderer.domElement);
+            _UMMAH3.renderer = renderer;
+
+            const globeGroup = new THREE.Group();
+            _UMMAH3.globeGroup = globeGroup;
+            scene.add(globeGroup);
+
+            const RADIUS = _UMMAH3.radius;
+
+            // Sphere (transparent)
+            const isDark = state.theme === 'dark';
+            const sphereGeo = new THREE.SphereGeometry(RADIUS - 0.01, 64, 64);
+            const sphereMat = new THREE.MeshBasicMaterial({
+                color: isDark ? 0x06060e : 0xffffff,
+                transparent: true,
+                opacity: isDark ? 0.85 : 0.4
+            });
+            const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
+            globeGroup.add(globeMesh);
+
+            // Topology dots
+            let topologyPoints = null;
+            const texLoader = new THREE.TextureLoader();
+            texLoader.load('https://unpkg.com/three-globe@2.31.1/example/img/earth-topology.png', tex => {
+                const img = tex.image;
+                const tc = document.createElement('canvas');
+                tc.width = img.width; tc.height = img.height;
+                const ctx = tc.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const data = ctx.getImageData(0, 0, tc.width, tc.height);
+                const positions = [];
+                const samples = 24000;
+                for (let i = 0; i < samples; i++) {
+                    const phi = Math.acos(-1 + (2 * i) / samples);
+                    const theta = Math.sqrt(samples * Math.PI) * phi;
+                    const lat = 90 - phi * 180 / Math.PI;
+                    const lon = (theta * 180 / Math.PI) % 360 - 180;
+
+                    const u = ((lon + 180) / 360) * tc.width;
+                    const v = ((90 - lat) / 180) * tc.height;
+                    const idx = (Math.floor(v) * tc.width + Math.floor(u)) * 4;
+                    const brightness = (data.data[idx] + data.data[idx + 1] + data.data[idx + 2]) / 3;
+                    if (brightness > 30) {
+                        const p = latLngToVec3(lat, lon, RADIUS);
+                        positions.push(p.x, p.y, p.z);
+                    }
+                }
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                const mat = new THREE.PointsMaterial({
+                    color: isDark ? 0xd4af37 : 0xb8860b,
+                    size: 0.007,
+                    transparent: true,
+                    opacity: isDark ? 0.55 : 0.8,
+                    sizeAttenuation: true
+                });
+                topologyPoints = new THREE.Points(geo, mat);
+                globeGroup.add(topologyPoints);
+            });
+
+            // Handle theme response
+            window.updateUmmahGlobeTheme = () => {
+                const dark = state.theme === 'dark';
+                sphereMat.color.setHex(dark ? 0x06060e : 0xffffff);
+                sphereMat.opacity = dark ? 0.85 : 0.4;
+                if (topologyPoints) {
+                    topologyPoints.material.color.setHex(dark ? 0xd4af37 : 0xb8860b);
+                    topologyPoints.material.opacity = dark ? 0.55 : 0.8;
+                }
+            };
+
+            // Country borders
+            fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json')
+                .then(r => r.json()).then(world => {
+                    const topo = window.topojson;
+                    if (!topo) return;
+                    const features = topo.feature(world, world.objects.countries).features;
+                    const drawRing = coords => {
+                        const pts = coords.map(c => latLngToVec3(c[1], c[0], RADIUS + 0.003));
+                        if (pts.length < 2) return;
+                        const geo = new THREE.BufferGeometry().setFromPoints(pts);
+                        const mat = new THREE.LineBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.18 });
+                        globeGroup.add(new THREE.Line(geo, mat));
+                    };
+                    features.forEach(f => {
+                        const t = f.geometry.type;
+                        if (t === 'Polygon') f.geometry.coordinates.forEach(r => drawRing(r));
+                        else if (t === 'MultiPolygon') f.geometry.coordinates.forEach(p => p.forEach(r => drawRing(r)));
+                    });
+                }).catch(() => { });
+
+            // Lat/lng grid
+            for (let la = -60; la <= 60; la += 20) {
+                const pts = [];
+                for (let lo = -180; lo <= 180; lo += 4) pts.push(latLngToVec3(la, lo, RADIUS + 0.005));
+                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x3a3020, transparent: true, opacity: 0.2 })));
+            }
+            for (let lo = -180; lo < 180; lo += 20) {
+                const pts = [];
+                for (let la = -90; la <= 90; la += 4) pts.push(latLngToVec3(la, lo, RADIUS + 0.005));
+                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x3a3020, transparent: true, opacity: 0.2 })));
+            }
+
+            // Orbital rings
+            [{ rx: Math.PI / 2, ry: 0 }, { rx: Math.PI / 3, ry: Math.PI / 5 }].forEach(r => {
+                const rGeo = new THREE.TorusGeometry(RADIUS + 0.28, 0.004, 16, 100);
+                const rMat = new THREE.MeshBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.15 });
+                const ring = new THREE.Mesh(rGeo, rMat);
+                ring.rotation.x = r.rx; ring.rotation.y = r.ry;
+                globeGroup.add(ring);
+            });
+
+            // Ambient light
+            scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+
+            // Drag to rotate
+            const dom = renderer.domElement;
+            dom.style.touchAction = 'none';
+            dom.addEventListener('pointerdown', e => { _UMMAH3.isDragging = true; _UMMAH3.prevMouse = { x: e.clientX, y: e.clientY }; });
+            window.addEventListener('pointermove', e => {
+                if (!_UMMAH3.isDragging || !_UMMAH3.globeGroup) return;
+                const dx = e.clientX - _UMMAH3.prevMouse.x, dy = e.clientY - _UMMAH3.prevMouse.y;
+                _UMMAH3.globeGroup.rotation.y += dx * 0.006;
+                _UMMAH3.globeGroup.rotation.x += dy * 0.006;
+                _UMMAH3.prevMouse = { x: e.clientX, y: e.clientY };
+            });
+            window.addEventListener('pointerup', () => { _UMMAH3.isDragging = false; });
+
+            // Resize
+            const onResize = () => {
+                if (!_UMMAH3.renderer) return;
+                const W2 = container.clientWidth, H2 = container.clientHeight;
+                camera.aspect = W2 / H2;
+                camera.updateProjectionMatrix();
+                _UMMAH3.renderer.setSize(W2, H2);
+            };
+            window.addEventListener('resize', onResize);
+            _UMMAH3._onResize = onResize;
+
+            // Animate
+            const animate = () => {
+                _UMMAH3.rafId = requestAnimationFrame(animate);
+                const t = _UMMAH3.clock.getElapsedTime();
+                // Smoothly interpolate camera and rotation
+                if (_UMMAH3.camera) {
+                    _UMMAH3.camera.position.z += (_UMMAH3.targetCamZ - _UMMAH3.camera.position.z) * 0.05;
+                }
+                if (!_UMMAH3.isDragging && _UMMAH3.globeGroup) {
+                    // Constant slow orbit PLUS target rotation drift
+                    _UMMAH3.globeGroup.rotation.y += 0.001;
+                    _UMMAH3.globeGroup.rotation.y += (_UMMAH3.targetRot.y - _UMMAH3.globeGroup.rotation.y) * 0.02;
+                    _UMMAH3.globeGroup.rotation.x += (_UMMAH3.targetRot.x - _UMMAH3.globeGroup.rotation.x) * 0.02;
+                }
+                // Pulsing glow rings and beams
+                _UMMAH3.markerMeshes.forEach(m => {
+                    if (m.userData.glowRing) {
+                        const pulse = 0.6 + 0.4 * Math.sin(t * 2 + m.userData.offset);
+                        m.userData.glowRing.material.opacity = pulse * 0.5;
+                        const scale = 1 + 0.25 * Math.sin(t * 2 + m.userData.offset);
+                        m.userData.glowRing.scale.setScalar(scale);
+                    }
+                });
+                _UMMAH3.beamMeshes.forEach(b => {
+                    const pulse = 0.7 + 0.3 * Math.sin(t * 1.5 + b.userData.offset);
+                    b.material.opacity = pulse * 0.4;
+                    b.scale.x = b.scale.y = 0.8 + 0.2 * pulse;
+                });
+                renderer.render(scene, camera);
+            };
+            animate();
+        }
+
+        function stopUmmahGlobe() {
+            if (_UMMAH3.rafId) { cancelAnimationFrame(_UMMAH3.rafId); _UMMAH3.rafId = null; }
+            if (_UMMAH3.renderer) { _UMMAH3.renderer.dispose(); _UMMAH3.renderer.domElement.remove(); _UMMAH3.renderer = null; }
+            if (_UMMAH3._onResize) { window.removeEventListener('resize', _UMMAH3._onResize); _UMMAH3._onResize = null; }
+            _UMMAH3.scene = null; _UMMAH3.globeGroup = null; _UMMAH3.clock = null; _UMMAH3.markerMeshes = [];
+        }
+
+        function closeUmmahScreen() { stopUmmahGlobe(); if (_UMMAH3._feedInterval) { clearInterval(_UMMAH3._feedInterval); _UMMAH3._feedInterval = null; } showScreen('appScreen'); }
+
+        function updateGlobeReaders(dots) {
+            if (!_UMMAH3.globeGroup) return;
+            const RADIUS = _UMMAH3.radius;
+            // Remove old items
+            _UMMAH3.markerMeshes.forEach(m => { _UMMAH3.globeGroup.remove(m); if (m.userData.glowRing) _UMMAH3.globeGroup.remove(m.userData.glowRing); });
+            _UMMAH3.beamMeshes.forEach(b => { _UMMAH3.globeGroup.remove(b); });
+            _UMMAH3.markerMeshes = [];
+            _UMMAH3.beamMeshes = [];
+
+            if (dots.length > 0) {
+                // Group dots by location (approximate to 0.5 degree)
+                const clusters = {};
+                dots.forEach(d => {
+                    const key = `${Math.round(d.lat * 2) / 2},${Math.round(d.lng * 2) / 2}`;
+                    if (!clusters[key]) clusters[key] = { lat: d.lat, lng: d.lng, count: 0, isRef: false };
+                    clusters[key].count++;
+                    if (d.ref) clusters[key].isRef = true;
+                });
+
+                let meanLat = 0, meanLng = 0;
+                let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
+
+                Object.values(clusters).forEach((c, idx) => {
+                    const pos = latLngToVec3(c.lat, c.lng, RADIUS);
+                    const col = c.isRef ? 0x37d4a5 : 0xd4af37;
+
+                    // Individual Dot (Smaller)
+                    const geo = new THREE.SphereGeometry(0.015, 12, 12);
+                    const mat = new THREE.MeshBasicMaterial({ color: col });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.position.copy(pos);
+                    mesh.userData.offset = idx * 0.7;
+
+                    // Glow Ring
+                    const rGeo = new THREE.RingGeometry(0.03, 0.05, 24);
+                    const rMat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+                    const ring = new THREE.Mesh(rGeo, rMat);
+                    ring.position.copy(pos);
+                    ring.lookAt(0, 0, 0);
+                    mesh.userData.glowRing = ring;
+
+                    _UMMAH3.globeGroup.add(mesh);
+                    _UMMAH3.globeGroup.add(ring);
+                    _UMMAH3.markerMeshes.push(mesh);
+
+                    // Cluster Beam (Column of Light)
+                    if (c.count > 1) {
+                        const beamHeight = Math.min(0.8, 0.2 + (c.count * 0.05));
+                        const bGeo = new THREE.CylinderGeometry(0.005, 0.015, beamHeight, 8, 1, true);
+                        const bMat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+                        const beam = new THREE.Mesh(bGeo, bMat);
+
+                        // Position beam pointing outward
+                        const beamPos = latLngToVec3(c.lat, c.lng, RADIUS + beamHeight / 2);
+                        beam.position.copy(beamPos);
+                        beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+                        beam.userData.offset = idx * 0.5;
+
+                        _UMMAH3.globeGroup.add(beam);
+                        _UMMAH3.beamMeshes.push(beam);
+                    }
+
+                    meanLat += c.lat; meanLng += c.lng;
+                    minLat = Math.min(minLat, c.lat); maxLat = Math.max(maxLat, c.lat);
+                    minLng = Math.min(minLng, c.lng); maxLng = Math.max(maxLng, c.lng);
+                });
+
+                // Set target rotation to centroid (facing camera at Z+)
+                meanLat /= Object.keys(clusters).length; meanLng /= Object.keys(clusters).length;
+                _UMMAH3.targetRot.y = - (meanLng) * Math.PI / 180;
+                _UMMAH3.targetRot.x = (meanLat) * Math.PI / 180;
+
+                // Set target zoom based on spread
+                const spread = Math.max(maxLat - minLat, maxLng - minLng);
+                _UMMAH3.targetCamZ = 3.6 + (spread / 180) * 2.5; // Zoom in more for tight clusters
+            } else {
+                _UMMAH3.targetCamZ = 4.2; // Return to neutral
+            }
+        }
 
         // Populate reader dots — from Supabase or simulated
         async function loadUmmahData() {
@@ -3789,75 +4423,187 @@
                 { n: 'بنغلاديش', lat: 23.8, lng: 90.4, w: 7 }, { n: 'أمريكا', lat: 40.7, lng: -74, w: 6 },
                 { n: 'الكويت', lat: 29.4, lng: 47.9, w: 5 }, { n: 'الأردن', lat: 31.9, lng: 35.9, w: 7 }
             ];
-            const SURAH_NAMES = ['الفاتحة','البقرة','آل عمران','الكهف','مريم','طه','يس','الملك','الرحمن','الواقعة','النساء','يوسف'];
+            const SURAH_NAMES = ['الفاتحة', 'البقرة', 'آل عمران', 'الكهف', 'مريم', 'طه', 'يس', 'الملك', 'الرحمن', 'الواقعة', 'النساء', 'يوسف'];
             const totalW = COUNTRIES.reduce((a, c) => a + c.w, 0);
             const pick = () => { let r = Math.random() * totalW; for (const c of COUNTRIES) { r -= c.w; if (r <= 0) return c; } return COUNTRIES[0]; };
 
-            // Try loading real readers from Supabase
+            // Load ONLY real readers from Supabase — no simulated padding
             let realReaders = [];
-            try { realReaders = await getActiveReaders(); } catch(e) {}
+            try { realReaders = await getActiveReaders(); } catch (e) { }
 
-            // Build dots: real readers + simulated to fill out
-            UMMAH.readerDots = [];
+            const myCode = getReferralCode();
+            let referredCount = 0;
+
+            // Build dots for Three.js globe — green = referred by me, gold = others
+            const globeDots = [];
             realReaders.forEach(r => {
-                UMMAH.readerDots.push({ lat: r.latitude, lng: r.longitude, ref: false, b: Date.now() - Math.random() * 30000, ttl: 90000, it: 0.6 + Math.random() * 0.4 });
+                const isReferred = r.referred_by === myCode;
+                if (isReferred) referredCount++;
+                globeDots.push({ lat: r.latitude, lng: r.longitude, ref: isReferred });
             });
-            while (UMMAH.readerDots.length < 60) {
-                const co = pick();
-                UMMAH.readerDots.push({ lat: co.lat + (Math.random() - 0.5) * 6, lng: co.lng + (Math.random() - 0.5) * 6, co, ref: Math.random() < 0.12, b: Date.now() - Math.random() * 50000, ttl: 15000 + Math.random() * 80000, it: 0.5 + Math.random() * 0.5 });
+            updateGlobeReaders(globeDots);
+
+            // Show popup if user has referred readers
+            if (referredCount > 0) {
+                const popup = document.getElementById('refPopup');
+                if (popup) {
+                    popup.textContent = state.lang === 'ar'
+                        ? `✨ ${toArabicNumGlobe(referredCount)} من الأصدقاء الذين دعوتهم يقرأون الآن — النقاط الخضراء!`
+                        : `✨ ${referredCount} friend${referredCount > 1 ? 's' : ''} you referred are reading now — green dots!`;
+                    popup.style.display = 'block';
+                    setTimeout(() => { popup.style.display = 'none'; }, 5000);
+                }
             }
 
-            // Stats from Supabase
+            // ── Fetch global stats ──
+            const l = state.lang;
             try {
-                const stats = await getGlobalStats();
-                const totalWords = stats.total_seconds * 3.3; // approx words from time
-                const lang = state.lang;
-                $('ummahTotalWords').textContent = lang === 'ar' ? fmtArNum(Math.floor(totalWords)) : Math.floor(totalWords).toLocaleString();
-                $('ummahKhatmas').textContent = lang === 'ar' ? toArabicNumGlobe(Math.floor(totalWords / 77430)) : Math.floor(totalWords / 77430);
-                $('ummahHours').textContent = lang === 'ar' ? toArabicNumGlobe(Math.floor(stats.total_seconds / 3600)) : Math.floor(stats.total_seconds / 3600);
-                $('ummahReaderCount').textContent = lang === 'ar' ? toArabicNumGlobe(realReaders.length || stats.total_visitors) : (realReaders.length || stats.total_visitors);
-                $('ummahCountries').textContent = lang === 'ar' ? toArabicNumGlobe(new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || COUNTRIES.length) : (new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || COUNTRIES.length);
-            } catch(e) {}
+                const stats = await getGlobalStats() || {};
+                const totalSeconds = stats.total_seconds || 0;
+                const totalWords = totalSeconds * 3.3;
 
-            // Live feed simulation
-            const feedEl = $('ummahFeed');
-            function addFeedItem() {
-                const co = pick(), su = SURAH_NAMES[Math.floor(Math.random() * SURAH_NAMES.length)];
-                const isRef = Math.random() < 0.12;
-                const col = isRef ? '#37d4a5' : '#c4a42e';
-                const shadow = isRef ? 'rgba(55,212,165,0.3)' : 'rgba(196,164,46,0.3)';
-                const div = document.createElement('div');
-                div.style.cssText = 'display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.015);font-size:12px;color:#6a6555;font-weight:600;animation:fadeIn 0.3s ease;';
-                div.innerHTML = `<span style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:${col};box-shadow:0 0 4px ${shadow};"></span><span style="flex:1">${co.n}</span><span style="color:#4a4535">${su}</span>`;
-                feedEl.insertBefore(div, feedEl.firstChild);
-                while (feedEl.children.length > 5) feedEl.removeChild(feedEl.lastChild);
-                // Cycle dots
-                const dots = UMMAH.readerDots; const now = Date.now();
-                for (let i = dots.length - 1; i >= 0; i--) if (now - dots[i].b > dots[i].ttl) dots.splice(i, 1);
-                while (dots.length < 60) { const c2 = pick(); dots.push({ lat: c2.lat + (Math.random() - 0.5) * 6, lng: c2.lng + (Math.random() - 0.5) * 6, co: c2, ref: Math.random() < 0.12, b: now, ttl: 15000 + Math.random() * 80000, it: 0.5 + Math.random() * 0.5 }); }
+                $('ummahTotalWords').textContent = l === 'ar' ? fmtArNum(Math.floor(totalWords)) : Math.floor(totalWords).toLocaleString();
+                $('ummahKhatmas').textContent = l === 'ar' ? toArabicNumGlobe(Math.floor(totalWords / 77430)) : Math.floor(totalWords / 77430);
+                $('ummahHours').textContent = l === 'ar' ? toArabicNumGlobe(Math.floor(totalSeconds / 3600)) : Math.floor(totalSeconds / 3600);
+                $('ummahCountries').textContent = l === 'ar' ? toArabicNumGlobe(new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || 0) : (new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || 12);
+            } catch (e) {
+                console.error('Ummah stats load fail:', e);
+                $('ummahTotalWords').textContent = l === 'ar' ? '٠' : '0';
+                $('ummahHours').textContent = l === 'ar' ? '٠' : '0';
+                $('ummahCountries').textContent = l === 'ar' ? '١٢' : '12';
+                $('ummahKhatmas').textContent = l === 'ar' ? '٠' : '0';
             }
-            UMMAH.feedInterval = setInterval(addFeedItem, 2200);
-            addFeedItem();
+
+            // ── Smart Counter: show active readers if high, else community size ──
+            const ACTIVE_THRESHOLD = 5; // Show "reading now" if this many active readers
+            const badge = document.getElementById('ummahCounterBadge');
+            const dot = document.getElementById('ummahCounterDot');
+            const readingNowEl = $('ummahReadingNow');
+            const countEl = $('ummahReaderCount');
+            const lang = state.lang;
+
+            // Read previous count from localStorage for change detection
+            const prevCount = parseInt(localStorage.getItem('kalima_prev_reader_count') || '0');
+
+            let displayCount, isLive;
+            if (realReaders.length >= ACTIVE_THRESHOLD) {
+                // Enough real readers — show "reading now" in green
+                displayCount = realReaders.length;
+                isLive = true;
+            } else {
+                // Few/no readers with location — show total community size honestly
+                displayCount = stats ? (stats.total_visitors || realReaders.length) : realReaders.length;
+                isLive = false;
+            }
+
+            // Update the badge color & label depending on mode
+            if (isLive) {
+                badge.style.background = 'rgba(55,212,165,0.08)';
+                badge.style.border = '1px solid rgba(55,212,165,0.2)';
+                dot.style.background = '#37d4a5';
+                dot.style.boxShadow = '0 0 6px rgba(55,212,165,0.6)';
+                readingNowEl.textContent = lang === 'ar' ? 'يقرأون الآن' : 'reading now';
+                readingNowEl.style.color = '#37d4a5';
+            } else {
+                // Community size mode — warm gold tone
+                badge.style.background = 'rgba(196,164,46,0.06)';
+                badge.style.border = '1px solid rgba(196,164,46,0.15)';
+                dot.style.background = '#c4a42e';
+                dot.style.boxShadow = 'none';
+                readingNowEl.textContent = lang === 'ar' ? 'في المجتمع' : 'community';
+                readingNowEl.style.color = '#6a5a20';
+            }
+
+            countEl.textContent = lang === 'ar' ? toArabicNumGlobe(displayCount) : displayCount;
+
+            // Visual cue if count grew since last visit (flash badge)
+            if (displayCount > prevCount && prevCount > 0) {
+                const diff = displayCount - prevCount;
+                badge.style.transition = 'transform 0.15s ease, box-shadow 0.3s ease';
+                badge.style.transform = 'scale(1.08)';
+                badge.style.boxShadow = isLive
+                    ? '0 0 16px rgba(55,212,165,0.5)'
+                    : '0 0 16px rgba(196,164,46,0.4)';
+                // Show a +N toast
+                showToast(lang === 'ar' ? `+${toArabicNumGlobe(diff)} انضموا للمجتمع ✨` : `+${diff} joined ✨`);
+                setTimeout(() => {
+                    badge.style.transform = 'scale(1)';
+                    badge.style.boxShadow = 'none';
+                }, 1200);
+            }
+            localStorage.setItem('kalima_prev_reader_count', displayCount);
+
+            // Live feed — show real readers who have location data
+            const feedEl = $('ummahFeed');
+            const feedEmptyEl = $('ummahFeedEmpty');
+
+            // Filter only readers that have a meaningful location
+            const locatedReaders = realReaders.filter(r => r.country_code || r.city);
+
+            if (locatedReaders.length === 0) {
+                if (feedEmptyEl) feedEmptyEl.style.display = 'block';
+            } else {
+                if (feedEmptyEl) feedEmptyEl.style.display = 'none';
+                // Country code → flag emoji helper
+                function countryFlag(code) {
+                    if (!code || code.length !== 2) return '🌐';
+                    return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E0 + c.charCodeAt(0) - 65));
+                }
+                // Time since label
+                function timeSince(iso) {
+                    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+                    if (mins < 2) return 'الآن';
+                    if (mins < 60) return `منذ ${toArabicNumGlobe(mins)} دقيقة`;
+                    const hrs = Math.round(mins / 60);
+                    return `منذ ${toArabicNumGlobe(hrs)} ساعة`;
+                }
+
+                // Show up to 6 most recent readers
+                const toShow = locatedReaders
+                    .slice()
+                    .sort((a, b) => new Date(b.last_active) - new Date(a.last_active))
+                    .slice(0, 6);
+
+                toShow.forEach(reader => {
+                    const isReferred = reader.referred_by === myCode;
+                    const flag = countryFlag(reader.country_code);
+                    const location = reader.city
+                        ? `${flag} ${reader.city}${reader.country_code ? ', ' + reader.country_code : ''}`
+                        : `${flag} ${reader.country_code}`;
+                    const when = reader.last_active ? timeSince(reader.last_active) : '';
+                    const accentCol = isReferred ? '#37d4a5' : 'rgba(255,255,255,0.12)';
+                    const dotCol = isReferred ? '#37d4a5' : '#d4af37';
+
+                    const row = document.createElement('div');
+                    row.style.cssText = `display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);animation:fadeIn 0.4s ease;`;
+                    row.innerHTML = `
+                        <span style="width:7px;height:7px;border-radius:50%;background:${dotCol};box-shadow:0 0 5px ${dotCol};flex-shrink:0;"></span>
+                        <span style="flex:1;font-size:13px;font-weight:700;color:var(--text-primary);">${location}</span>
+                        ${isReferred ? `<span style="font-size:9px;font-weight:700;color:#37d4a5;background:rgba(55,212,165,0.1);border:1px solid rgba(55,212,165,0.25);border-radius:8px;padding:2px 6px;">دعوتك</span>` : ''}
+                        <span style="font-size:10px;color:var(--text-muted);font-weight:600;flex-shrink:0;">${when}</span>
+                    `;
+                    feedEl.appendChild(row);
+                });
+            }
         }
 
-        function openUmmahScreen() { showScreen('ummahScreen'); initUmmahGlobe(); loadUmmahData(); }
-        function closeUmmahScreen() { stopUmmahGlobe(); if (UMMAH.feedInterval) clearInterval(UMMAH.feedInterval); showScreen('appScreen'); }
+
+        function openUmmahScreen() { showScreen('ummahScreen'); initUmmahGlobe(); loadUmmahData(); createParticles(); }
 
         $('ummahBtn').addEventListener('click', openUmmahScreen);
-        $('ummahShareBtn').addEventListener('click', () => {
-            const url = window.location.href;
-            const text = state.lang === 'ar' ? 'كلمات — ختم القرآن بالقراءة السريعة\nبلا إعلانات • صدقة جارية' : 'Kalima — Speed-read the Quran\nAd-free • Ongoing charity';
-            if (navigator.share) { navigator.share({ title: 'كلمات', text, url }); } else { navigator.clipboard.writeText(url); showToast(i18n[state.lang].copied); }
-        });
+        $('ummahShareBtn').addEventListener('click', shareReferral);
+        // Restore preferred speed from last session
+        const savedWpm = parseInt(localStorage.getItem('kalima_wpm'));
+        if (savedWpm && savedWpm >= 50 && savedWpm <= 600) state.wpm = savedWpm;
         createParticles(); updateUI(); populateSurahSelect(); populatePageSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
-        
+
         // Load theme from localStorage and apply it
         const savedTheme = localStorage.getItem('quranReaderTheme') || state.theme;
         state.theme = savedTheme;
         document.documentElement.setAttribute('data-theme', state.theme);
         // Save theme to localStorage to ensure it's available for other pages
         localStorage.setItem('quranReaderTheme', state.theme);
-        
+
         // Auto-initialize: Skip language screen and resume modal, always start from last position
         (async () => {
             try {
@@ -3939,7 +4685,10 @@
             <h3 id="iosTitle">تثبيت على الشاشة الرئيسية</h3>
             <div class="ios-step">
                 <span class="ios-step-num">1</span>
-                <span id="iosStep1">اضغط على زر المشاركة <svg viewBox="0 0 24 24"><path d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z"/></svg> في أسفل الشاشة</span>
+                <span id="iosStep1">اضغط على زر المشاركة <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z" />
+                    </svg> في أسفل الشاشة</span>
             </div>
             <div class="ios-step">
                 <span class="ios-step-num">2</span>
@@ -3949,7 +4698,8 @@
                 <span class="ios-step-num">3</span>
                 <span id="iosStep3">اضغط "إضافة" في الأعلى</span>
             </div>
-            <button class="modal-btn primary" style="margin-top:20px;width:100%" onclick="document.getElementById('iosModal').classList.remove('show')">
+            <button class="modal-btn primary" style="margin-top:20px;width:100%"
+                onclick="document.getElementById('iosModal').classList.remove('show')">
                 <span id="iosGotIt">فهمت!</span>
             </button>
         </div>
@@ -3959,130 +4709,130 @@
     <div class="offline-bar" id="offlineBar">⚡ أنت غير متصل - الأجزاء المحملة مسبقاً متوفرة</div>
 
     <script>
-    // ============================================
-    // PWA: Service Worker Registration
-    // ============================================
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(reg => {
-                    console.log('SW registered:', reg.scope);
-                    // Check for updates periodically
-                    setInterval(() => reg.update(), 60 * 60 * 1000); // hourly
-                })
-                .catch(err => console.log('SW registration failed:', err));
-        });
-    }
-
-    // ============================================
-    // PWA: Install Prompt Handling
-    // ============================================
-    let deferredPrompt = null;
-    const installBanner = document.getElementById('installBanner');
-    const iosModal = document.getElementById('iosModal');
-
-    // Detect if already installed
-    function isStandalone() {
-        return window.matchMedia('(display-mode: standalone)').matches
-            || window.navigator.standalone === true
-            || document.referrer.includes('android-app://');
-    }
-
-    // Detect iOS
-    function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-
-    // Check if dismissed recently (don't nag - show only once per 7 days)
-    function wasDismissed() {
-        const dismissed = localStorage.getItem('pwaInstallDismissed');
-        if (!dismissed) return false;
-        const daysSince = (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24);
-        return daysSince < 7;
-    }
-
-    // Listen for the beforeinstallprompt event (Chrome/Edge/Samsung)
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (!isStandalone() && !wasDismissed()) {
-            updateInstallBannerLang();
-            setTimeout(() => installBanner.classList.add('show'), 2000);
-        }
-    });
-
-    // For iOS - show after a brief delay if not installed
-    window.addEventListener('load', () => {
-        if (isIOS() && !isStandalone() && !wasDismissed()) {
-            setTimeout(() => {
-                updateInstallBannerLang();
-                installBanner.classList.add('show');
-            }, 3000);
-        }
-    });
-
-    function updateInstallBannerLang() {
-        const lang = (typeof state !== 'undefined' && state.lang) || 'ar';
-        if (lang === 'en') {
-            document.getElementById('installTitle').textContent = 'Install App';
-            document.getElementById('installDesc').textContent = 'Add Quran to your home screen - no app store needed';
-            document.getElementById('installBtn').textContent = 'Install';
-            document.getElementById('iosTitle').textContent = 'Add to Home Screen';
-            document.getElementById('iosStep1').innerHTML = 'Tap the Share button <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent-1);vertical-align:middle"><path d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z"/></svg> at the bottom';
-            document.getElementById('iosStep2').textContent = 'Scroll down and tap "Add to Home Screen"';
-            document.getElementById('iosStep3').textContent = 'Tap "Add" in the top right';
-            document.getElementById('iosGotIt').textContent = 'Got it!';
-            document.getElementById('offlineBar').textContent = '⚡ You\'re offline - previously loaded content is available';
-        }
-    }
-
-    function handleInstallClick() {
-        if (isIOS()) {
-            // iOS doesn't support beforeinstallprompt, show instructions
-            installBanner.classList.remove('show');
-            iosModal.classList.add('show');
-        } else if (deferredPrompt) {
-            // Chrome/Edge/Samsung - trigger native install
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(choice => {
-                if (choice.outcome === 'accepted') {
-                    console.log('PWA installed');
-                }
-                deferredPrompt = null;
-                installBanner.classList.remove('show');
+        // ============================================
+        // PWA: Service Worker Registration
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => {
+                        console.log('SW registered:', reg.scope);
+                        // Check for updates periodically
+                        setInterval(() => reg.update(), 60 * 60 * 1000); // hourly
+                    })
+                    .catch(err => console.log('SW registration failed:', err));
             });
         }
-    }
 
-    function dismissInstall() {
-        installBanner.classList.remove('show');
-        localStorage.setItem('pwaInstallDismissed', Date.now().toString());
-    }
+        // ============================================
+        // PWA: Install Prompt Handling
+        // ============================================
+        let deferredPrompt = null;
+        const installBanner = document.getElementById('installBanner');
+        const iosModal = document.getElementById('iosModal');
 
-    // Track successful install
-    window.addEventListener('appinstalled', () => {
-        installBanner.classList.remove('show');
-        deferredPrompt = null;
-        console.log('PWA was installed');
-    });
-
-    // ============================================
-    // PWA: Offline / Online Detection
-    // ============================================
-    const offlineBar = document.getElementById('offlineBar');
-
-    function updateOnlineStatus() {
-        if (!navigator.onLine) {
-            offlineBar.classList.add('show');
-        } else {
-            offlineBar.classList.remove('show');
+        // Detect if already installed
+        function isStandalone() {
+            return window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true
+                || document.referrer.includes('android-app://');
         }
-    }
 
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    updateOnlineStatus();
+        // Detect iOS
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+
+        // Check if dismissed recently (don't nag - show only once per 7 days)
+        function wasDismissed() {
+            const dismissed = localStorage.getItem('pwaInstallDismissed');
+            if (!dismissed) return false;
+            const daysSince = (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24);
+            return daysSince < 7;
+        }
+
+        // Listen for the beforeinstallprompt event (Chrome/Edge/Samsung)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!isStandalone() && !wasDismissed()) {
+                updateInstallBannerLang();
+                setTimeout(() => installBanner.classList.add('show'), 2000);
+            }
+        });
+
+        // For iOS - show after a brief delay if not installed
+        window.addEventListener('load', () => {
+            if (isIOS() && !isStandalone() && !wasDismissed()) {
+                setTimeout(() => {
+                    updateInstallBannerLang();
+                    installBanner.classList.add('show');
+                }, 3000);
+            }
+        });
+
+        function updateInstallBannerLang() {
+            const lang = (typeof state !== 'undefined' && state.lang) || 'ar';
+            if (lang === 'en') {
+                document.getElementById('installTitle').textContent = 'Install App';
+                document.getElementById('installDesc').textContent = 'Add Quran to your home screen - no app store needed';
+                document.getElementById('installBtn').textContent = 'Install';
+                document.getElementById('iosTitle').textContent = 'Add to Home Screen';
+                document.getElementById('iosStep1').innerHTML = 'Tap the Share button <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent-1);vertical-align:middle"><path d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z"/></svg> at the bottom';
+                document.getElementById('iosStep2').textContent = 'Scroll down and tap "Add to Home Screen"';
+                document.getElementById('iosStep3').textContent = 'Tap "Add" in the top right';
+                document.getElementById('iosGotIt').textContent = 'Got it!';
+                document.getElementById('offlineBar').textContent = '⚡ You\'re offline - previously loaded content is available';
+            }
+        }
+
+        function handleInstallClick() {
+            if (isIOS()) {
+                // iOS doesn't support beforeinstallprompt, show instructions
+                installBanner.classList.remove('show');
+                iosModal.classList.add('show');
+            } else if (deferredPrompt) {
+                // Chrome/Edge/Samsung - trigger native install
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                    if (choice.outcome === 'accepted') {
+                        console.log('PWA installed');
+                    }
+                    deferredPrompt = null;
+                    installBanner.classList.remove('show');
+                });
+            }
+        }
+
+        function dismissInstall() {
+            installBanner.classList.remove('show');
+            localStorage.setItem('pwaInstallDismissed', Date.now().toString());
+        }
+
+        // Track successful install
+        window.addEventListener('appinstalled', () => {
+            installBanner.classList.remove('show');
+            deferredPrompt = null;
+            console.log('PWA was installed');
+        });
+
+        // ============================================
+        // PWA: Offline / Online Detection
+        // ============================================
+        const offlineBar = document.getElementById('offlineBar');
+
+        function updateOnlineStatus() {
+            if (!navigator.onLine) {
+                offlineBar.classList.add('show');
+            } else {
+                offlineBar.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
     </script>
 
 </html>
