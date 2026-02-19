@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="القرآن">
@@ -53,6 +53,15 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Safe area support for notched devices */
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
         /* Prevent text selection on mobile for better UX */
@@ -110,7 +119,8 @@
             font-family: 'Inter', 'Noto Naskh Arabic', sans-serif;
             background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
             color: var(--text-primary);
-            min-height: 100vh;
+            min-height: 100vh; /* Fallback */
+            min-height: 100dvh;
             overflow-x: hidden;
             overflow-y: auto;
             transition: all 0.4s ease;
@@ -223,7 +233,8 @@
 
         .screen {
             display: none;
-            min-height: 100vh;
+            min-height: 100vh; /* Fallback */
+            min-height: 100dvh;
             position: relative;
             z-index: 1;
         }
@@ -373,45 +384,62 @@
         /* App Screen */
         .app-screen {
             padding: 15px;
-            padding-bottom: 30px;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch;
+            /* overscroll-behavior: contain; */
         }
 
         .app-container {
             max-width: 500px;
             width: 100%;
+            height: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: flex-start; /* Allow natural top-down flow */
             padding: 0 16px;
-        }
-
-        .app-screen {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            /* overscroll-behavior: contain; */
-            /* Removed to ensure natural scroll if needed */
+            /* No gap here, we handle spacing via flex or margins */
+            gap: 0;
+            overflow: hidden; /* Main container doesn't scroll, inner parts might */
         }
 
         /* Mobile: Full width and height for reading area */
         @media (max-width: 768px) {
+            .app-screen {
+                padding: 0 !important; /* Remove main screen padding to fix shift */
+            }
+
             .app-container {
                 max-width: 100%;
-                padding: 0;
-                gap: 0;
+                /* Reset padding to fix shift - children handle their own margins */
+                padding: 0 !important;
             }
 
             .word-display {
-                width: 100vw;
-                min-height: calc(100vh - 200px);
-                max-height: calc(100vh - 200px);
-                padding: 0;
-                margin: 0;
-                border-radius: 0;
+                width: calc(100% - 32px) !important; /* Force spacing from edges */
+                max-width: 500px !important; /* Cap width for larger mobile screens */
+                height: 25dvh !important; /* Force rectangular landscape shape */
+                min-height: 180px;
+                max-height: 400px;
+                /* Remove flex grow */
+                flex: 0 0 auto;
+                
+                /* Keep rounded corners */
+                border-radius: 24px !important;
+                margin: 20px auto 10px auto !important; /* Added top margin for spacing */
+                
+                /* display: flex is inherited or set in main class, but ensure here */
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                
+                /* Ensure background/border are visible */
+                background: var(--bg-card);
+                border: 1px solid var(--border);
             }
 
             .spritz-frame {
@@ -436,6 +464,38 @@
                 padding: 0;
             }
 
+            /* Apply Card Styling to all main containers */
+            .surah-row,
+            .stats-grid,
+            .progress-track,
+            .playback-controls,
+            .speed-presets-simple,
+            .more-controls-btn,
+            .control-card,
+            .advanced-controls .control-card {
+                width: calc(100% - 32px) !important;
+                max-width: 500px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                border-radius: 16px !important;
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Adjust Surah Row specific padding */
+            .surah-row {
+                padding: 0 !important;
+                margin-bottom: 10px !important;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            
+            /* Ensure progress track is visible and touchable */
+            .progress-track {
+                margin: 15px auto !important;
+                padding: 10px 0 !important;
+            }
+
             .current-word {
                 width: 100%;
                 max-width: 100%;
@@ -448,6 +508,7 @@
             justify-content: space-between;
             align-items: flex-start;
             padding: 5px 0;
+            flex-shrink: 0; /* Don't shrink */
         }
 
         .top-bar-item {
@@ -532,7 +593,8 @@
         /* Word Display */
         .word-display {
             width: 100%;
-            min-height: 200px;
+            /* Default for desktop/tablet: fixed height or min-height */
+            min-height: 300px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -544,6 +606,11 @@
             padding: 40px 20px;
             position: relative;
             overflow: hidden;
+            /* Constrained height instead of flex: 1 */
+            height: 35dvh;
+            min-height: 250px;
+            max-height: 500px;
+            flex-shrink: 0;
         }
 
         .word-display::before {
@@ -925,6 +992,9 @@
             border: 1px solid var(--border);
             padding: 16px;
             border-radius: 16px;
+            gap: 12px;
+            margin-top: auto;
+            flex-shrink: 0; /* Don't shrink */
         }
 
         .control-header {
@@ -1206,6 +1276,7 @@
             border-radius: 8px;
             text-align: center;
             -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         .loop-input::-webkit-outer-spin-button,
@@ -2870,7 +2941,7 @@
 
     <!-- ═══ Ummah Globe Screen ═══ -->
     <div class="screen" id="ummahScreen"
-        style="background:var(--bg-gradient-1);overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;">
+        style="position:fixed;inset:0;width:100%;height:100%;z-index:5000;background:var(--bg-gradient-1);overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;">
         <!-- Referral popup -->
         <div id="refPopup"
             style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;padding:10px 20px;background:rgba(74,222,128,0.12);backdrop-filter:blur(16px);border:1px solid rgba(74,222,128,0.35);border-radius:24px;font-size:13px;font-weight:700;color:#4ade80;white-space:nowrap;animation:fadeIn 0.4s ease;pointer-events:none;">

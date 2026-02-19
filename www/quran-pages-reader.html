@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>قراءة صفحات القرآن</title>
     <style>
         * {
@@ -16,10 +16,13 @@
             background: #fff;
             color: #000;
             overflow: hidden;
-            width: 100vw;
-            height: 100vh;
+            overflow: hidden;
+            width: 100%; /* Changed from 100vw to prevent scrollbar shift */
+            height: 100vh; /* Fallback */
+            height: 100dvh;
             position: fixed;
             transition: background 0.3s ease;
+            -webkit-text-size-adjust: 100%;
         }
 
         body[data-theme="dark"] {
@@ -37,7 +40,10 @@
             justify-content: center;
             align-items: flex-start;
             padding: 20px;
-            padding-top: 70px; /* Space for top bar */
+            padding-top: calc(90px + env(safe-area-inset-top)); /* Increased from 70px */
+            padding-bottom: calc(40px + env(safe-area-inset-bottom)); /* Increased from 20px */
+            padding-left: calc(20px + env(safe-area-inset-left));
+            padding-right: calc(20px + env(safe-area-inset-right));
         }
 
         .quran-page {
@@ -70,7 +76,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100vh; /* Fallback */
+            height: 100dvh;
             color: #666;
             font-size: 18px;
             transition: color 0.3s ease;
@@ -104,8 +111,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100vh; /* Fallback */
+            height: 100dvh;
             color: #ff6b6b;
             text-align: center;
             padding: 20px;
@@ -140,13 +149,14 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding: 10px 20px;
+            padding-top: calc(10px + env(safe-area-inset-top));
+            padding-left: calc(20px + env(safe-area-inset-left));
+            padding-right: calc(20px + env(safe-area-inset-right));
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 200;
             transition: all 0.3s ease;
-            gap: 10px;
-            flex-wrap: wrap;
         }
 
         body[data-theme="dark"] .top-bar {
@@ -347,23 +357,67 @@
 </head>
 <body>
     <div class="top-bar">
-        <a href="index.html" class="back-btn" title="العودة">←</a>
-        <div class="navigation-controls">
-            <select id="surahSelect" class="nav-select">
-                <option value="">اختر سورة...</option>
-            </select>
-            <select id="pageSelect" class="nav-select">
-                <option value="">--</option>
-            </select>
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn" style="border: none; padding: 5px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+        </a>
+
+        <!-- Centered Title -->
+        <div style="font-weight: 700; font-size: 1.1rem; text-align: center; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary);">
+            <span id="headerTitle">المصحف</span>
         </div>
-        <div class="reading-stats">
-            <div class="speed-display">
-                <span>معدل القراءة:</span>
-                <span class="speed-value" id="readingSpeed">--</span>
-                <span>ك/د</span>
+
+        <!-- Menu Action Button -->
+        <button id="menuBtn" style="background: transparent; border: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Hidden Controls Overlay -->
+    <div id="controlsOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 210; align-items: flex-end; justify-content: center;">
+        <div id="controlsSheet" style="background: var(--bg-card); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h3 style="margin: 0; font-size: 1.2rem;">الإعدادات</h3>
+                <button id="closeMenuBtn" style="background: rgba(128,128,128,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">✕</button>
+            </div>
+            
+            <div style="display: grid; gap: 15px;">
+                <!-- Theme Toggle -->
+                <button id="themeToggle" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(128,128,128,0.08); border: none; border-radius: 16px; color: var(--text-primary); font-size: 1rem;">
+                    <span>المظهر</span>
+                    <span id="themeIcon">🌙</span>
+                </button>
+
+                <!-- Navigation Controls -->
+                <div style="background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px;">
+                    <label style="display: block; margin-bottom: 10px; font-size: 0.9rem; color: var(--text-secondary);">الانتقال إلى</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <select id="surahSelect" class="nav-select" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: transparent; color: var(--text-primary);">
+                            <option value="">السورة...</option>
+                        </select>
+                        <select id="pageSelect" class="nav-select" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: transparent; color: var(--text-primary);">
+                            <option value="">الصفحة...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1; background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px; text-align: center;">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">رقم الصفحة</span>
+                        <span id="pageNumberDisplay" style="font-weight: 700;">١</span>
+                    </div>
+                    <div style="flex: 1; background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px; text-align: center;">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">معدل القراءة</span>
+                        <span id="speedDisplayValue" style="font-weight: 700;">--</span> <span style="font-size: 0.8rem;">ك/د</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button>
     </div>
     <div class="page-container" id="pageContainer">
         <div class="loading">
@@ -532,6 +586,17 @@
             currentSurah = findSurahFromPage(currentPage);
             if (surahSelect) surahSelect.value = currentSurah;
             if (pageSelect) pageSelect.value = currentPage;
+
+            // Update Header Title
+            const surahObj = SURAHS.find(s => s.number === currentSurah);
+            if (surahObj) {
+                const titleEl = document.getElementById('headerTitle');
+                if (titleEl) titleEl.textContent = `سورة ${surahObj.name} - ص${toArabicNum(currentPage)}`;
+            }
+            
+            // Update Page Number in Overlay
+            const pageNumDisplay = document.getElementById('pageNumberDisplay');
+            if (pageNumDisplay) pageNumDisplay.textContent = toArabicNum(currentPage);
         }
 
         function calculateReadingSpeed() {
@@ -539,7 +604,7 @@
                 // Convert milliseconds to minutes
                 const minutes = totalReadingTime / 60000;
                 averageWPM = Math.round(totalWordsRead / minutes);
-                document.getElementById('readingSpeed').textContent = averageWPM;
+                document.getElementById('speedDisplayValue').textContent = averageWPM;
             }
         }
 
@@ -803,23 +868,30 @@
         populateSurahSelect();
         populatePageSelect();
 
-        // Handle surah selection
-        surahSelect.addEventListener('change', (e) => {
-            if (e.target.value) {
-                const surahNum = parseInt(e.target.value);
-                const firstPage = getSurahFirstPage(surahNum);
-                endPageTimer(); // End timer before loading new page
-                loadPage(firstPage);
-            }
-        });
+        // Menu & Overlay Controls
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const controlsOverlay = document.getElementById('controlsOverlay');
+        const controlsSheet = document.getElementById('controlsSheet');
 
-        // Handle page selection
-        pageSelect.addEventListener('change', (e) => {
-            if (e.target.value) {
-                const pageNum = parseInt(e.target.value);
-                endPageTimer(); // End timer before loading new page
-                loadPage(pageNum);
-            }
+        function openMenu() {
+            controlsOverlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                controlsSheet.style.transform = 'translateY(0)';
+            });
+        }
+
+        function closeMenu() {
+            controlsSheet.style.transform = 'translateY(100%)';
+            setTimeout(() => {
+                controlsOverlay.style.display = 'none';
+            }, 300);
+        }
+
+        menuBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        controlsOverlay.addEventListener('click', (e) => {
+            if (e.target === controlsOverlay) closeMenu();
         });
 
         // Initialize - load first page
@@ -830,7 +902,28 @@
         totalWordsRead = 0;
         totalReadingTime = 0;
         averageWPM = 0;
-        document.getElementById('readingSpeed').textContent = '--';
+        document.getElementById('speedDisplayValue').textContent = '--';
+        
+        // Handle surah selection
+        surahSelect.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const surahNum = parseInt(e.target.value);
+                const firstPage = getSurahFirstPage(surahNum);
+                endPageTimer(); // End timer before loading new page
+                loadPage(firstPage);
+                closeMenu(); // Close menu after selection
+            }
+        });
+
+        // Handle page selection
+        pageSelect.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const pageNum = parseInt(e.target.value);
+                endPageTimer(); // End timer before loading new page
+                loadPage(pageNum);
+                closeMenu(); // Close menu after selection
+            }
+        });
         
         loadPage(savedPage);
     </script>
