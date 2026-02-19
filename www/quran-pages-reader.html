@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
@@ -13,12 +14,17 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
             background: #fff;
             color: #000;
             overflow: hidden;
             overflow: hidden;
-            width: 100%; /* Changed from 100vw to prevent scrollbar shift */
-            height: 100vh; /* Fallback */
+            width: 100%;
+            /* Changed from 100vw to prevent scrollbar shift */
+            height: 100vh;
+            /* Fallback */
             height: 100dvh;
             position: fixed;
             transition: background 0.3s ease;
@@ -26,6 +32,9 @@
         }
 
         body[data-theme="dark"] {
+            --bg-card: rgba(26, 26, 36, 0.95);
+            --text-primary: #f5f5f0;
+            --text-secondary: #a0a0a0;
             background: #000;
             color: #fff;
         }
@@ -40,8 +49,10 @@
             justify-content: center;
             align-items: flex-start;
             padding: 20px;
-            padding-top: calc(90px + env(safe-area-inset-top)); /* Increased from 70px */
-            padding-bottom: calc(40px + env(safe-area-inset-bottom)); /* Increased from 20px */
+            padding-top: calc(90px + env(safe-area-inset-top));
+            /* Increased from 70px */
+            padding-bottom: calc(50px + env(safe-area-inset-bottom));
+            /* Increased from 40px */
             padding-left: calc(20px + env(safe-area-inset-left));
             padding-right: calc(20px + env(safe-area-inset-right));
         }
@@ -76,7 +87,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh; /* Fallback */
+            height: 100vh;
+            /* Fallback */
             height: 100dvh;
             color: #666;
             font-size: 18px;
@@ -104,7 +116,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .error {
@@ -113,7 +127,8 @@
             align-items: center;
             align-items: center;
             justify-content: center;
-            height: 100vh; /* Fallback */
+            height: 100vh;
+            /* Fallback */
             height: 100dvh;
             color: #ff6b6b;
             text-align: center;
@@ -148,15 +163,19 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 10px 20px;
-            padding-top: calc(10px + env(safe-area-inset-top));
-            padding-left: calc(20px + env(safe-area-inset-left));
-            padding-right: calc(20px + env(safe-area-inset-right));
+            padding-top: max(10px, env(safe-area-inset-top));
+            z-index: 200;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 200;
-            transition: all 0.3s ease;
+            padding: 10px 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            min-height: 50px;
         }
 
         body[data-theme="dark"] .top-bar {
@@ -334,8 +353,12 @@
 
         @media (max-width: 768px) {
             .top-bar {
-                flex-direction: column;
-                padding: 8px 10px;
+                padding-top: max(10px, env(safe-area-inset-top));
+                padding-bottom: 0;
+            }
+
+            .top-bar-content {
+                padding: 5px 10px;
             }
 
             .navigation-controls {
@@ -355,51 +378,70 @@
         }
     </style>
 </head>
+
 <body>
     <div class="top-bar">
-        <!-- Back Button -->
-        <a href="index.html" class="back-btn" style="border: none; padding: 5px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-        </a>
+        <div class="top-bar-content">
+            <!-- Back Button -->
+            <a href="index.html" class="back-btn" style="border: none; padding: 5px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+            </a>
 
-        <!-- Centered Title -->
-        <div style="font-weight: 700; font-size: 1.1rem; text-align: center; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary);">
-            <span id="headerTitle">المصحف</span>
+            <!-- Centered Title -->
+            <div
+                style="font-weight: 700; font-size: 1.1rem; text-align: center; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); padding: 0 10px;">
+                <span id="headerTitle">المصحف</span>
+            </div>
+
+            <!-- Menu Action Button -->
+            <button id="menuBtn"
+                style="background: transparent; border: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                </svg>
+            </button>
         </div>
-
-        <!-- Menu Action Button -->
-        <button id="menuBtn" style="background: transparent; border: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12h18M3 6h18M3 18h18" />
-            </svg>
-        </button>
     </div>
 
     <!-- Hidden Controls Overlay -->
-    <div id="controlsOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 210; align-items: flex-end; justify-content: center;">
-        <div id="controlsSheet" style="background: var(--bg-card); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+    <div id="controlsOverlay"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 210; align-items: flex-end; justify-content: center;">
+        <div id="controlsSheet"
+            style="background: var(--bg-card); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                 <h3 style="margin: 0; font-size: 1.2rem;">الإعدادات</h3>
-                <button id="closeMenuBtn" style="background: rgba(128,128,128,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">✕</button>
+                <button id="closeMenuBtn"
+                    style="background: rgba(128,128,128,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">✕</button>
             </div>
-            
+
             <div style="display: grid; gap: 15px;">
                 <!-- Theme Toggle -->
-                <button id="themeToggle" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(128,128,128,0.08); border: none; border-radius: 16px; color: var(--text-primary); font-size: 1rem;">
+                <button id="themeToggle"
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(128,128,128,0.08); border: none; border-radius: 16px; color: var(--text-primary); font-size: 1rem;">
                     <span>المظهر</span>
                     <span id="themeIcon">🌙</span>
                 </button>
 
                 <!-- Navigation Controls -->
                 <div style="background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px;">
-                    <label style="display: block; margin-bottom: 10px; font-size: 0.9rem; color: var(--text-secondary);">الانتقال إلى</label>
+                    <label
+                        style="display: block; margin-bottom: 10px; font-size: 0.9rem; color: var(--text-secondary);">الانتقال
+                        إلى</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <select id="surahSelect" class="nav-select" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: transparent; color: var(--text-primary);">
+                        <style>
+                            .nav-select option {
+                                background-color: var(--bg-card);
+                                color: var(--text-primary);
+                            }
+                        </style>
+                        <select id="surahSelect" class="nav-select"
+                            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: transparent; color: var(--text-primary);">
                             <option value="">السورة...</option>
                         </select>
-                        <select id="pageSelect" class="nav-select" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: transparent; color: var(--text-primary);">
+                        <select id="pageSelect" class="nav-select"
+                            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: transparent; color: var(--text-primary);">
                             <option value="">الصفحة...</option>
                         </select>
                     </div>
@@ -407,13 +449,20 @@
 
                 <!-- Stats -->
                 <div style="display: flex; gap: 10px;">
-                    <div style="flex: 1; background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px; text-align: center;">
-                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">رقم الصفحة</span>
-                        <span id="pageNumberDisplay" style="font-weight: 700;">١</span>
+                    <div
+                        style="flex: 1; background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px; text-align: center;">
+                        <span
+                            style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">رقم
+                            الصفحة</span>
+                        <span id="pageNumberDisplay" style="font-weight: 700; color: var(--text-primary);">١</span>
                     </div>
-                    <div style="flex: 1; background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px; text-align: center;">
-                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">معدل القراءة</span>
-                        <span id="speedDisplayValue" style="font-weight: 700;">--</span> <span style="font-size: 0.8rem;">ك/د</span>
+                    <div
+                        style="flex: 1; background: rgba(128,128,128,0.08); padding: 15px; border-radius: 16px; text-align: center;">
+                        <span
+                            style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">معدل
+                            القراءة</span>
+                        <span id="speedDisplayValue" style="font-weight: 700; color: var(--text-primary);">--</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">ك/د</span>
                     </div>
                 </div>
             </div>
@@ -429,70 +478,70 @@
     <script>
         const TOTAL_PAGES = 604;
         const FOLDER_PATH = 'Quran_Pages/';
-        
+
         // Utility function for Arabic numbers
         function toArabicNum(n) {
             return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
         }
-        
+
         // Surahs data
         const SURAHS = [
-            { number: 1, name: "الفاتحة", ayahs: 7 }, { number: 2, name: "البقرة", ayahs: 286 }, 
-            { number: 3, name: "آل عمران", ayahs: 200 }, { number: 4, name: "النساء", ayahs: 176 }, 
-            { number: 5, name: "المائدة", ayahs: 120 }, { number: 6, name: "الأنعام", ayahs: 165 }, 
-            { number: 7, name: "الأعراف", ayahs: 206 }, { number: 8, name: "الأنفال", ayahs: 75 }, 
-            { number: 9, name: "التوبة", ayahs: 129 }, { number: 10, name: "يونس", ayahs: 109 }, 
-            { number: 11, name: "هود", ayahs: 123 }, { number: 12, name: "يوسف", ayahs: 111 }, 
-            { number: 13, name: "الرعد", ayahs: 43 }, { number: 14, name: "إبراهيم", ayahs: 52 }, 
-            { number: 15, name: "الحجر", ayahs: 99 }, { number: 16, name: "النحل", ayahs: 128 }, 
-            { number: 17, name: "الإسراء", ayahs: 111 }, { number: 18, name: "الكهف", ayahs: 110 }, 
-            { number: 19, name: "مريم", ayahs: 98 }, { number: 20, name: "طه", ayahs: 135 }, 
-            { number: 21, name: "الأنبياء", ayahs: 112 }, { number: 22, name: "الحج", ayahs: 78 }, 
-            { number: 23, name: "المؤمنون", ayahs: 118 }, { number: 24, name: "النور", ayahs: 64 }, 
-            { number: 25, name: "الفرقان", ayahs: 77 }, { number: 26, name: "الشعراء", ayahs: 227 }, 
-            { number: 27, name: "النمل", ayahs: 93 }, { number: 28, name: "القصص", ayahs: 88 }, 
-            { number: 29, name: "العنكبوت", ayahs: 69 }, { number: 30, name: "الروم", ayahs: 60 }, 
-            { number: 31, name: "لقمان", ayahs: 34 }, { number: 32, name: "السجدة", ayahs: 30 }, 
-            { number: 33, name: "الأحزاب", ayahs: 73 }, { number: 34, name: "سبأ", ayahs: 54 }, 
-            { number: 35, name: "فاطر", ayahs: 45 }, { number: 36, name: "يس", ayahs: 83 }, 
-            { number: 37, name: "الصافات", ayahs: 182 }, { number: 38, name: "ص", ayahs: 88 }, 
-            { number: 39, name: "الزمر", ayahs: 75 }, { number: 40, name: "غافر", ayahs: 85 }, 
-            { number: 41, name: "فصلت", ayahs: 54 }, { number: 42, name: "الشورى", ayahs: 53 }, 
-            { number: 43, name: "الزخرف", ayahs: 89 }, { number: 44, name: "الدخان", ayahs: 59 }, 
-            { number: 45, name: "الجاثية", ayahs: 37 }, { number: 46, name: "الأحقاف", ayahs: 35 }, 
-            { number: 47, name: "محمد", ayahs: 38 }, { number: 48, name: "الفتح", ayahs: 29 }, 
-            { number: 49, name: "الحجرات", ayahs: 18 }, { number: 50, name: "ق", ayahs: 45 }, 
-            { number: 51, name: "الذاريات", ayahs: 60 }, { number: 52, name: "الطور", ayahs: 49 }, 
-            { number: 53, name: "النجم", ayahs: 62 }, { number: 54, name: "القمر", ayahs: 55 }, 
-            { number: 55, name: "الرحمن", ayahs: 78 }, { number: 56, name: "الواقعة", ayahs: 96 }, 
-            { number: 57, name: "الحديد", ayahs: 29 }, { number: 58, name: "المجادلة", ayahs: 22 }, 
-            { number: 59, name: "الحشر", ayahs: 24 }, { number: 60, name: "الممتحنة", ayahs: 13 }, 
-            { number: 61, name: "الصف", ayahs: 14 }, { number: 62, name: "الجمعة", ayahs: 11 }, 
-            { number: 63, name: "المنافقون", ayahs: 11 }, { number: 64, name: "التغابن", ayahs: 18 }, 
-            { number: 65, name: "الطلاق", ayahs: 12 }, { number: 66, name: "التحريم", ayahs: 12 }, 
-            { number: 67, name: "الملك", ayahs: 30 }, { number: 68, name: "القلم", ayahs: 52 }, 
-            { number: 69, name: "الحاقة", ayahs: 52 }, { number: 70, name: "المعارج", ayahs: 44 }, 
-            { number: 71, name: "نوح", ayahs: 28 }, { number: 72, name: "الجن", ayahs: 28 }, 
-            { number: 73, name: "المزمل", ayahs: 20 }, { number: 74, name: "المدثر", ayahs: 56 }, 
-            { number: 75, name: "القيامة", ayahs: 40 }, { number: 76, name: "الإنسان", ayahs: 31 }, 
-            { number: 77, name: "المرسلات", ayahs: 50 }, { number: 78, name: "النبأ", ayahs: 40 }, 
-            { number: 79, name: "النازعات", ayahs: 46 }, { number: 80, name: "عبس", ayahs: 42 }, 
-            { number: 81, name: "التكوير", ayahs: 29 }, { number: 82, name: "الانفطار", ayahs: 19 }, 
-            { number: 83, name: "المطففين", ayahs: 36 }, { number: 84, name: "الانشقاق", ayahs: 25 }, 
-            { number: 85, name: "البروج", ayahs: 22 }, { number: 86, name: "الطارق", ayahs: 17 }, 
-            { number: 87, name: "الأعلى", ayahs: 19 }, { number: 88, name: "الغاشية", ayahs: 26 }, 
-            { number: 89, name: "الفجر", ayahs: 30 }, { number: 90, name: "البلد", ayahs: 20 }, 
-            { number: 91, name: "الشمس", ayahs: 15 }, { number: 92, name: "الليل", ayahs: 21 }, 
-            { number: 93, name: "الضحى", ayahs: 11 }, { number: 94, name: "الشرح", ayahs: 8 }, 
-            { number: 95, name: "التين", ayahs: 8 }, { number: 96, name: "العلق", ayahs: 19 }, 
-            { number: 97, name: "القدر", ayahs: 5 }, { number: 98, name: "البينة", ayahs: 8 }, 
-            { number: 99, name: "الزلزلة", ayahs: 8 }, { number: 100, name: "العاديات", ayahs: 11 }, 
-            { number: 101, name: "القارعة", ayahs: 10 }, { number: 102, name: "التكاثر", ayahs: 8 }, 
-            { number: 103, name: "العصر", ayahs: 3 }, { number: 104, name: "الهمزة", ayahs: 9 }, 
-            { number: 105, name: "الفيل", ayahs: 5 }, { number: 106, name: "قريش", ayahs: 4 }, 
-            { number: 107, name: "الماعون", ayahs: 7 }, { number: 108, name: "الكوثر", ayahs: 3 }, 
-            { number: 109, name: "الكافرون", ayahs: 6 }, { number: 110, name: "النصر", ayahs: 3 }, 
-            { number: 111, name: "المسد", ayahs: 5 }, { number: 112, name: "الإخلاص", ayahs: 4 }, 
+            { number: 1, name: "الفاتحة", ayahs: 7 }, { number: 2, name: "البقرة", ayahs: 286 },
+            { number: 3, name: "آل عمران", ayahs: 200 }, { number: 4, name: "النساء", ayahs: 176 },
+            { number: 5, name: "المائدة", ayahs: 120 }, { number: 6, name: "الأنعام", ayahs: 165 },
+            { number: 7, name: "الأعراف", ayahs: 206 }, { number: 8, name: "الأنفال", ayahs: 75 },
+            { number: 9, name: "التوبة", ayahs: 129 }, { number: 10, name: "يونس", ayahs: 109 },
+            { number: 11, name: "هود", ayahs: 123 }, { number: 12, name: "يوسف", ayahs: 111 },
+            { number: 13, name: "الرعد", ayahs: 43 }, { number: 14, name: "إبراهيم", ayahs: 52 },
+            { number: 15, name: "الحجر", ayahs: 99 }, { number: 16, name: "النحل", ayahs: 128 },
+            { number: 17, name: "الإسراء", ayahs: 111 }, { number: 18, name: "الكهف", ayahs: 110 },
+            { number: 19, name: "مريم", ayahs: 98 }, { number: 20, name: "طه", ayahs: 135 },
+            { number: 21, name: "الأنبياء", ayahs: 112 }, { number: 22, name: "الحج", ayahs: 78 },
+            { number: 23, name: "المؤمنون", ayahs: 118 }, { number: 24, name: "النور", ayahs: 64 },
+            { number: 25, name: "الفرقان", ayahs: 77 }, { number: 26, name: "الشعراء", ayahs: 227 },
+            { number: 27, name: "النمل", ayahs: 93 }, { number: 28, name: "القصص", ayahs: 88 },
+            { number: 29, name: "العنكبوت", ayahs: 69 }, { number: 30, name: "الروم", ayahs: 60 },
+            { number: 31, name: "لقمان", ayahs: 34 }, { number: 32, name: "السجدة", ayahs: 30 },
+            { number: 33, name: "الأحزاب", ayahs: 73 }, { number: 34, name: "سبأ", ayahs: 54 },
+            { number: 35, name: "فاطر", ayahs: 45 }, { number: 36, name: "يس", ayahs: 83 },
+            { number: 37, name: "الصافات", ayahs: 182 }, { number: 38, name: "ص", ayahs: 88 },
+            { number: 39, name: "الزمر", ayahs: 75 }, { number: 40, name: "غافر", ayahs: 85 },
+            { number: 41, name: "فصلت", ayahs: 54 }, { number: 42, name: "الشورى", ayahs: 53 },
+            { number: 43, name: "الزخرف", ayahs: 89 }, { number: 44, name: "الدخان", ayahs: 59 },
+            { number: 45, name: "الجاثية", ayahs: 37 }, { number: 46, name: "الأحقاف", ayahs: 35 },
+            { number: 47, name: "محمد", ayahs: 38 }, { number: 48, name: "الفتح", ayahs: 29 },
+            { number: 49, name: "الحجرات", ayahs: 18 }, { number: 50, name: "ق", ayahs: 45 },
+            { number: 51, name: "الذاريات", ayahs: 60 }, { number: 52, name: "الطور", ayahs: 49 },
+            { number: 53, name: "النجم", ayahs: 62 }, { number: 54, name: "القمر", ayahs: 55 },
+            { number: 55, name: "الرحمن", ayahs: 78 }, { number: 56, name: "الواقعة", ayahs: 96 },
+            { number: 57, name: "الحديد", ayahs: 29 }, { number: 58, name: "المجادلة", ayahs: 22 },
+            { number: 59, name: "الحشر", ayahs: 24 }, { number: 60, name: "الممتحنة", ayahs: 13 },
+            { number: 61, name: "الصف", ayahs: 14 }, { number: 62, name: "الجمعة", ayahs: 11 },
+            { number: 63, name: "المنافقون", ayahs: 11 }, { number: 64, name: "التغابن", ayahs: 18 },
+            { number: 65, name: "الطلاق", ayahs: 12 }, { number: 66, name: "التحريم", ayahs: 12 },
+            { number: 67, name: "الملك", ayahs: 30 }, { number: 68, name: "القلم", ayahs: 52 },
+            { number: 69, name: "الحاقة", ayahs: 52 }, { number: 70, name: "المعارج", ayahs: 44 },
+            { number: 71, name: "نوح", ayahs: 28 }, { number: 72, name: "الجن", ayahs: 28 },
+            { number: 73, name: "المزمل", ayahs: 20 }, { number: 74, name: "المدثر", ayahs: 56 },
+            { number: 75, name: "القيامة", ayahs: 40 }, { number: 76, name: "الإنسان", ayahs: 31 },
+            { number: 77, name: "المرسلات", ayahs: 50 }, { number: 78, name: "النبأ", ayahs: 40 },
+            { number: 79, name: "النازعات", ayahs: 46 }, { number: 80, name: "عبس", ayahs: 42 },
+            { number: 81, name: "التكوير", ayahs: 29 }, { number: 82, name: "الانفطار", ayahs: 19 },
+            { number: 83, name: "المطففين", ayahs: 36 }, { number: 84, name: "الانشقاق", ayahs: 25 },
+            { number: 85, name: "البروج", ayahs: 22 }, { number: 86, name: "الطارق", ayahs: 17 },
+            { number: 87, name: "الأعلى", ayahs: 19 }, { number: 88, name: "الغاشية", ayahs: 26 },
+            { number: 89, name: "الفجر", ayahs: 30 }, { number: 90, name: "البلد", ayahs: 20 },
+            { number: 91, name: "الشمس", ayahs: 15 }, { number: 92, name: "الليل", ayahs: 21 },
+            { number: 93, name: "الضحى", ayahs: 11 }, { number: 94, name: "الشرح", ayahs: 8 },
+            { number: 95, name: "التين", ayahs: 8 }, { number: 96, name: "العلق", ayahs: 19 },
+            { number: 97, name: "القدر", ayahs: 5 }, { number: 98, name: "البينة", ayahs: 8 },
+            { number: 99, name: "الزلزلة", ayahs: 8 }, { number: 100, name: "العاديات", ayahs: 11 },
+            { number: 101, name: "القارعة", ayahs: 10 }, { number: 102, name: "التكاثر", ayahs: 8 },
+            { number: 103, name: "العصر", ayahs: 3 }, { number: 104, name: "الهمزة", ayahs: 9 },
+            { number: 105, name: "الفيل", ayahs: 5 }, { number: 106, name: "قريش", ayahs: 4 },
+            { number: 107, name: "الماعون", ayahs: 7 }, { number: 108, name: "الكوثر", ayahs: 3 },
+            { number: 109, name: "الكافرون", ayahs: 6 }, { number: 110, name: "النصر", ayahs: 3 },
+            { number: 111, name: "المسد", ayahs: 5 }, { number: 112, name: "الإخلاص", ayahs: 4 },
             { number: 113, name: "الفلق", ayahs: 5 }, { number: 114, name: "الناس", ayahs: 6 }
         ];
 
@@ -512,15 +561,15 @@
             101: 600, 102: 600, 103: 601, 104: 601, 105: 601, 106: 602, 107: 602, 108: 602, 109: 603, 110: 603,
             111: 603, 112: 604, 113: 604, 114: 604
         };
-        
+
         // Average words per page in the Quran (approximately 200-250 words per page)
         // This is an approximation - actual count varies by page
         const AVG_WORDS_PER_PAGE = 225;
-        
+
         // Minimum time needed to read a page realistically (in milliseconds)
         // Any page read faster than this is considered a quick flip/navigation, not actual reading
         const MIN_PAGE_READING_TIME = 12000; // 12 seconds
-        
+
         let currentPage = 1;
         let currentSurah = 1;
         let touchStartX = 0;
@@ -529,7 +578,7 @@
         let touchEndY = 0;
         let isSwiping = false;
         const minSwipeDistance = 50;
-        
+
         // Reading speed tracking
         let pageStartTime = null;
         let totalWordsRead = 0;
@@ -598,7 +647,7 @@
                 const titleEl = document.getElementById('headerTitle');
                 if (titleEl) titleEl.textContent = `سورة ${surahObj.name} - ص${toArabicNum(currentPage)}`;
             }
-            
+
             // Update Page Number in Overlay
             const pageNumDisplay = document.getElementById('pageNumberDisplay');
             if (pageNumDisplay) pageNumDisplay.textContent = toArabicNum(currentPage);
@@ -620,7 +669,7 @@
         function endPageTimer() {
             if (pageStartTime) {
                 const pageReadingTime = Date.now() - pageStartTime;
-                
+
                 // Only count this page if the reading time is realistic
                 // Quick flips/navigation should not affect reading speed
                 if (pageReadingTime >= MIN_PAGE_READING_TIME) {
@@ -632,7 +681,7 @@
                     // This was a quick flip, ignore it for speed calculation
                     console.log(`Quick flip detected (${Math.round(pageReadingTime / 1000)}s), ignoring for speed calculation`);
                 }
-                
+
                 // Reset timer
                 pageStartTime = null;
             }
@@ -650,10 +699,10 @@
             // Update current surah based on page
             currentSurah = findSurahFromPage(pageNum);
             updatePageInfo();
-            
+
             // Save current page to localStorage
             localStorage.setItem('quranPagesReaderCurrentPage', pageNum);
-            
+
             // Start timer for new page
             startPageTimer();
 
@@ -721,7 +770,7 @@
                         imageLoaded = true;
                         pageContainer.innerHTML = '';
                         img.className = 'quran-page';
-                        
+
                         // Apply invert filter in dark mode
                         const isDarkMode = document.body.getAttribute('data-theme') === 'dark';
                         if (isDarkMode) {
@@ -731,7 +780,7 @@
                             img.style.setProperty('filter', 'none', 'important');
                             img.style.setProperty('-webkit-filter', 'none', 'important');
                         }
-                        
+
                         pageContainer.appendChild(img);
                         // Scroll to top when page changes
                         pageContainer.scrollTop = 0;
@@ -834,10 +883,10 @@
         // Priority: 1) quranReaderTheme (from index.html), 2) quranPagesReaderTheme (from this page), 3) default to 'dark' (same as index.html)
         const indexTheme = localStorage.getItem('quranReaderTheme');
         const savedTheme = indexTheme || localStorage.getItem('quranPagesReaderTheme') || 'dark';
-        
+
         document.body.setAttribute('data-theme', savedTheme);
         themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        
+
         // Update image filter on initial load
         setTimeout(() => {
             updateImageFilter();
@@ -901,14 +950,14 @@
 
         // Initialize - load first page
         const savedPage = parseInt(localStorage.getItem('quranPagesReaderCurrentPage')) || 1;
-        
+
         // Reset reading speed stats for each new session
         // Don't load saved stats - start fresh every time
         totalWordsRead = 0;
         totalReadingTime = 0;
         averageWPM = 0;
         document.getElementById('speedDisplayValue').textContent = '--';
-        
+
         // Handle surah selection
         surahSelect.addEventListener('change', (e) => {
             if (e.target.value) {
@@ -929,8 +978,9 @@
                 closeMenu(); // Close menu after selection
             }
         });
-        
+
         loadPage(savedPage);
     </script>
 </body>
+
 </html>

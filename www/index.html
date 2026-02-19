@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="القرآن">
@@ -119,7 +120,8 @@
             font-family: 'Inter', 'Noto Naskh Arabic', sans-serif;
             background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
             color: var(--text-primary);
-            min-height: 100vh; /* Fallback */
+            min-height: 100vh;
+            /* Fallback */
             min-height: 100dvh;
             overflow-x: hidden;
             overflow-y: auto;
@@ -233,7 +235,8 @@
 
         .screen {
             display: none;
-            min-height: 100vh; /* Fallback */
+            min-height: 100vh;
+            /* Fallback */
             min-height: 100dvh;
             position: relative;
             z-index: 1;
@@ -387,7 +390,8 @@
             height: 100dvh;
             display: flex;
             flex-direction: column;
-            overflow-y: auto; /* Enable vertical scrolling */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
             -webkit-overflow-scrolling: touch;
             /* overscroll-behavior: contain; */
         }
@@ -395,21 +399,24 @@
         .app-container {
             max-width: 500px;
             width: 100%;
-            height: 100%;
+            min-height: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Allow natural top-down flow */
+            justify-content: flex-start;
+            /* Allow natural top-down flow */
             padding: 0 16px;
             /* No gap here, we handle spacing via flex or margins */
             gap: 0;
-            overflow: hidden; /* Main container doesn't scroll, inner parts might */
+            padding-bottom: 30px;
+            /* Add some padding so the bottom isn't fully hugging the edge */
         }
 
         /* Mobile: Full width and height for reading area */
         @media (max-width: 768px) {
             .app-screen {
-                padding: 0 !important; /* Remove main screen padding to fix shift */
+                padding: 0 !important;
+                /* Remove main screen padding to fix shift */
             }
 
             .app-container {
@@ -419,24 +426,28 @@
             }
 
             .word-display {
-                width: calc(100% - 32px) !important; /* Force spacing from edges */
-                max-width: 500px !important; /* Cap width for larger mobile screens */
-                height: 25dvh !important; /* Force rectangular landscape shape */
-                min-height: 180px;
-                max-height: 400px;
+                width: calc(100% - 32px) !important;
+                /* Force spacing from edges */
+                max-width: 500px !important;
+                /* Cap width for larger mobile screens */
+                height: 200px !important;
+                /* Force rectangular landscape shape */
+                min-height: 180px !important;
+                max-height: 200px !important;
                 /* Remove flex grow */
                 flex: 0 0 auto;
-                
+
                 /* Keep rounded corners */
                 border-radius: 24px !important;
-                margin: 20px auto 10px auto !important; /* Added top margin for spacing */
-                
+                margin: 20px auto 10px auto !important;
+                /* Added top margin for spacing */
+
                 /* display: flex is inherited or set in main class, but ensure here */
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                
+
                 /* Ensure background/border are visible */
                 background: var(--bg-card);
                 border: 1px solid var(--border);
@@ -489,7 +500,7 @@
                 justify-content: space-between;
                 gap: 10px;
             }
-            
+
             /* Ensure progress track is visible and touchable */
             .progress-track {
                 margin: 15px auto !important;
@@ -508,7 +519,8 @@
             justify-content: space-between;
             align-items: flex-start;
             padding: 5px 0;
-            flex-shrink: 0; /* Don't shrink */
+            flex-shrink: 0;
+            /* Don't shrink */
         }
 
         .top-bar-item {
@@ -594,7 +606,7 @@
         .word-display {
             width: 100%;
             /* Default for desktop/tablet: fixed height or min-height */
-            min-height: 300px;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -603,13 +615,12 @@
             backdrop-filter: var(--glass-blur);
             border: 1px solid var(--border);
             border-radius: 24px;
-            padding: 40px 20px;
+            padding: 20px;
             position: relative;
             overflow: hidden;
             /* Constrained height instead of flex: 1 */
-            height: 35dvh;
-            min-height: 250px;
-            max-height: 500px;
+            height: 200px;
+            max-height: 200px;
             flex-shrink: 0;
         }
 
@@ -994,7 +1005,8 @@
             border-radius: 16px;
             gap: 12px;
             margin-top: auto;
-            flex-shrink: 0; /* Don't shrink */
+            flex-shrink: 0;
+            /* Don't shrink */
         }
 
         .control-header {
@@ -1288,6 +1300,7 @@
         .loop-input:focus {
             outline: none;
             border-color: var(--accent-1);
+            background-color: var(--bg-hover);
         }
 
         .loop-slider {
@@ -1535,6 +1548,14 @@
             .surah-selector select {
                 font-size: 0.95rem;
                 padding: 12px 16px;
+                background-color: var(--bg-card);
+                color: var(--text-primary);
+                border: 1px solid var(--border);
+            }
+
+            .surah-selector select option {
+                background-color: var(--bg-card-solid);
+                color: var(--text-primary);
             }
 
             .app-container {
@@ -1545,8 +1566,9 @@
 
             .word-display {
                 width: 100vw;
-                min-height: calc(100vh - 200px);
-                max-height: calc(100vh - 200px);
+                height: 200px;
+                min-height: 180px;
+                max-height: 200px;
                 padding: 0;
                 margin: 0;
                 border-radius: 0;
@@ -1676,8 +1698,9 @@
 
             .word-display {
                 width: 100vw;
-                min-height: calc(100vh - 180px);
-                max-height: calc(100vh - 180px);
+                height: 200px;
+                min-height: 180px;
+                max-height: 200px;
                 padding: 0;
                 margin: 0;
                 border-radius: 0;
@@ -2002,8 +2025,8 @@
 
         .info-bar {
             margin: 0 !important;
-            padding: 5px !important;
-            gap: 4px !important;
+            padding: 8px 5px !important;
+            gap: 8px !important;
             height: 100%;
             justify-content: space-around;
         }
@@ -2025,14 +2048,14 @@
         /* Bento Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
+            grid-template-columns: 1.35fr 1fr;
             gap: 8px;
             margin: 5px 0;
         }
 
         .time-estimates {
             margin: 0 !important;
-            padding: 5px !important;
+            padding: 8px 5px !important;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -2046,17 +2069,6 @@
             text-align: center;
         }
 
-        .time-label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            margin-bottom: 2px;
-        }
-
-        .time-value {
-            font-size: 0.85rem;
-            color: var(--accent-1);
-            font-weight: 600;
-        }
 
         /* Interaction Overlay */
         .touch-zone.center {
@@ -3012,10 +3024,10 @@
                             <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
                     </div>
-                    <div style="font-size:20px;font-weight:900;color:var(--text-primary);line-height:1;"
+                    <div style="font-size:32px;font-weight:900;color:var(--text-primary);line-height:1;"
                         id="ummahHours">--</div>
                     <div
-                        style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
+                        style="font-size:14px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
                         ساعة</div>
                 </div>
                 <div
@@ -3032,10 +3044,10 @@
                             </path>
                         </svg>
                     </div>
-                    <div style="font-size:20px;font-weight:900;color:var(--text-primary);line-height:1;"
+                    <div style="font-size:32px;font-weight:900;color:var(--text-primary);line-height:1;"
                         id="ummahCountries">--</div>
                     <div
-                        style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
+                        style="font-size:14px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
                         دولة</div>
                 </div>
                 <div
@@ -3049,10 +3061,10 @@
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                         </svg>
                     </div>
-                    <div style="font-size:20px;font-weight:900;color:var(--text-primary);line-height:1;"
+                    <div style="font-size:32px;font-weight:900;color:var(--text-primary);line-height:1;"
                         id="ummahKhatmas">--</div>
                     <div
-                        style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
+                        style="font-size:14px;color:var(--text-muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">
                         ختمة</div>
                 </div>
             </div>
@@ -4226,6 +4238,7 @@
             _UMMAH3.renderer = renderer;
 
             const globeGroup = new THREE.Group();
+            globeGroup.rotation.order = 'YXZ';
             _UMMAH3.globeGroup = globeGroup;
             scene.add(globeGroup);
 
@@ -4370,10 +4383,16 @@
                     _UMMAH3.camera.position.z += (_UMMAH3.targetCamZ - _UMMAH3.camera.position.z) * 0.05;
                 }
                 if (!_UMMAH3.isDragging && _UMMAH3.globeGroup) {
-                    // Constant slow orbit PLUS target rotation drift
+                    // Constant slow orbit PLUS target rotation drift using shortest path
                     _UMMAH3.globeGroup.rotation.y += 0.001;
-                    _UMMAH3.globeGroup.rotation.y += (_UMMAH3.targetRot.y - _UMMAH3.globeGroup.rotation.y) * 0.02;
-                    _UMMAH3.globeGroup.rotation.x += (_UMMAH3.targetRot.x - _UMMAH3.globeGroup.rotation.x) * 0.02;
+
+                    let dy = _UMMAH3.targetRot.y - _UMMAH3.globeGroup.rotation.y;
+                    dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+                    _UMMAH3.globeGroup.rotation.y += dy * 0.02;
+
+                    let dx = _UMMAH3.targetRot.x - _UMMAH3.globeGroup.rotation.x;
+                    dx = Math.atan2(Math.sin(dx), Math.cos(dx));
+                    _UMMAH3.globeGroup.rotation.x += dx * 0.02;
                 }
                 // Pulsing glow rings and beams
                 _UMMAH3.markerMeshes.forEach(m => {
