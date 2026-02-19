@@ -430,6 +430,11 @@
         const TOTAL_PAGES = 604;
         const FOLDER_PATH = 'Quran_Pages/';
         
+        // Utility function for Arabic numbers
+        function toArabicNum(n) {
+            return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+        }
+        
         // Surahs data
         const SURAHS = [
             { number: 1, name: "الفاتحة", ayahs: 7 }, { number: 2, name: "البقرة", ayahs: 286 }, 
