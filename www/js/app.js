@@ -1,3 +1,58 @@
+        const SURAHS = [{ number: 1, name: "الفاتحة", ayahs: 7 }, { number: 2, name: "البقرة", ayahs: 286 }, { number: 3, name: "آل عمران", ayahs: 200 }, { number: 4, name: "النساء", ayahs: 176 }, { number: 5, name: "المائدة", ayahs: 120 }, { number: 6, name: "الأنعام", ayahs: 165 }, { number: 7, name: "الأعراف", ayahs: 206 }, { number: 8, name: "الأنفال", ayahs: 75 }, { number: 9, name: "التوبة", ayahs: 129 }, { number: 10, name: "يونس", ayahs: 109 }, { number: 11, name: "هود", ayahs: 123 }, { number: 12, name: "يوسف", ayahs: 111 }, { number: 13, name: "الرعد", ayahs: 43 }, { number: 14, name: "إبراهيم", ayahs: 52 }, { number: 15, name: "الحجر", ayahs: 99 }, { number: 16, name: "النحل", ayahs: 128 }, { number: 17, name: "الإسراء", ayahs: 111 }, { number: 18, name: "الكهف", ayahs: 110 }, { number: 19, name: "مريم", ayahs: 98 }, { number: 20, name: "طه", ayahs: 135 }, { number: 21, name: "الأنبياء", ayahs: 112 }, { number: 22, name: "الحج", ayahs: 78 }, { number: 23, name: "المؤمنون", ayahs: 118 }, { number: 24, name: "النور", ayahs: 64 }, { number: 25, name: "الفرقان", ayahs: 77 }, { number: 26, name: "الشعراء", ayahs: 227 }, { number: 27, name: "النمل", ayahs: 93 }, { number: 28, name: "القصص", ayahs: 88 }, { number: 29, name: "العنكبوت", ayahs: 69 }, { number: 30, name: "الروم", ayahs: 60 }, { number: 31, name: "لقمان", ayahs: 34 }, { number: 32, name: "السجدة", ayahs: 30 }, { number: 33, name: "الأحزاب", ayahs: 73 }, { number: 34, name: "سبأ", ayahs: 54 }, { number: 35, name: "فاطر", ayahs: 45 }, { number: 36, name: "يس", ayahs: 83 }, { number: 37, name: "الصافات", ayahs: 182 }, { number: 38, name: "ص", ayahs: 88 }, { number: 39, name: "الزمر", ayahs: 75 }, { number: 40, name: "غافر", ayahs: 85 }, { number: 41, name: "فصلت", ayahs: 54 }, { number: 42, name: "الشورى", ayahs: 53 }, { number: 43, name: "الزخرف", ayahs: 89 }, { number: 44, name: "الدخان", ayahs: 59 }, { number: 45, name: "الجاثية", ayahs: 37 }, { number: 46, name: "الأحقاف", ayahs: 35 }, { number: 47, name: "محمد", ayahs: 38 }, { number: 48, name: "الفتح", ayahs: 29 }, { number: 49, name: "الحجرات", ayahs: 18 }, { number: 50, name: "ق", ayahs: 45 }, { number: 51, name: "الذاريات", ayahs: 60 }, { number: 52, name: "الطور", ayahs: 49 }, { number: 53, name: "النجم", ayahs: 62 }, { number: 54, name: "القمر", ayahs: 55 }, { number: 55, name: "الرحمن", ayahs: 78 }, { number: 56, name: "الواقعة", ayahs: 96 }, { number: 57, name: "الحديد", ayahs: 29 }, { number: 58, name: "المجادلة", ayahs: 22 }, { number: 59, name: "الحشر", ayahs: 24 }, { number: 60, name: "الممتحنة", ayahs: 13 }, { number: 61, name: "الصف", ayahs: 14 }, { number: 62, name: "الجمعة", ayahs: 11 }, { number: 63, name: "المنافقون", ayahs: 11 }, { number: 64, name: "التغابن", ayahs: 18 }, { number: 65, name: "الطلاق", ayahs: 12 }, { number: 66, name: "التحريم", ayahs: 12 }, { number: 67, name: "الملك", ayahs: 30 }, { number: 68, name: "القلم", ayahs: 52 }, { number: 69, name: "الحاقة", ayahs: 52 }, { number: 70, name: "المعارج", ayahs: 44 }, { number: 71, name: "نوح", ayahs: 28 }, { number: 72, name: "الجن", ayahs: 28 }, { number: 73, name: "المزمل", ayahs: 20 }, { number: 74, name: "المدثر", ayahs: 56 }, { number: 75, name: "القيامة", ayahs: 40 }, { number: 76, name: "الإنسان", ayahs: 31 }, { number: 77, name: "المرسلات", ayahs: 50 }, { number: 78, name: "النبأ", ayahs: 40 }, { number: 79, name: "النازعات", ayahs: 46 }, { number: 80, name: "عبس", ayahs: 42 }, { number: 81, name: "التكوير", ayahs: 29 }, { number: 82, name: "الانفطار", ayahs: 19 }, { number: 83, name: "المطففين", ayahs: 36 }, { number: 84, name: "الانشقاق", ayahs: 25 }, { number: 85, name: "البروج", ayahs: 22 }, { number: 86, name: "الطارق", ayahs: 17 }, { number: 87, name: "الأعلى", ayahs: 19 }, { number: 88, name: "الغاشية", ayahs: 26 }, { number: 89, name: "الفجر", ayahs: 30 }, { number: 90, name: "البلد", ayahs: 20 }, { number: 91, name: "الشمس", ayahs: 15 }, { number: 92, name: "الليل", ayahs: 21 }, { number: 93, name: "الضحى", ayahs: 11 }, { number: 94, name: "الشرح", ayahs: 8 }, { number: 95, name: "التين", ayahs: 8 }, { number: 96, name: "العلق", ayahs: 19 }, { number: 97, name: "القدر", ayahs: 5 }, { number: 98, name: "البينة", ayahs: 8 }, { number: 99, name: "الزلزلة", ayahs: 8 }, { number: 100, name: "العاديات", ayahs: 11 }, { number: 101, name: "القارعة", ayahs: 11 }, { number: 102, name: "التكاثر", ayahs: 8 }, { number: 103, name: "العصر", ayahs: 3 }, { number: 104, name: "الهمزة", ayahs: 9 }, { number: 105, name: "الفيل", ayahs: 5 }, { number: 106, name: "قريش", ayahs: 4 }, { number: 107, name: "الماعون", ayahs: 7 }, { number: 108, name: "الكوثر", ayahs: 3 }, { number: 109, name: "الكافرون", ayahs: 6 }, { number: 110, name: "النصر", ayahs: 3 }, { number: 111, name: "المسد", ayahs: 5 }, { number: 112, name: "الإخلاص", ayahs: 4 }, { number: 113, name: "الفلق", ayahs: 5 }, { number: 114, name: "الناس", ayahs: 6 }];
+        const TOTAL_QURAN_WORDS = 77430;
+        const state = { lang: 'ar', theme: 'dark', surah: 1, words: [], wordIndex: 0, isPlaying: false, wpm: 200, fontSize: 'small', enhancedMode: true, loopEnabled: false, loopStart: 1, loopEnd: 7, wordsRead: 0, elapsedSeconds: 0, isFullscreen: false, currentAyah: 1, gazeEnabled: false, faceDetected: false, overlayActive: false, focusStart: 0, rampFactor: 1.0, variableSpeed: true, lastSeen: 0 };
+
+        // ── Supabase Config ──
+        const SUPABASE_URL = 'https://olgvhsksnmwevcxrrylu.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3Zoc2tzbm13ZXZjeHJyeWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5ODg4OTYsImV4cCI6MjA4NjU2NDg5Nn0.o11M5WnI_Bk4F0zztyZeGjH-8Br1W7K5fFfSjngAdyU';
+        let _sb = null;
+        function getSB() { if (!_sb) _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON); return _sb; }
+        function getDeviceId() { let id = localStorage.getItem('kalima_device_id'); if (!id) { id = crypto.randomUUID(); localStorage.setItem('kalima_device_id', id); } return id; }
+        const i18n = {
+            ar: {
+                introTitle: 'كلمات',
+                introSubtitle: 'اقرأ القرآن كلمة بكلمة بسرعتك',
+                start: 'ابدأ',
+                selectSurah: 'اختر سورة...',
+                page: 'الصفحة',
+                ayah: 'الآية',
+                word: 'الكلمة',
+                surahTime: 'الوقت المتبقي للسورة',
+                quranTime: 'لختم القرآن كاملاً',
+                play: 'تشغيل', pause: 'إيقاف', nextSurah: 'السورة التالية',
+                startAyah: 'بداية الآية', endAyah: 'نهاية الآية',
+                skip10: '١٠ كلمات', speed: 'سرعة القراءة', customSpeed: 'سرعة القراءة المخصصة',
+                variableSpeed: 'سرعة متغيرة',
+                variableSpeedTip: 'نمط القراءة الإيقاعي: تباطؤ تلقائي عند المد وعلامات الوقف',
+                loop: 'تكرار الآيات', loopRange: 'نطاق التكرار:', from: 'من الآية', to: 'إلى الآية', focus: 'وضع التركيز', focusDesc: 'تمييز نقطة التركيز البصري', fontSize: 'حجم الخط', wordsRead: 'كلمات قرأتها', timeSpent: 'وقت القراءة', visitors: 'زوار الصفحة', theme: 'تغيير المظهر', fullscreen: 'تركيز', share: 'مشاركة', bookmark: 'حفظ الموضع', lang: 'تغيير اللغة', exit: 'خروج', slower: 'أبطأ', slow: 'بطيء', medium: 'متوسط', normal: 'عادي', fast: 'سريع', faster: 'أسرع', loading: 'جاري التحميل...', bookmarkSaved: 'تم حفظ الموضع!', copied: 'تم نسخ الرابط!', pages: 'المصحف', moreControls: 'المزيد من التحكم', surah: 'السورة', hizb: 'الحزب', juzu: 'الجزء'
+            },
+            en: {
+                introTitle: 'Quran Reader',
+                introSubtitle: 'Read word by word at your pace',
+                start: 'Start',
+                selectSurah: 'Select Surah...',
+                page: 'Page',
+                ayah: 'Ayah',
+                word: 'Word',
+                surahTime: 'Time left for Surah',
+                quranTime: 'To finish Quran',
+                play: 'Play', pause: 'Pause', nextSurah: 'Next Surah',
+                startAyah: 'Ayah Start', endAyah: 'Ayah End',
+                skip10: '10 words', speed: 'Reading Speed', customSpeed: 'Custom Reading Speed',
+                variableSpeed: 'Variable Speed',
+                variableSpeedTip: 'Rhythmic mode: Auto-slowing for Madda & Pause markers',
+                loop: 'Repeat Verses', loopRange: 'Repeat Range:', from: 'From Ayah', to: 'To Ayah', focus: 'Focus Mode', focusDesc: 'Highlight ORP point', fontSize: 'Font Size', wordsRead: 'Words Read', timeSpent: 'Time Spent', visitors: 'Visitors', theme: 'Toggle Theme', fullscreen: 'Focus', share: 'Share', bookmark: 'Bookmark', lang: 'Language', exit: 'Exit', slower: 'Slower', slow: 'Slow', medium: 'Medium', normal: 'Normal', fast: 'Fast', faster: 'Fastest', loading: 'Loading...', bookmarkSaved: 'Saved!', copied: 'Copied!', pages: 'Mus-haf', moreControls: 'More Controls', surah: 'Surah', hizb: 'Hizb', juzu: 'Juzu'
+            }
+        };
+        function $(id) { return document.getElementById(id); }
+        function toArabicNum(n) { return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
+        const SAJDA_VERSES = [
+            { s: 7, a: 206 }, { s: 13, a: 15 }, { s: 16, a: 50 }, { s: 17, a: 109 },
+            { s: 19, a: 58 }, { s: 22, a: 18 }, { s: 22, a: 77 }, { s: 25, a: 60 },
+            { s: 27, a: 26 }, { s: 32, a: 15 }, { s: 38, a: 24 }, { s: 41, a: 38 },
+            { s: 53, a: 62 }, { s: 84, a: 21 }, { s: 96, a: 19 }
+        ];
+
         function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
         function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; if ($('shareLabel')) $('shareLabel').textContent = t.share; if ($('bookmarkLabel')) $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
         function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
@@ -259,7 +314,21 @@
             if (faceMesh) return;
             $('gazeStatus').textContent = 'جاري التحميل...';
 
+            // Check camera API availability
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.error('getUserMedia not available');
+                $('gazeStatus').textContent = state.lang === 'ar' ? 'الكاميرا غير متاحة على هذا الجهاز' : 'Camera not available on this device';
+                state.gazeEnabled = false;
+                $('gazeToggle').checked = false;
+                return;
+            }
+
             try {
+                // Request camera permission explicitly before initializing MediaPipe
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 320, height: 240 } });
+                // Stop the stream — MediaPipe Camera will create its own
+                stream.getTracks().forEach(t => t.stop());
+
                 faceMesh = new FaceMesh({
                     locateFile: (file) => {
                         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
@@ -286,10 +355,15 @@
                     height: 240
                 });
                 await camera.start();
-                $('gazeStatus').textContent = 'الكاميرا تعمل';
+                $('gazeStatus').textContent = state.lang === 'ar' ? 'الكاميرا تعمل' : 'Camera active';
             } catch (e) {
-                console.error(e);
-                $('gazeStatus').textContent = 'فشل الوصول للكاميرا';
+                console.error('Gaze init error:', e);
+                const denied = e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError';
+                if (denied) {
+                    $('gazeStatus').textContent = state.lang === 'ar' ? 'تم رفض إذن الكاميرا' : 'Camera permission denied';
+                } else {
+                    $('gazeStatus').textContent = state.lang === 'ar' ? 'فشل الوصول للكاميرا' : 'Camera access failed';
+                }
                 state.gazeEnabled = false;
                 $('gazeToggle').checked = false;
             }
@@ -1020,6 +1094,7 @@
             _UMMAH3.renderer = renderer;
 
             const globeGroup = new THREE.Group();
+            globeGroup.rotation.order = 'YXZ';
             _UMMAH3.globeGroup = globeGroup;
             scene.add(globeGroup);
 
@@ -1029,9 +1104,9 @@
             const isDark = state.theme === 'dark';
             const sphereGeo = new THREE.SphereGeometry(RADIUS - 0.01, 64, 64);
             const sphereMat = new THREE.MeshBasicMaterial({
-                color: isDark ? 0x06060e : 0xffffff,
+                color: isDark ? 0x111118 : 0xf0ede8,
                 transparent: true,
-                opacity: isDark ? 0.85 : 0.4
+                opacity: isDark ? 0.9 : 0.7
             });
             const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
             globeGroup.add(globeMesh);
@@ -1067,9 +1142,9 @@
                 geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
                 const mat = new THREE.PointsMaterial({
                     color: isDark ? 0xd4af37 : 0xb8860b,
-                    size: 0.007,
+                    size: 0.012,
                     transparent: true,
-                    opacity: isDark ? 0.55 : 0.8,
+                    opacity: isDark ? 0.75 : 0.9,
                     sizeAttenuation: true
                 });
                 topologyPoints = new THREE.Points(geo, mat);
@@ -1079,11 +1154,11 @@
             // Handle theme response
             window.updateUmmahGlobeTheme = () => {
                 const dark = state.theme === 'dark';
-                sphereMat.color.setHex(dark ? 0x06060e : 0xffffff);
-                sphereMat.opacity = dark ? 0.85 : 0.4;
+                sphereMat.color.setHex(dark ? 0x111118 : 0xf0ede8);
+                sphereMat.opacity = dark ? 0.9 : 0.7;
                 if (topologyPoints) {
                     topologyPoints.material.color.setHex(dark ? 0xd4af37 : 0xb8860b);
-                    topologyPoints.material.opacity = dark ? 0.55 : 0.8;
+                    topologyPoints.material.opacity = dark ? 0.75 : 0.9;
                 }
             };
 
@@ -1097,7 +1172,7 @@
                         const pts = coords.map(c => latLngToVec3(c[1], c[0], RADIUS + 0.003));
                         if (pts.length < 2) return;
                         const geo = new THREE.BufferGeometry().setFromPoints(pts);
-                        const mat = new THREE.LineBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.18 });
+                        const mat = new THREE.LineBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.35 });
                         globeGroup.add(new THREE.Line(geo, mat));
                     };
                     features.forEach(f => {
@@ -1111,18 +1186,18 @@
             for (let la = -60; la <= 60; la += 20) {
                 const pts = [];
                 for (let lo = -180; lo <= 180; lo += 4) pts.push(latLngToVec3(la, lo, RADIUS + 0.005));
-                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x3a3020, transparent: true, opacity: 0.2 })));
+                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x55472d, transparent: true, opacity: 0.15 })));
             }
             for (let lo = -180; lo < 180; lo += 20) {
                 const pts = [];
                 for (let la = -90; la <= 90; la += 4) pts.push(latLngToVec3(la, lo, RADIUS + 0.005));
-                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x3a3020, transparent: true, opacity: 0.2 })));
+                globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x55472d, transparent: true, opacity: 0.15 })));
             }
 
             // Orbital rings
             [{ rx: Math.PI / 2, ry: 0 }, { rx: Math.PI / 3, ry: Math.PI / 5 }].forEach(r => {
                 const rGeo = new THREE.TorusGeometry(RADIUS + 0.28, 0.004, 16, 100);
-                const rMat = new THREE.MeshBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.15 });
+                const rMat = new THREE.MeshBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.25 });
                 const ring = new THREE.Mesh(rGeo, rMat);
                 ring.rotation.x = r.rx; ring.rotation.y = r.ry;
                 globeGroup.add(ring);
@@ -1164,10 +1239,16 @@
                     _UMMAH3.camera.position.z += (_UMMAH3.targetCamZ - _UMMAH3.camera.position.z) * 0.05;
                 }
                 if (!_UMMAH3.isDragging && _UMMAH3.globeGroup) {
-                    // Constant slow orbit PLUS target rotation drift
+                    // Constant slow orbit PLUS target rotation drift using shortest path
                     _UMMAH3.globeGroup.rotation.y += 0.001;
-                    _UMMAH3.globeGroup.rotation.y += (_UMMAH3.targetRot.y - _UMMAH3.globeGroup.rotation.y) * 0.02;
-                    _UMMAH3.globeGroup.rotation.x += (_UMMAH3.targetRot.x - _UMMAH3.globeGroup.rotation.x) * 0.02;
+
+                    let dy = _UMMAH3.targetRot.y - _UMMAH3.globeGroup.rotation.y;
+                    dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+                    _UMMAH3.globeGroup.rotation.y += dy * 0.02;
+
+                    let dx = _UMMAH3.targetRot.x - _UMMAH3.globeGroup.rotation.x;
+                    dx = Math.atan2(Math.sin(dx), Math.cos(dx));
+                    _UMMAH3.globeGroup.rotation.x += dx * 0.02;
                 }
                 // Pulsing glow rings and beams
                 _UMMAH3.markerMeshes.forEach(m => {
@@ -1322,8 +1403,9 @@
 
             // ── Fetch global stats ──
             const l = state.lang;
+            let stats = null;
             try {
-                const stats = await getGlobalStats() || {};
+                stats = await getGlobalStats() || {};
                 const totalSeconds = stats.total_seconds || 0;
                 const totalWords = totalSeconds * 3.3;
 
@@ -1401,6 +1483,7 @@
             // Live feed — show real readers who have location data
             const feedEl = $('ummahFeed');
             const feedEmptyEl = $('ummahFeedEmpty');
+            if (feedEl) feedEl.innerHTML = '';
 
             // Filter only readers that have a meaningful location
             const locatedReaders = realReaders.filter(r => r.country_code || r.city);
@@ -1491,8 +1574,7 @@
                 showScreen('onboardScreen');
             }
         })();
-    </script>
-    <script>
+
         // Interaction Overlay Logic
         document.addEventListener('DOMContentLoaded', () => {
             const center = $('zoneCenter');
@@ -1532,52 +1614,11 @@
                 if (btn) btn.click();
             });
         });
-    </script>
-    <!-- PWA Install Banner -->
-    <div class="install-banner" id="installBanner">
-        <img src="/icons/icon-96.png" alt="" class="install-banner-icon">
-        <div class="install-banner-text">
-            <div class="install-banner-title" id="installTitle">تثبيت التطبيق</div>
-            <div class="install-banner-desc" id="installDesc">أضف القرآن لشاشتك الرئيسية - بدون متجر</div>
-        </div>
-        <button class="install-banner-btn" id="installBtn" onclick="handleInstallClick()">تثبيت</button>
-        <button class="install-banner-close" id="installClose" onclick="dismissInstall()">&times;</button>
-    </div>
 
-    <!-- iOS Install Instructions Modal -->
-    <div class="ios-install-modal" id="iosModal">
-        <div class="ios-install-content">
-            <h3 id="iosTitle">تثبيت على الشاشة الرئيسية</h3>
-            <div class="ios-step">
-                <span class="ios-step-num">1</span>
-                <span id="iosStep1">اضغط على زر المشاركة <svg viewBox="0 0 24 24">
-                        <path
-                            d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z" />
-                    </svg> في أسفل الشاشة</span>
-            </div>
-            <div class="ios-step">
-                <span class="ios-step-num">2</span>
-                <span id="iosStep2">مرر للأسفل واختر "إضافة إلى الشاشة الرئيسية"</span>
-            </div>
-            <div class="ios-step">
-                <span class="ios-step-num">3</span>
-                <span id="iosStep3">اضغط "إضافة" في الأعلى</span>
-            </div>
-            <button class="modal-btn primary" style="margin-top:20px;width:100%"
-                onclick="document.getElementById('iosModal').classList.remove('show')">
-                <span id="iosGotIt">فهمت!</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Offline Bar -->
-    <div class="offline-bar" id="offlineBar">⚡ أنت غير متصل - الأجزاء المحملة مسبقاً متوفرة</div>
-
-    <script>
         // ============================================
         // PWA: Service Worker Registration
         // ============================================
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.protocol === 'http:')) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(reg => {
@@ -1588,193 +1629,4 @@
                     .catch(err => console.log('SW registration failed:', err));
             });
         }
-
-        // ============================================
-        // PWA: Install Prompt Handling
-        // ============================================
-        let deferredPrompt = null;
-        const installBanner = document.getElementById('installBanner');
-        const iosModal = document.getElementById('iosModal');
-
-        // Detect if already installed
-        function isStandalone() {
-            return window.matchMedia('(display-mode: standalone)').matches
-                || window.navigator.standalone === true
-                || document.referrer.includes('android-app://');
-        }
-
-        // Detect iOS
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        }
-
-        // Check if dismissed recently (don't nag - show only once per 7 days)
-        function wasDismissed() {
-            const dismissed = localStorage.getItem('pwaInstallDismissed');
-            if (!dismissed) return false;
-            const daysSince = (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24);
-            return daysSince < 7;
-        }
-
-        // Listen for the beforeinstallprompt event (Chrome/Edge/Samsung)
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (!isStandalone() && !wasDismissed()) {
-                updateInstallBannerLang();
-                setTimeout(() => installBanner.classList.add('show'), 2000);
-            }
-        });
-
-        // For iOS - show after a brief delay if not installed
-        window.addEventListener('load', () => {
-            if (isIOS() && !isStandalone() && !wasDismissed()) {
-                setTimeout(() => {
-                    updateInstallBannerLang();
-                    installBanner.classList.add('show');
-                }, 3000);
-            }
-        });
-
-        function updateInstallBannerLang() {
-            const lang = (typeof state !== 'undefined' && state.lang) || 'ar';
-            if (lang === 'en') {
-                document.getElementById('installTitle').textContent = 'Install App';
-                document.getElementById('installDesc').textContent = 'Add Quran to your home screen - no app store needed';
-                document.getElementById('installBtn').textContent = 'Install';
-                document.getElementById('iosTitle').textContent = 'Add to Home Screen';
-                document.getElementById('iosStep1').innerHTML = 'Tap the Share button <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent-1);vertical-align:middle"><path d="M12 2l3.5 3.5-1.4 1.4L13 5.8V16h-2V5.8L9.9 6.9 8.5 5.5 12 2zm6 10v8H6v-8H4v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-2z"/></svg> at the bottom';
-                document.getElementById('iosStep2').textContent = 'Scroll down and tap "Add to Home Screen"';
-                document.getElementById('iosStep3').textContent = 'Tap "Add" in the top right';
-                document.getElementById('iosGotIt').textContent = 'Got it!';
-                document.getElementById('offlineBar').textContent = '⚡ You\'re offline - previously loaded content is available';
-            }
-        }
-
-        function handleInstallClick() {
-            if (isIOS()) {
-                // iOS doesn't support beforeinstallprompt, show instructions
-                installBanner.classList.remove('show');
-                iosModal.classList.add('show');
-            } else if (deferredPrompt) {
-                // Chrome/Edge/Samsung - trigger native install
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(choice => {
-                    if (choice.outcome === 'accepted') {
-                        console.log('PWA installed');
-                    }
-                    deferredPrompt = null;
-                    installBanner.classList.remove('show');
-                });
-            }
-        }
-
-        function dismissInstall() {
-            installBanner.classList.remove('show');
-            localStorage.setItem('pwaInstallDismissed', Date.now().toString());
-        }
-
-        // Track successful install
-        window.addEventListener('appinstalled', () => {
-            installBanner.classList.remove('show');
-            deferredPrompt = null;
-            console.log('PWA was installed');
-        });
-
-        // ============================================
-        // PWA: Offline / Online Detection
-        // ============================================
-        const offlineBar = document.getElementById('offlineBar');
-
-        function updateOnlineStatus() {
-            if (!navigator.onLine) {
-                offlineBar.classList.add('show');
-            } else {
-                offlineBar.classList.remove('show');
-            }
-        }
-
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        updateOnlineStatus();
-
-// Restore preferred speed from last session
-const savedWpm = parseInt(localStorage.getItem('kalima_wpm'));
-if (savedWpm && savedWpm >= 50 && savedWpm <= 600) state.wpm = savedWpm;
-
-// Initialize Application
-createParticles();
-updateUI();
-populateSurahSelect();
-populatePageSelect();
-updateSpeedDisplay();
-initVisitorCounter();
-loadCollectiveTime();
-updateUmmahLocation();
-
-
-// Screen Helper
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const el = document.getElementById(id);
-    if (el) el.classList.add('active');
-}
-
-// Event Listeners
-const startBtn = document.getElementById('startBtn');
-if (startBtn) {
-    startBtn.addEventListener('click', () => {
-        showScreen('onboardScreen');
-    });
-}
-
-const onbStartBtn = document.getElementById('onbStartBtn');
-if (onbStartBtn) {
-    onbStartBtn.addEventListener('click', () => {
-        localStorage.setItem('kalima_seen_intro', 'true');
-        showScreen('appScreen');
-        // Resume last session
-        const savedSurah = localStorage.getItem('kalima_surah');
-        const savedWord = localStorage.getItem('kalima_word');
-        if (savedSurah) loadSurah(parseInt(savedSurah)).then(() => {
-            if (savedWord) {
-                state.wordIndex = parseInt(savedWord);
-                displayWord();
-                updateProgress();
-            }
-        });
-    });
-}
-
-const langSwitchBtn = document.getElementById('langSwitchBtn');
-if (langSwitchBtn) {
-    langSwitchBtn.addEventListener('click', () => {
-        state.lang = state.lang === 'ar' ? 'en' : 'ar';
-        updateUI();
-        document.documentElement.lang = state.lang;
-        document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-    });
-}
-
-// Initial Load Logic
-if (localStorage.getItem('kalima_seen_intro')) {
-    showScreen('appScreen');
-    const savedSurah = localStorage.getItem('kalima_surah');
-    const savedWord = localStorage.getItem('kalima_word');
-    if (savedSurah) {
-        loadSurah(parseInt(savedSurah)).then(() => {
-            if (savedWord) {
-                state.wordIndex = parseInt(savedWord);
-                displayWord();
-                updateProgress();
-            }
-        });
-    } else {
-        loadSurah(1);
-    }
-} else {
-    showScreen('introScreen');
-    loadSurah(1); // Preload Fatiha
-}
 

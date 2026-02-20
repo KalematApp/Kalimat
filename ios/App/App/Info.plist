@@ -47,5 +47,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is needed for gaze-based reading control (eye tracking). No images or data are sent externally.</string>
 </dict>
 </plist>
