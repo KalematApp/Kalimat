@@ -903,7 +903,7 @@ body {
 .top-bar-item:hover .btn-label,
 .top-bar-item:active .btn-label,
 .top-bar-item.active .btn-label {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .top-bar-btn svg {
@@ -1807,7 +1807,7 @@ body {
 /* Fullscreen Exit Button */
 .focus-exit {
   position: fixed;
-  top: 20px;
+  top: max(20px, calc(env(safe-area-inset-top) + 8px));
   left: 50%;
   transform: translateX(-50%);
   background: var(--bg-card);
