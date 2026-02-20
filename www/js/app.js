@@ -54,7 +54,7 @@
         ];
 
         function createParticles() { const bg = $('ambientBg'); bg.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div'); p.className = 'particle'; p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 15}s;animation-duration:${12 + Math.random() * 8}s`; bg.appendChild(p); } }
-        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; if ($('shareLabel')) $('shareLabel').textContent = t.share; if ($('bookmarkLabel')) $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahCountriesLabel')) $('ummahCountriesLabel').textContent = state.lang === 'ar' ? 'دولة' : 'countries'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
+        function updateUI() { const t = i18n[state.lang]; $('introTitle').textContent = t.introTitle; $('introSubtitle').textContent = t.introSubtitle; $('startBtn').textContent = t.start; if ($('pageLabel')) $('pageLabel').textContent = t.page; if ($('ayahLabel')) $('ayahLabel').textContent = t.ayah; if ($('wordLabel')) $('wordLabel').textContent = t.word; if ($('surahLabel')) $('surahLabel').textContent = t.surah; if ($('surahSelectLabel')) $('surahSelectLabel').textContent = state.lang === 'ar' ? 'السورة' : 'Chapter'; if ($('hizbLabel')) $('hizbLabel').textContent = t.hizb; if ($('juzuLabel')) $('juzuLabel').textContent = t.juzu; if ($('pageNumberLabel')) $('pageNumberLabel').textContent = state.lang === 'ar' ? 'رقم الصفحة' : 'Page Number'; $('surahTimeLabel').textContent = t.surahTime; $('quranTimeLabel').textContent = t.quranTime; updatePlayButton(); $('startAyahLabel').textContent = t.startAyah; $('endAyahLabel').textContent = t.endAyah; $('skipBackLabel').textContent = t.skip10; $('skipFwdLabel').textContent = t.skip10; $('speedLabel').textContent = t.speed; if ($('variableSpeedLabel')) $('variableSpeedLabel').textContent = t.variableSpeed; if ($('variableSpeedTip')) $('variableSpeedTip').textContent = t.variableSpeedTip; $('loopLabel').textContent = t.loop; $('loopRangeText').textContent = t.loopRange; $('fromLabel').textContent = t.from; $('toLabel').textContent = t.to; $('enhancedTitle').textContent = t.focus; $('enhancedDesc').textContent = t.focusDesc; $('fontSizeLabel').textContent = t.fontSize; $('wordsReadLabel').textContent = t.wordsRead; $('timeSpentLabel').textContent = t.timeSpent; $('visitorsLabel').textContent = t.visitors; $('themeLabel').textContent = t.theme.split(' ')[0]; $('fsLabel').textContent = t.fullscreen.split(' ')[0]; if ($('shareLabel')) $('shareLabel').textContent = t.share; if ($('bookmarkLabel')) $('bookmarkLabel').textContent = t.bookmark.split(' ')[0]; if ($('pagesLabel')) $('pagesLabel').textContent = t.pages; $('langLabel').textContent = t.lang.split(' ')[0]; $('exitFocusLabel').textContent = t.exit; if ($('moreControlsLabel')) $('moreControlsLabel').textContent = t.moreControls; if ($('speedSlower')) $('speedSlower').textContent = t.slower; if ($('speedSlow')) $('speedSlow').textContent = t.slow; if ($('speedMedium')) $('speedMedium').textContent = t.medium; if ($('speedHigh')) $('speedHigh').textContent = t.fast; if ($('speedFaster')) $('speedFaster').textContent = t.faster; const speedLabelEl = $('speedLabel'); if (speedLabelEl && speedLabelEl.closest('.advanced-controls')) speedLabelEl.textContent = t.customSpeed || t.speed; document.querySelectorAll('.preset-btn').forEach((btn, i) => btn.textContent = [t.slow, t.normal, t.fast, t.faster][i]); document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = state.lang; if ($('ummahLabel')) $('ummahLabel').textContent = state.lang === 'ar' ? 'الأمة' : 'Ummah'; if ($('ummahLiveLabel')) $('ummahLiveLabel').textContent = state.lang === 'ar' ? 'مباشر' : 'LIVE'; if ($('ummahReadingNow')) $('ummahReadingNow').textContent = state.lang === 'ar' ? 'يقرأون الآن' : 'reading now'; if ($('ummahWordsLabel')) $('ummahWordsLabel').textContent = state.lang === 'ar' ? 'كلمة قرأتها الأمة معاً' : 'words read by the Ummah together'; if ($('ummahKhatmasLabel')) $('ummahKhatmasLabel').textContent = state.lang === 'ar' ? 'ختمة كاملة' : 'full khatmas'; if ($('ummahMyHoursLabel')) $('ummahMyHoursLabel').textContent = state.lang === 'ar' ? 'ساعاتك' : 'your hours'; if ($('ummahHoursLabel')) $('ummahHoursLabel').textContent = state.lang === 'ar' ? 'ساعة قراءة' : 'hours read'; if ($('ummahFeedTitle')) $('ummahFeedTitle').textContent = state.lang === 'ar' ? 'نشاط مباشر' : 'LIVE FEED'; if ($('ummahShareLabel')) $('ummahShareLabel').textContent = state.lang === 'ar' ? 'ادعُ أصدقاءك وشارك الأجر' : 'Invite friends & share the reward'; }
         function populateSurahSelect() { const sel = $('surahSelect'); sel.innerHTML = `<option value="">${i18n[state.lang].selectSurah}</option>`; SURAHS.forEach(s => { const o = document.createElement('option'); o.value = s.number; o.textContent = `${s.number}. ${s.name}`; sel.appendChild(o); }); sel.value = state.surah; }
 
         function populatePageSelect() {
@@ -1005,20 +1005,63 @@
 
         window.addEventListener('beforeunload', () => { autoSaveBookmark(); });
         window.addEventListener('pagehide', () => { autoSaveBookmark(); });
-        // Ummah Globe: anonymous location ping — only if permission already granted, no popup on load
+        // Ummah Globe: request geolocation and upsert to Supabase. Returns {latitude, longitude} or null.
         async function updateUmmahLocation() {
+            if (!navigator.geolocation) {
+                console.warn('[Ummah] Geolocation API not available');
+                return null;
+            }
             try {
-                if (navigator.permissions) {
-                    const result = await navigator.permissions.query({ name: 'geolocation' });
-                    if (result.state !== 'granted') return; // Don't prompt — only use if already allowed
-                }
                 const referredBy = localStorage.getItem('kalima_referred_by') || '';
-                const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: false, timeout: 5000 }));
-                // Pass referral code when upserting so referred readers can be identified
-                await getSB().rpc('upsert_location', { p_device_id: getDeviceId(), p_latitude: pos.coords.latitude, p_longitude: pos.coords.longitude, p_referred_by: referredBy });
-            } catch (e) { /* geolocation denied or unavailable */ }
+                const pos = await new Promise((res, rej) =>
+                    navigator.geolocation.getCurrentPosition(res, rej, {
+                        enableHighAccuracy: false, timeout: 8000, maximumAge: 300000
+                    })
+                );
+                const { latitude, longitude } = pos.coords;
+                console.log('[Ummah] Location obtained:', latitude.toFixed(2), longitude.toFixed(2));
+                // Cache locally so the user always appears on globe even if Supabase is slow
+                localStorage.setItem('kalima_last_loc', JSON.stringify({ lat: latitude, lng: longitude }));
+                const { error } = await getSB().rpc('upsert_location', {
+                    p_device_id: getDeviceId(),
+                    p_latitude: latitude,
+                    p_longitude: longitude,
+                    p_referred_by: referredBy
+                });
+                if (error) console.error('[Ummah] upsert_location failed:', error);
+                else console.log('[Ummah] Location upserted successfully');
+                return { latitude, longitude };
+            } catch (e) {
+                console.warn('[Ummah] Geolocation error:', e.message || e);
+                return null;
+            }
         }
-        async function getActiveReaders() { try { const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); const { data } = await getSB().from('ummah_locations').select('latitude, longitude, city, country_code, last_active, referred_by').gte('last_active', cutoff); return data || []; } catch { return []; } }
+
+        // Heartbeat: re-ping location every 10 minutes to stay in the 24h active window
+        let _ummahHeartbeatId = null;
+        function startUmmahHeartbeat() {
+            if (_ummahHeartbeatId) return;
+            _ummahHeartbeatId = setInterval(() => { updateUmmahLocation(); }, 10 * 60 * 1000);
+            console.log('[Ummah] Heartbeat started (every 10 min)');
+        }
+        function stopUmmahHeartbeat() {
+            if (_ummahHeartbeatId) { clearInterval(_ummahHeartbeatId); _ummahHeartbeatId = null; }
+        }
+        async function getActiveReaders() {
+            try {
+                const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                const { data, error } = await getSB()
+                    .from('ummah_locations')
+                    .select('latitude, longitude, city, country_code, last_active, referred_by')
+                    .gte('last_active', cutoff);
+                if (error) console.error('[Ummah] getActiveReaders query error:', error);
+                console.log('[Ummah] Active readers found:', (data || []).length);
+                return data || [];
+            } catch (e) {
+                console.error('[Ummah] getActiveReaders exception:', e);
+                return [];
+            }
+        }
 
 
         function toArabicNumGlobe(n) { return String(n).replace(/[0-9]/g, d => String.fromCharCode(0x0660 + +d)); }
@@ -1377,6 +1420,26 @@
             let realReaders = [];
             try { realReaders = await getActiveReaders(); } catch (e) { }
 
+            // Ensure current user always appears on globe even if Supabase hasn't returned their row yet
+            const cachedLoc = localStorage.getItem('kalima_last_loc');
+            if (cachedLoc) {
+                try {
+                    const loc = JSON.parse(cachedLoc);
+                    const alreadyIncluded = realReaders.some(r =>
+                        Math.abs(r.latitude - loc.lat) < 0.01 && Math.abs(r.longitude - loc.lng) < 0.01
+                    );
+                    if (!alreadyIncluded) {
+                        realReaders.push({
+                            latitude: loc.lat, longitude: loc.lng,
+                            city: null, country_code: null,
+                            last_active: new Date().toISOString(),
+                            referred_by: null
+                        });
+                        console.log('[Ummah] Added current user to reader list from cache');
+                    }
+                } catch (e) { /* invalid cached location */ }
+            }
+
             const myCode = getReferralCode();
             let referredCount = 0;
 
@@ -1412,12 +1475,18 @@
                 $('ummahTotalWords').textContent = l === 'ar' ? fmtArNum(Math.floor(totalWords)) : Math.floor(totalWords).toLocaleString();
                 $('ummahKhatmas').textContent = l === 'ar' ? toArabicNumGlobe(Math.floor(totalWords / 77430)) : Math.floor(totalWords / 77430);
                 $('ummahHours').textContent = l === 'ar' ? toArabicNumGlobe(Math.floor(totalSeconds / 3600)) : Math.floor(totalSeconds / 3600);
-                $('ummahCountries').textContent = l === 'ar' ? toArabicNumGlobe(new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || 0) : (new Set(realReaders.map(r => r.country_code).filter(Boolean)).size || 12);
+                // Personal reading time
+                const myHours = Math.floor(state.elapsedSeconds / 3600);
+                const myMins = Math.floor((state.elapsedSeconds % 3600) / 60);
+                $('ummahMyHours').textContent = myHours > 0
+                    ? (l === 'ar' ? toArabicNumGlobe(myHours) : myHours)
+                    : (l === 'ar' ? toArabicNumGlobe(myMins) + ' د' : myMins + 'm');
             } catch (e) {
                 console.error('Ummah stats load fail:', e);
                 $('ummahTotalWords').textContent = l === 'ar' ? '٠' : '0';
                 $('ummahHours').textContent = l === 'ar' ? '٠' : '0';
-                $('ummahCountries').textContent = l === 'ar' ? '١٢' : '12';
+                const myMins = Math.floor((state.elapsedSeconds % 3600) / 60);
+                $('ummahMyHours').textContent = l === 'ar' ? toArabicNumGlobe(myMins) + ' د' : myMins + 'm';
                 $('ummahKhatmas').textContent = l === 'ar' ? '٠' : '0';
             }
 
@@ -1457,7 +1526,7 @@
                 badge.style.border = '1px solid rgba(196,164,46,0.15)';
                 dot.style.background = '#c4a42e';
                 dot.style.boxShadow = 'none';
-                readingNowEl.textContent = lang === 'ar' ? 'في المجتمع' : 'community';
+                readingNowEl.textContent = lang === 'ar' ? 'قارئ' : 'reader';
                 readingNowEl.style.color = '#6a5a20';
             }
 
@@ -1536,14 +1605,28 @@
         }
 
 
-        function openUmmahScreen() { showScreen('ummahScreen'); initUmmahGlobe(); loadUmmahData(); createParticles(); }
+        async function openUmmahScreen() {
+            showScreen('ummahScreen');
+            initUmmahGlobe();
+            // Request location when user opens Ummah screen — natural context for the permission prompt
+            const userLoc = await updateUmmahLocation();
+            await loadUmmahData();
+            // Center the globe on the user's location if available
+            if (userLoc && _UMMAH3.globeGroup) {
+                _UMMAH3.targetRot.y = -(userLoc.longitude) * Math.PI / 180;
+                _UMMAH3.targetRot.x = (userLoc.latitude) * Math.PI / 180;
+                _UMMAH3.targetCamZ = 3.6; // Zoom in closer to the user
+                console.log('[Ummah] Globe centered on user location');
+            }
+            createParticles();
+        }
 
         $('ummahBtn').addEventListener('click', openUmmahScreen);
         $('ummahShareBtn').addEventListener('click', shareReferral);
         // Restore preferred speed from last session
         const savedWpm = parseInt(localStorage.getItem('kalima_wpm'));
         if (savedWpm && savedWpm >= 50 && savedWpm <= 600) state.wpm = savedWpm;
-        createParticles(); updateUI(); populateSurahSelect(); populatePageSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation();
+        createParticles(); updateUI(); populateSurahSelect(); populatePageSelect(); updateSpeedDisplay(); initVisitorCounter(); loadCollectiveTime(); updateUmmahLocation(); startUmmahHeartbeat();
 
         // Load theme from localStorage and apply it
         const savedTheme = localStorage.getItem('quranReaderTheme') || state.theme;
