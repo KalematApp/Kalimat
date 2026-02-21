@@ -1560,7 +1560,7 @@ body {
   gap: 6px;
   justify-content: center;
   flex-wrap: nowrap;
-  margin-top: 14px;
+  margin-top: 6px;
   background: var(--bg-card);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -1602,7 +1602,7 @@ body {
 .more-controls-btn {
   width: 100%;
   padding: 14px 20px;
-  margin-top: 10px;
+  margin-top: 6px;
   background: var(--bg-card);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -2481,7 +2481,7 @@ body {
   display: grid;
   grid-template-columns: 1.35fr 1fr;
   gap: 8px;
-  margin: 10px 0;
+  margin: 6px 0;
 }
 
 .time-estimates {

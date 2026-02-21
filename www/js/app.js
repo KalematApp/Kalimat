@@ -907,9 +907,12 @@
             const isVisible = advancedControls.style.display !== 'none';
             advancedControls.style.display = isVisible ? 'none' : 'block';
             moreControlsBtn.classList.toggle('expanded', !isVisible);
+            if (!isVisible) {
+                setTimeout(() => advancedControls.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+            }
         }
         let isDragging = false; $('progressContainer').addEventListener('mousedown', e => { isDragging = true; handleProgressDrag(e); }); $('progressContainer').addEventListener('touchstart', e => { isDragging = true; handleProgressDrag(e.touches[0]); }, { passive: true }); document.addEventListener('mousemove', e => { if (isDragging) handleProgressDrag(e); }); document.addEventListener('touchmove', e => { if (isDragging) handleProgressDrag(e.touches[0]); }, { passive: true }); document.addEventListener('mouseup', () => isDragging = false); document.addEventListener('touchend', () => isDragging = false);
-        function handleProgressDrag(e) { const rect = $('progressContainer').getBoundingClientRect(); let pct = (e.clientX - rect.left) / rect.width; if (state.lang === 'ar') pct = 1 - pct; pct = Math.max(0, Math.min(1, pct)); state.wordIndex = Math.floor(pct * (state.words.length - 1)); displayWord(); updateProgress(); }
+        function handleProgressDrag(e) { if (state._loading || !state.words.length) return; const rect = $('progressContainer').getBoundingClientRect(); let pct = (e.clientX - rect.left) / rect.width; if (state.lang === 'ar') pct = 1 - pct; pct = Math.max(0, Math.min(1, pct)); state.wordIndex = Math.floor(pct * (state.words.length - 1)); displayWord(); updateProgress(); }
         document.querySelectorAll('.lang-btn').forEach(btn => { btn.addEventListener('click', async () => { state.lang = btn.dataset.lang; updateUI(); populateSurahSelect(); const hasBookmark = localStorage.getItem('quranReaderBookmark'); if (hasBookmark) { showScreen('appScreen'); await restoreBookmark(); if (!state.words.length) loadSurah(1); } else { updateOnboarding(); showScreen('onboardScreen'); } }); });
         function updateOnboarding() {
             const lang = state.lang;
@@ -1698,8 +1701,10 @@
                 if (hasBookmark) {
                     // Restore from last position automatically
                     showScreen('appScreen');
+                    state._loading = true;
                     await restoreBookmark();
-                    if (!state.words.length) loadSurah(1);
+                    if (!state.words.length) await loadSurah(1);
+                    state._loading = false;
                     // Don't show resume modal - just continue from last position
                 } else {
                     // No bookmark - show onboarding
