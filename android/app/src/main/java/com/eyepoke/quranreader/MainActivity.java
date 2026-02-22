@@ -9,5 +9,13 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
+        
+        // Hide the native ActionBar to ensure the web view takes full screen without the app title bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
     }
 }

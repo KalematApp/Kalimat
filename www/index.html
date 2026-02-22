@@ -21,6 +21,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-96.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
     <title>كلمات</title>
+    <!-- Add theme-color meta tag for light mode fallback -->
+    <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#fbf9f4" media="(prefers-color-scheme: light)">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -32,7 +35,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body spellcheck="false" translate="no">
     <div class="sajda-notif" id="sajdaNotif">
         <div class="sajda-icon-container">
             <svg viewBox="0 0 24 24">
@@ -140,15 +143,18 @@
                 <div class="onb-text">
                     <div class="onb-feat-title" data-ar="وضع التركيز" data-en="Focus Mode">وضع التركيز</div>
                     <div class="onb-feat-desc" data-ar="شاشة كاملة بدون عناصر تشتت — كلمات فقط"
-                        data-en="Full screen with no distractions — just words">شاشة كاملة بدون عناصر تشتت — كلمات فقط</div>
+                        data-en="Full screen with no distractions — just words">شاشة كاملة بدون عناصر تشتت — كلمات فقط
+                    </div>
                 </div>
             </div>
             <div class="onb-feature">
                 <div class="onb-icon">🌍</div>
                 <div class="onb-text">
-                    <div class="onb-feat-title" data-ar="الأمة تقرأ معاً" data-en="The Ummah Reads Together">الأمة تقرأ معاً</div>
+                    <div class="onb-feat-title" data-ar="الأمة تقرأ معاً" data-en="The Ummah Reads Together">الأمة تقرأ
+                        معاً</div>
                     <div class="onb-feat-desc" data-ar="شاهد القراء حول العالم مباشرة على الخريطة"
-                        data-en="See readers around the world live on the globe">شاهد القراء حول العالم مباشرة على الخريطة</div>
+                        data-en="See readers around the world live on the globe">شاهد القراء حول العالم مباشرة على
+                        الخريطة</div>
                 </div>
             </div>
         </div>
@@ -202,23 +208,36 @@
                 </div>
             </div>
 
-            <div class="surah-row" style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px;">
-                <div class="surah-selector" style="flex: 1; margin: 0; position: relative; padding-top: 20px;">
-                    <label for="surahSelect"
-                        style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;"
-                        id="surahSelectLabel">السورة</label>
-                    <select id="surahSelect" style="margin-top: 0;">
-                        <option value="">اختر سورة...</option>
-                    </select>
+            <!-- Unified Top Info Block -->
+            <div class="unified-info-block" style="padding: 10px 16px; gap: 10px; justify-content: center;">
+
+                <!-- Hizb / Juzu -->
+                <div style="display: flex; align-items: center; gap: 12px; white-space: nowrap;">
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted);" id="hizbLabel">الحزب</span>
+                        <span style="font-size: 0.9rem; color: var(--accent-1); font-weight: 600;" id="hizbNum">١</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted);" id="juzuLabel">الجزء</span>
+                        <span style="font-size: 0.9rem; color: var(--accent-1); font-weight: 600;" id="juzuNum">١</span>
+                    </div>
                 </div>
-                <!-- Page Selector Dropdown -->
-                <div class="surah-selector" style="flex: 1; margin: 0; position: relative; padding-top: 20px;">
-                    <label for="pageSelect"
-                        style="position: absolute; top: 0; right: 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; pointer-events: none; padding: 0 4px;"
-                        id="pageNumberLabel">رقم الصفحة</label>
-                    <select id="pageSelect" style="margin-top: 0;">
-                        <option value="">--</option>
-                    </select>
+
+                <!-- Surah / Page Selectors -->
+                <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 200px;">
+                    <div class="surah-selector" style="flex: 2; margin: 0; position: relative;">
+                        <!-- Using clean minimalist dropdown -->
+                        <select id="surahSelect"
+                            style="margin: 0; padding: 8px 12px; font-size: 0.9rem; border-radius: 12px; height: 38px; width: 100%;">
+                            <option value="">اختر سورة...</option>
+                        </select>
+                    </div>
+                    <div class="surah-selector" style="flex: 1; margin: 0; position: relative;">
+                        <select id="pageSelect"
+                            style="margin: 0; padding: 8px 12px; font-size: 0.9rem; border-radius: 12px; height: 38px; width: 100%;">
+                            <option value="">--</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -267,8 +286,8 @@
                                 viewBox="0 0 24 24">
                                 <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" />
                             </svg></button><span class="ctrl-btn-label" id="skipBackLabel">١٠ كلمات</span></div>
-                    <div class="ctrl-btn-wrap"><button class="ctrl-btn ctrl-btn-play" id="playBtn"><svg viewBox="0 0 24 24"
-                                id="playIcon">
+                    <div class="ctrl-btn-wrap"><button class="ctrl-btn ctrl-btn-play" id="playBtn"><svg
+                                viewBox="0 0 24 24" id="playIcon">
                                 <path d="M8 5v14l11-7z" />
                             </svg></button><span class="ctrl-btn-label" id="playLabel">تشغيل</span></div>
                     <div class="ctrl-btn-wrap"><button class="ctrl-btn ctrl-btn-sm" id="skipFwdBtn"><svg
@@ -282,32 +301,20 @@
                 </div>
             </div>
 
-            <!-- Simplified Info Bar -->
-            <div class="stats-grid">
-                <div class="info-bar">
-                    <div class="info-item"><span class="info-label" id="surahLabel">السورة</span><span
-                            class="info-value" id="surahName">الفاتحة</span></div>
-                    <div class="info-item"><span class="info-label" id="hizbLabel">الحزب</span><span class="info-value"
-                            id="hizbNum">١</span></div>
-                    <div class="info-item"><span class="info-label" id="juzuLabel">الجزء</span><span class="info-value"
-                            id="juzuNum">١</span></div>
+            <!-- Compact Time Remaining Row -->
+            <div class="compact-time-row">
+                <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="quranTimeLabel">باقي للختمة</span>
+                    <span style="font-size: 0.85rem; color: var(--accent-1); font-weight: 600;" id="quranTime">--</span>
                 </div>
-
-                <div class="time-estimates">
-                    <div class="time-item">
-                        <div class="time-label" id="surahTimeLabel">باقي للسورة</div>
-                        <div class="time-value" id="surahTime">--</div>
-                    </div>
-                    <div class="time-item">
-                        <div class="time-label" id="quranTimeLabel">باقي للختمة</div>
-                        <div class="time-value" id="quranTime">--</div>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="surahTimeLabel">باقي للسورة</span>
+                    <span style="font-size: 0.85rem; color: var(--accent-1); font-weight: 600;" id="surahTime">--</span>
                 </div>
             </div>
 
             <!-- Simplified Speed Control: 5 Buttons -->
-            <div class="speed-presets-simple"
-                style="display: flex; gap: 8px; justify-content: center;">
+            <div class="speed-presets-simple" style="display: flex; gap: 8px; justify-content: center;">
                 <button class="speed-btn-simple" id="speedSlower" data-wpm="100">أبطأ</button>
                 <button class="speed-btn-simple" id="speedSlow" data-wpm="150">بطيء</button>
                 <button class="speed-btn-simple active" id="speedMedium" data-wpm="200">متوسط</button>
@@ -494,7 +501,7 @@
                             </svg>
                         </div>
                         <div class="ummah-stat-value" id="ummahHours">--</div>
-                        <div class="ummah-stat-label">ساعة</div>
+                        <div class="ummah-stat-label" id="ummahHoursLabel">ساعات الأمة</div>
                     </div>
                     <!-- Card 2: Your Reading Time -->
                     <div class="ummah-stat-card">
@@ -507,7 +514,7 @@
                             </svg>
                         </div>
                         <div class="ummah-stat-value" id="ummahMyHours">--</div>
-                        <div class="ummah-stat-label">ساعاتك</div>
+                        <div class="ummah-stat-label" id="ummahMyHoursLabel">وقت قراءتك</div>
                     </div>
                     <div class="ummah-stat-card">
                         <div class="ummah-stat-card-accent" style="background:#c084fc;"></div>
@@ -519,7 +526,7 @@
                             </svg>
                         </div>
                         <div class="ummah-stat-value" id="ummahKhatmas">--</div>
-                        <div class="ummah-stat-label">ختمة</div>
+                        <div class="ummah-stat-label" id="ummahKhatmasLabel">ختمة</div>
                     </div>
                 </div>
 

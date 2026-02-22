@@ -2,10 +2,8 @@
 @font-face {
   font-family: "KFGQPC Uthmanic Script HAFS";
   src:
-    url("https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff2")
-      format("woff2"),
-    url("https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff")
-      format("woff");
+    url("https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/mustafa0x/quran-font@3.0.0/dist/v1/uthmanic/KFGQPC%20Uthmanic%20Script%20HAFS.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -13,8 +11,7 @@
 
 @font-face {
   font-family: "Scheherazade New";
-  src: url("https://fonts.gstatic.com/s/scheherazadenew/v9/4iCp6KhlaNHb2oeD7Vamy7lsnA7gL1kzLad.woff2")
-    format("woff2");
+  src: url("https://fonts.gstatic.com/s/scheherazadenew/v9/4iCp6KhlaNHb2oeD7Vamy7lsnA7gL1kzLad.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -32,6 +29,11 @@
   -ms-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+}
+
+html,
+body {
+  overscroll-behavior: none;
 }
 
 /* Safe area support for notched devices and edge-to-edge (Android 15+) */
@@ -108,11 +110,9 @@ textarea {
 
 body {
   font-family: "Inter", "Noto Naskh Arabic", sans-serif;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-1) 0%,
-    var(--bg-gradient-2) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-1) 0%,
+      var(--bg-gradient-2) 100%);
   color: var(--text-primary);
   height: 100vh;
   height: 100dvh;
@@ -135,6 +135,7 @@ body {
 }
 
 @keyframes pulse-dot {
+
   0%,
   100% {
     box-shadow: 0 0 6px 2px rgba(55, 212, 165, 0.5);
@@ -203,6 +204,7 @@ body {
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0) translateX(0);
@@ -263,11 +265,9 @@ body {
   left: 0;
   right: 0;
   height: 120px;
-  background: linear-gradient(
-    to top,
-    var(--bg-gradient-1) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(to top,
+      var(--bg-gradient-1) 0%,
+      transparent 100%);
   pointer-events: none;
 }
 
@@ -281,11 +281,9 @@ body {
   justify-content: space-between;
   padding: 14px 18px;
   padding-top: calc(14px + env(safe-area-inset-top));
-  background: linear-gradient(
-    to bottom,
-    var(--overlay-dark) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(to bottom,
+      var(--overlay-dark) 0%,
+      transparent 100%);
 }
 
 .ummah-top-bar-left {
@@ -525,11 +523,9 @@ body {
   flex-shrink: 0;
   padding: 16px 20px;
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  background: linear-gradient(
-    to top,
-    var(--bg-gradient-1) 70%,
-    transparent 100%
-  );
+  background: linear-gradient(to top,
+      var(--bg-gradient-1) 70%,
+      transparent 100%);
 }
 
 .ummah-share-btn {
@@ -598,6 +594,7 @@ body {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     transform: scale(1);
@@ -789,6 +786,8 @@ body {
   }
 
   /* Apply Card Styling to all main containers */
+  .unified-info-block,
+  .compact-time-row,
   .surah-row,
   .stats-grid,
   .playhead-card,
@@ -818,7 +817,7 @@ body {
   }
 
   /* Children inside playhead card: full width, no borders, no extra margins */
-  .playhead-card > .progress-track {
+  .playhead-card>.progress-track {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 0 6px 0 !important;
@@ -828,7 +827,7 @@ body {
     background: none !important;
   }
 
-  .playhead-card > .playback-controls {
+  .playhead-card>.playback-controls {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -858,8 +857,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  margin: 12px 16px 16px 16px;
+  padding: 6px 12px;
+  margin: 8px 16px 10px 16px;
   border-radius: 40px;
   flex-shrink: 0;
   position: sticky;
@@ -949,6 +948,36 @@ body {
   outline: none;
   border-color: var(--accent-1);
   box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Unified Info Block */
+.unified-info-block {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--surface-glass-border);
+  border-radius: 20px;
+  margin: 0 auto 12px auto;
+  box-shadow: var(--shadow-bento);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+/* Compact Time Row */
+.compact-time-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  gap: 15px;
+  padding: 8px 16px;
+  margin: 0 auto 12px auto;
+  width: 100%;
 }
 
 /* Word Display */
@@ -1168,7 +1197,7 @@ body {
   box-shadow: var(--shadow-bento);
 }
 
-.playhead-card > .progress-track {
+.playhead-card>.progress-track {
   width: 100%;
   margin: 0 0 6px 0;
   padding: 4px 0;
@@ -1177,7 +1206,7 @@ body {
   border-radius: 0;
 }
 
-.playhead-card > .playback-controls {
+.playhead-card>.playback-controls {
   width: 100%;
   margin: 0;
   padding: 6px 0 4px 0;
@@ -1375,6 +1404,7 @@ body {
 }
 
 @keyframes playBtnFlash {
+
   0%,
   100% {
     transform: scale(1);
@@ -1485,12 +1515,12 @@ body {
   transition: 0.3s;
 }
 
-.toggle-switch input:checked + .toggle-slider {
+.toggle-switch input:checked+.toggle-slider {
   background: var(--accent-1);
   border-color: var(--accent-1);
 }
 
-.toggle-switch input:checked + .toggle-slider:before {
+.toggle-switch input:checked+.toggle-slider:before {
   transform: translateX(24px);
   background: #0a0a0f;
 }
@@ -1903,6 +1933,7 @@ body {
 }
 
 @keyframes dotPulse {
+
   0%,
   60%,
   100% {
@@ -1925,8 +1956,9 @@ body {
   }
 
   .top-bar {
-    padding: 12px 16px;
+    padding: 6px 12px;
     gap: 8px;
+    margin: 8px 12px;
   }
 
   .top-bar-btn {
@@ -2446,7 +2478,7 @@ body {
   height: 170px !important;
 }
 
-.playhead-card > .playback-controls {
+.playhead-card>.playback-controls {
   margin: 0 !important;
   padding: 6px 0 4px 0 !important;
   direction: rtl !important;
@@ -2747,12 +2779,12 @@ body {
   border-radius: 50%;
 }
 
-input:checked + .toggle-slider {
+input:checked+.toggle-slider {
   background-color: var(--accent-1);
   border-color: var(--accent-1);
 }
 
-input:checked + .toggle-slider:before {
+input:checked+.toggle-slider:before {
   transform: translateX(20px);
   background-color: #000;
 }
