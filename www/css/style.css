@@ -22,13 +22,6 @@
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  -webkit-text-size-adjust: 100%;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
 }
 
 html,
@@ -578,6 +571,8 @@ body {
   justify-content: center;
   padding: 30px;
   text-align: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .intro-icon {
@@ -591,6 +586,7 @@ body {
   justify-content: center;
   box-shadow: 0 20px 60px var(--accent-glow);
   animation: pulse 3s infinite ease-in-out;
+  flex-shrink: 0;
 }
 
 @keyframes pulse {
